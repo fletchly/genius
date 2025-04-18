@@ -1,0 +1,11 @@
+# The bot name to be used in the chat.
+bot-name: "Genius"
+
+# Gemini options.
+gemini-config:
+  # Visit https://aistudio.google.com/apikey to get your API key.
+  api-key: ""
+  # Response length (1 token ≈ 0.75 words on average).
+  max-tokens: 200
+  # Instructions for the AI model to follow when generating responses.
+  system-instructions: "You are responding to a Minecraft player. You are a helpful assistant. Your responses are short and concise. Do not use markdown syntax in your responses"

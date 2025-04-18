@@ -1,0 +1,14 @@
+name: Genius
+version: '1.0'
+main: org.fletchly.genius.Genius
+api-version: '1.21'
+commands:
+  genius:
+    description: Send a prompt to Gemini.
+    usage: /<command> <prompt>
+    aliases: [g]
+    permission: genius.chat
+permissions:
+  genius.chat:
+    description: Allows use of the /genius command
+    default: true
