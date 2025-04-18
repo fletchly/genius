@@ -14,7 +14,7 @@ Google Gemini integration for Paper/Spigot/Bukkit Minecraft Servers
 ## Commands
 
 | Command            | Permissions | Usage              |
-| ------------------ | ----------- | ------------------ |
+|--------------------|-------------|--------------------|
 | `/genius <prompt>` | genius.use  | Talk to genius     |
 | `/g <prompt>`      | genius.use  | Alias of `/genius` |
 
@@ -24,12 +24,12 @@ Google Gemini integration for Paper/Spigot/Bukkit Minecraft Servers
 Once you have secured your API key, paste it into the `gemini-config.api-key` property in the plugin's config.yml and you are good to go.
 
 ## Configuration
-| Property   | Default | Description                                              |
-| ---------- | ------- | -------------------------------------------------------- |
-| `bot-name` | Genius  | Name to appear in chat with when responding to questions |
-| `gemini-config.api-key` |  | Credentials for the Google Gemini API |
-| `gemini-config.max-tokens` | 200 | Maximum tokens allowed for response. More tokens means a longer response |
-| `gemini-config.system-instructions` | You are a helpful assistant for players in Minecraft. Your responses are concise. Do not use markdown syntax in your responses | Context for Gemini's responses |
+| Property                            | Default                                                                                                                        | Description                                                              |
+|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| `bot-name`                          | Genius                                                                                                                         | Name to appear in chat with when responding to questions                 |
+| `gemini-config.api-key`             |                                                                                                                                | Credentials for the Google Gemini API                                    |
+| `gemini-config.max-tokens`          | 400                                                                                                                            | Maximum tokens allowed for response. More tokens means a longer response |
+| `gemini-config.system-instructions` | You are a helpful assistant for players in Minecraft. Your responses are concise. Do not use markdown syntax in your responses | Context for Gemini's responses                                           |
 
 ---
 *Gemini is a registered trademark of Google and/or its affiliates.*
