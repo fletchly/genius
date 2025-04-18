@@ -5,7 +5,7 @@
 Google Gemini integration for Paper/Spigot/Bukkit Minecraft Servers
 
 ## Downloads
-- [Paper/Spigot/Bukkit]()
+- [Paper/Spigot/Bukkit](https://modrinth.com/plugin/genius)
 
 ## Features
 - Interact with Google's Gemini 2.0 Flash model directly from Minecraft chat
