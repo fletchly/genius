@@ -32,7 +32,7 @@ public final class Genius extends JavaPlugin
             getLogger().warning("API Key not found in config.yml. Please set it up.");
         }
 
-        getLogger().info("Genius is enabled!");
+        getLogger().info("Successfully enabled Genius.");
     }
 
     @Override
