@@ -1,5 +1,5 @@
 name: Genius
-version: '1.0'
+version: '0.2.0'
 main: org.fletchly.genius.Genius
 api-version: '1.21'
 commands:
