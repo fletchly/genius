@@ -95,7 +95,8 @@ public class ApiService
                 .path("parts")
                 .get(0)
                 .path("text")
-                .asText();
+                .asText()
+                .replaceFirst("\\r?\\n$", "");
     }
 }
 
