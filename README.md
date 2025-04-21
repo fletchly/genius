@@ -1,6 +1,6 @@
 # Genius
 [![Latest Release](https://img.shields.io/github/release/fletchly/genius.svg?color=6cd113)](https://github.com/fletchly/genius/releases/latest)
-[![License](https://img.shields.io/github/license/fletchly/genius.svg)](https://github.com/fletchly/genius/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/fletchly/genius.svg?color=2664ff)](https://github.com/fletchly/genius/blob/main/LICENSE)
 
 Google Gemini integration for Paper/Spigot/Bukkit Minecraft Servers
 
