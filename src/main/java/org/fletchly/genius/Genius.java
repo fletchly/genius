@@ -1,5 +1,7 @@
 package org.fletchly.genius;
 
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -60,6 +62,9 @@ public final class Genius extends JavaPlugin
 
             // Join the arguments to form the prompt
             String prompt = String.join(" ", args);
+
+            String cleanedPrompt = prompt.replaceAll("[^\\w\\s.,!?@#\\-]", "").trim();
+
             try {
                 // Get the bot name from the configuration
                 String botName = getConfig().getString("bot-name");
@@ -75,6 +80,8 @@ public final class Genius extends JavaPlugin
                 {
                     sender.sendMessage(message);
                 }
+
+                sender.playSound(Sound.sound(Key.key("minecraft:entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f));
             } catch (Exception e) {
                 // Handle any exceptions that occur during the API call
                 sender.sendMessage("An error occurred");
