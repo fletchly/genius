@@ -1,38 +1,69 @@
 package org.fletchly.genius;
 
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.fletchly.genius.Service.ApiService;
-import org.fletchly.genius.Service.ChatHelper;
-import org.jetbrains.annotations.NotNull;
+import org.fletchly.genius.commands.GeniusCommand;
+import org.fletchly.genius.service.api.ApiService;
+import org.fletchly.genius.service.api.gemini.GeminiApiService;
 
+@SuppressWarnings("UnstableApiUsage")
 public final class Genius extends JavaPlugin
 {
-    // ApiService instance
+    private FileConfiguration config;
     private ApiService api;
 
     @Override
     public void onEnable()
     {
-        // Load the configuration file
         saveDefaultConfig();
-        var config = getConfig();
-        String apiKey = getConfig().getString("gemini-config.api-key");
 
-        // Initialize the ApiService with the API key
-        if (apiKey != null && !apiKey.isBlank())
+        config = getConfig();
+
+        // TODO: Add more robust error handling for blank configs.
+        String modelType = config.getString("api-config.model-type");
+        String apiKey = config.getString("api-config.api-key");
+        String baseUrl = config.getString("api-config.base-url");
+        int maxTokens = Integer.parseInt(config.getString("api-config.max-tokens"));
+        String systemContext = config.getString("api-config.system-context");
+
+
+        // Check for model type in config
+        if (modelType != null && !modelType.isBlank())
         {
-            api = new ApiService(config);
-            getLogger().info("Loaded API Key Successfully and initialized API Service.");
+            // Check for API Key in config
+            if (apiKey != null && !apiKey.isBlank())
+            {
+                // Determine which API Service implementation to use based on config
+                switch (modelType)
+                {
+                    case "gemini": // Use Gemini API service
+                        api = new GeminiApiService(apiKey, baseUrl, maxTokens, systemContext);
+                        getLogger().info("Using Gemini as Genius model");
+                        break;
+                    default: // Unknown model type
+                        getLogger().warning("Unknown model type. Please check your config.yml");
+                        break;
+                }
+                getLogger().info("Loaded API Service successfully");
+            }
+            else
+            {
+                // Notify if API key is not set
+                getLogger().warning("API Key not found. Please specify it in config.yml");
+            }
         }
         else
         {
-            // Log a warning if the API key is not found
-            getLogger().warning("API Key not found in config.yml. Please set it up.");
+            // Notify if Model type is not set
+            getLogger().warning("Model type not found. Please specify it in config.yml");
         }
+
+        // Register commands
+        getLogger().info("Registering commands");
+        registerCommands();
 
         getLogger().info("Successfully enabled Genius.");
     }
@@ -40,54 +71,28 @@ public final class Genius extends JavaPlugin
     @Override
     public void onDisable()
     {
-        getLogger().info("Genius is disabled!");
+        getLogger().info("Genius has shut down.");
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String @NotNull [] args)
+    /**
+     * Register plugin commands
+     */
+    public void registerCommands()
     {
-        if (command.getName().equalsIgnoreCase("genius")) {
-            // Check if the API key is set
-            if (api == null)
-            {
-                sender.sendMessage("API Key is not set. Please check your config.yml.");
-                return true;
-            }
+        // Add command listeners
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            // Add main genius command
+            var geniusCommand = GeniusCommand.getCommand(api, config.getString("bot-name"));
 
-            // Respond with usage if no arguments are provided
-            if (args.length == 0) {
-                sender.sendMessage("Usage: /genius <prompt>");
-                return true;
-            }
+            // Add genius alias
+            var geniusAlias = LiteralArgumentBuilder
+                    .<CommandSourceStack>literal("g")
+                    .redirect(geniusCommand)
+                    .build();
 
-            // Join the arguments to form the prompt
-            String prompt = String.join(" ", args);
-
-            String cleanedPrompt = prompt.replaceAll("[^\\w\\s.,!?@#\\-]", "").trim();
-
-            try {
-                // Get the bot name from the configuration
-                String botName = getConfig().getString("bot-name");
-
-                // Get the response from the API
-                String response = api.getResponse(prompt);
-
-                // Build the response message
-                var messages = ChatHelper.buildBotMessage(botName, response);
-
-                // Send the response message to the command sender
-                for (var message : messages)
-                {
-                    sender.sendMessage(message);
-                }
-
-                sender.playSound(Sound.sound(Key.key("minecraft:entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f));
-            } catch (Exception e) {
-                // Handle any exceptions that occur during the API call
-                sender.sendMessage("An error occurred");
-            }
-            return true;
-        }
-        return false;
+            // Register commands
+            commands.registrar().register(geniusCommand);
+            commands.registrar().register(geniusAlias);
+        });
     }
 }

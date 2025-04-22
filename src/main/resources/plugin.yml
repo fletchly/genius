@@ -1,14 +1,14 @@
 name: Genius
-version: '0.2.2'
+version: '1.0.0-alpha'
 main: org.fletchly.genius.Genius
+description: Generative AI integration for Minecraft servers.
+author: fletchly
 api-version: '1.21'
-commands:
-  genius:
-    description: Send a prompt to Gemini.
-    usage: /<command> <prompt>
-    aliases: [g]
-    permission: genius.chat
+
 permissions:
-  genius.chat:
-    description: Allows use of the /genius command
-    default: true
+  genius.use:
+    description: "Allows the player to use the Genius plugin."
+    default: notop
+  genius.admin:
+    description: "Allows the player to use Genius admin commands."
+    default: op
