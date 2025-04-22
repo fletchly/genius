@@ -1,4 +1,4 @@
-package org.fletchly.genius.Service;
+package org.fletchly.genius.service;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

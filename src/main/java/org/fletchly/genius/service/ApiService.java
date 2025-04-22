@@ -1,4 +1,4 @@
-package org.fletchly.genius.Service;
+package org.fletchly.genius.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
