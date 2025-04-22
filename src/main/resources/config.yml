@@ -1,14 +1,14 @@
-# The bot name to be used in the chat.
+# Name to appear in chat when responding to questions
 bot-name: "Genius"
 
 # Gemini options.
 api-config:
-  # AI model to use.
+  # Language model to use. See https://github.com/fletchly/genius/blob/main/supported-models.md for more info
   model-type: "gemini"
-  # Visit https://aistudio.google.com/apikey to get a free Gemini API key.
+  # Credentials for the language model API
   api-key: ""
-  # The URL for the API endpoint.
-  base-url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+  # Base URL for the language model API endpoint
+  base-url: ""
   # Response length (1 token ≈ 0.75 words on average).
   max-tokens: 400
   # Instructions for the AI model to follow when generating responses.

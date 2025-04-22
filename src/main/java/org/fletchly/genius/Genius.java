@@ -1,5 +1,7 @@
 package org.fletchly.genius;
 
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,33 +30,40 @@ public final class Genius extends JavaPlugin
         String systemContext = config.getString("api-config.system-context");
 
 
+        // Check for model type in config
         if (modelType != null && !modelType.isBlank())
         {
+            // Check for API Key in config
             if (apiKey != null && !apiKey.isBlank())
             {
+                // Determine which API Service implementation to use based on config
                 switch (modelType)
                 {
-                    case "gemini":
+                    case "gemini": // Use Gemini API service
                         api = new GeminiApiService(apiKey, baseUrl, maxTokens, systemContext);
-                        getLogger().info("Loaded API Key Successfully and initialized Gemini API Service.");
+                        getLogger().info("Using Gemini as Genius model");
                         break;
-                    default:
+                    default: // Unknown model type
                         getLogger().warning("Unknown model type. Please check your config.yml");
+                        break;
                 }
+                getLogger().info("Loaded API Service successfully");
             }
             else
             {
+                // Notify if API key is not set
                 getLogger().warning("API Key not found. Please specify it in config.yml");
             }
         }
         else
         {
+            // Notify if Model type is not set
             getLogger().warning("Model type not found. Please specify it in config.yml");
         }
 
-        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(GeniusCommand.constructGeniusCommand(api, config.getString("bot-name")));
-        });
+        // Register commands
+        getLogger().info("Registering commands");
+        registerCommands();
 
         getLogger().info("Successfully enabled Genius.");
     }
@@ -63,5 +72,27 @@ public final class Genius extends JavaPlugin
     public void onDisable()
     {
         getLogger().info("Genius has shut down.");
+    }
+
+    /**
+     * Register plugin commands
+     */
+    public void registerCommands()
+    {
+        // Add command listeners
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            // Add main genius command
+            var geniusCommand = GeniusCommand.getCommand(api, config.getString("bot-name"));
+
+            // Add genius alias
+            var geniusAlias = LiteralArgumentBuilder
+                    .<CommandSourceStack>literal("g")
+                    .redirect(geniusCommand)
+                    .build();
+
+            // Register commands
+            commands.registrar().register(geniusCommand);
+            commands.registrar().register(geniusAlias);
+        });
     }
 }

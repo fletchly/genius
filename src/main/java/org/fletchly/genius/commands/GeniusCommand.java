@@ -25,7 +25,7 @@ public class GeniusCommand
      * @param botName the name of the chatbot to appear in chat
      * @return Command literal
      */
-    public static LiteralCommandNode<CommandSourceStack> constructGeniusCommand(ApiService api, String botName)
+    public static LiteralCommandNode<CommandSourceStack> getCommand(ApiService api, String botName)
     {
         // /genius <prompt>
         return Commands.literal("genius")
