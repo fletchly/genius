@@ -12,11 +12,3 @@ permissions:
   genius.admin:
     description: "Allows the player to use Genius admin commands."
     default: op
-
-commands:
-  genius:
-    description: "Talk to Genius."
-    usage: "/genius <message>"
-    aliases: [g]
-    permission: genius.use
-    permission-message: "You do not have permission to use this command."

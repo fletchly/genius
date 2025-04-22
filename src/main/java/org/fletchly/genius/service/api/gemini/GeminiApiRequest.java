@@ -14,11 +14,11 @@ import java.util.List;
  */
 public class GeminiApiRequest implements ApiRequest
 {
-    @SerializedName("system_instructions")
-    private PartList systemInstructions;
+    @SerializedName("system_instruction")
+    private PartList systemInstruction;
 
     @SerializedName("contents")
-    private PartList contents;
+    private List<PartList> contents;
 
     @SerializedName("generationConfig")
     private GenerationConfig generationConfig;
@@ -32,8 +32,8 @@ public class GeminiApiRequest implements ApiRequest
      */
     public GeminiApiRequest(String systemContext, String prompt, int maxTokens)
     {
-        this.systemInstructions = new PartList(List.of(new Part(systemContext)));
-        this.contents = new PartList(List.of(new Part(prompt)));
+        this.systemInstruction = new PartList(List.of(new Part(systemContext)));
+        this.contents = List.of(new PartList(List.of(new Part(prompt))));
         this.generationConfig = new GenerationConfig(maxTokens);
     }
 

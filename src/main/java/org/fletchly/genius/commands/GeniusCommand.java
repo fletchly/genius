@@ -67,7 +67,17 @@ public class GeniusCommand
                     {
                         // Deserialize response
                         JsonElement root = JsonParser.parseString(body);
-                        var response = root.getAsJsonObject().getAsJsonArray("candidates").get(0).getAsJsonObject().getAsJsonObject("content").getAsJsonArray("parts").get(0).getAsJsonObject().get("text").getAsString().replaceFirst("\\r?\\n$", "");
+                        var response = root
+                                .getAsJsonObject()
+                                .getAsJsonArray("candidates")
+                                .get(0).getAsJsonObject()
+                                .getAsJsonObject("content")
+                                .getAsJsonArray("parts")
+                                .get(0)
+                                .getAsJsonObject()
+                                .get("text")
+                                .getAsString()
+                                .replaceFirst("\\r?\\n$", "");
 
                         // Format response to support multiple lines
                         var responseFormatted = ChatHelper.buildMessage(botName, response);
@@ -86,7 +96,7 @@ public class GeniusCommand
                         // catch an exception and tell the sender
                         ctx.getSource().getSender().sendRichMessage("<red>An error occurred");
                         return null;
-                    });
+                    }).join();
         } catch (InterruptedException e)
         {
             ctx.getSource().getSender().sendRichMessage("<red>An error occurred");
