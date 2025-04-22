@@ -4,7 +4,7 @@ bot-name: "Genius"
 # Gemini options.
 api-config:
   # Language model to use. See https://github.com/fletchly/genius/blob/main/supported-models.md for more info
-  model-type: "gemini"
+  model-type: ""
   # Credentials for the language model API
   api-key: ""
   # Base URL for the language model API endpoint
