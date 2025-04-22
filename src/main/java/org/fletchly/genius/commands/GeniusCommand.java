@@ -62,41 +62,25 @@ public class GeniusCommand
         try
         {
             // Get response from the API
-            api.getResponse(sanitizedPrompt)
-                    .thenAccept(body ->
-                    {
-                        // Deserialize response
-                        JsonElement root = JsonParser.parseString(body);
-                        var response = root
-                                .getAsJsonObject()
-                                .getAsJsonArray("candidates")
-                                .get(0).getAsJsonObject()
-                                .getAsJsonObject("content")
-                                .getAsJsonArray("parts")
-                                .get(0)
-                                .getAsJsonObject()
-                                .get("text")
-                                .getAsString()
-                                .replaceFirst("\\r?\\n$", "");
-
-                        // Format response to support multiple lines
-                        var responseFormatted = ChatHelper.buildMessage(botName, response);
-
-                        // Play a sound for the sender to notify them of a response
-                        ctx.getSource().getSender().playSound(Sound.sound(org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
-
-                        // Send all lines of the response
-                        for (var message : responseFormatted)
-                        {
-                            ctx.getSource().getSender().sendMessage(message);
-                        }
-                    })
+            var response = api.getResponse(sanitizedPrompt)
                     .exceptionally(ex ->
                     {
                         // catch an exception and tell the sender
                         ctx.getSource().getSender().sendRichMessage("<red>An error occurred");
                         return null;
                     }).join();
+
+            // Format response to support multiple lines
+            var responseFormatted = ChatHelper.buildMessage(botName, response);
+
+            // Play a sound for the sender to notify them of a response
+            ctx.getSource().getSender().playSound(Sound.sound(org.bukkit.Sound.ENTITY_EXPERIENCE_ORB_PICKUP, Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
+
+            // Send all lines of the response
+            for (var message : responseFormatted)
+            {
+                ctx.getSource().getSender().sendMessage(message);
+            }
         } catch (InterruptedException e)
         {
             ctx.getSource().getSender().sendRichMessage("<red>An error occurred");

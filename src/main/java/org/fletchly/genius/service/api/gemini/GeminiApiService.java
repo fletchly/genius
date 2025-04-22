@@ -1,8 +1,9 @@
 package org.fletchly.genius.service.api.gemini;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.fletchly.genius.service.api.ApiService;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -59,7 +60,18 @@ public class GeminiApiService implements ApiService
                     {
                         throw new RuntimeException("Gemini API returned status code " + response.statusCode());
                     }
-                    return response.body();
+                    JsonElement root = JsonParser.parseString(response.body());
+                    return root
+                            .getAsJsonObject()
+                            .getAsJsonArray("candidates")
+                            .get(0).getAsJsonObject()
+                            .getAsJsonObject("content")
+                            .getAsJsonArray("parts")
+                            .get(0)
+                            .getAsJsonObject()
+                            .get("text")
+                            .getAsString()
+                            .replaceFirst("\\r?\\n$", "");
                 });
     }
 }
