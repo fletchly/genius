@@ -38,7 +38,7 @@ public class GeminiApiService implements ApiService
     }
 
     @Override
-    public CompletableFuture<String> getResponse(String prompt) throws InterruptedException
+    public CompletableFuture<String> getResponse(String prompt)
     {
         // Create the request URL with the API key
         var urlWithKey = baseUrl + "?key=" + apiKey;
