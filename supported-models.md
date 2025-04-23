@@ -1,10 +1,8 @@
 # Supported Models
 
-Reference the table below to find the name and base URL to specify in config.yml for each supported model
+This plugin is compatible with any language model that follows the OpenAI Completions API specification. This includes all OpenAI models, as well as many third-party models that adopt the same standard. See the table below for a list of models that have been tested and confirmed to work with this plugin.
 
-| Name     | Base URL                                                                                   | Notes                                                                               |
-|----------|--------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `gemini` | `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent` | To get a free API key from Google, click [here](https://aistudio.google.com/apikey) |
+| Name               | Base URL                                                  | Notes                                                                               |
+|--------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------------|
+| `gemini-2.0-flash` | `https://generativelanguage.googleapis.com/v1beta/models/ | To get a free API key from Google, click [here](https://aistudio.google.com/apikey) |
 
----
-*Gemini is a registered trademark of Google and/or its affiliates.*

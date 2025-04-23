@@ -19,7 +19,9 @@ Language model integration for Paper/Spigot/Bukkit Minecraft Servers
 | `/g <prompt>`      | genius.use  | Alias of `/genius` |
 
 ## Setup
-**Important:** You will need to specify a model type, base url, and API key to use this plugin. For a list of supported models, click [here](/supported-models.md)
+**Important:** You will need to specify a language model API before you can start using Genius. This plugin is compatible with any language model that follows the OpenAI Completions API specification. This includes all OpenAI models, as well as many third-party models that adopt the same standard. Click [here](/supported-models.md) for a list of models that have been tested and confirmed to work with this plugin.
+
+If you don't care what model you use, follow the [quick start guide]() to get Genius up and running as fast as possible.
 
 Once you have determined your API details, paste them into the `api-config` property in the plugin's config.yml, and you are good to go!
 

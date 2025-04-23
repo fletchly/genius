@@ -1,7 +1,5 @@
 package org.fletchly.genius.commands;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -9,7 +7,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.sound.Sound;
-import org.fletchly.genius.service.api.ApiService;
+import org.fletchly.genius.Genius;
+import org.fletchly.genius.service.api.openai.OpenAiApiService;
 import org.fletchly.genius.util.ChatHelper;
 
 /**
@@ -25,7 +24,7 @@ public class GeniusCommand
      * @param botName the name of the chatbot to appear in chat
      * @return Command literal
      */
-    public static LiteralCommandNode<CommandSourceStack> getCommand(ApiService api, String botName)
+    public static LiteralCommandNode<CommandSourceStack> getCommand(OpenAiApiService api, String botName)
     {
         // /genius <prompt>
         return Commands.literal("genius")
@@ -44,7 +43,7 @@ public class GeniusCommand
      * @param botName name of chatbot to appear in chat
      * @return integer representing command success
      */
-    private static int executeGeniusCommand(final CommandContext<CommandSourceStack> ctx, ApiService api, String botName)
+    private static int executeGeniusCommand(final CommandContext<CommandSourceStack> ctx, OpenAiApiService api, String botName)
     {
         // Get prompt from arguments
         String prompt = ctx.getArgument("prompt", String.class);
@@ -62,13 +61,7 @@ public class GeniusCommand
         try
         {
             // Get response from the API
-            var response = api.getResponse(sanitizedPrompt)
-                    .exceptionally(ex ->
-                    {
-                        // catch an exception and tell the sender
-                        ctx.getSource().getSender().sendRichMessage("<red>An error occurred");
-                        return null;
-                    }).join();
+            var response = api.getResponse(sanitizedPrompt);
 
             // Format response to support multiple lines
             var responseFormatted = ChatHelper.buildMessage(botName, response);
@@ -81,9 +74,10 @@ public class GeniusCommand
             {
                 ctx.getSource().getSender().sendMessage(message);
             }
-        } catch (InterruptedException e)
+        } catch (Exception e)
         {
-            ctx.getSource().getSender().sendRichMessage("<red>An error occurred");
+
+            ctx.getSource().getSender().sendRichMessage("<red>An error occurred: " + e.getMessage());
         }
 
         return Command.SINGLE_SUCCESS;

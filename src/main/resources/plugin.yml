@@ -1,5 +1,5 @@
 name: Genius
-version: '1.0.0-alpha'
+version: '2.0.0-alpha'
 main: org.fletchly.genius.Genius
 description: Generative AI integration for Minecraft servers.
 author: fletchly
@@ -8,7 +8,7 @@ api-version: '1.21'
 permissions:
   genius.use:
     description: "Allows the player to use the Genius plugin."
-    default: notop
+    default: not op
   genius.admin:
     description: "Allows the player to use Genius admin commands."
     default: op
