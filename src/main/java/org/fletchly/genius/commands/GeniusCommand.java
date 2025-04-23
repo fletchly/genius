@@ -7,9 +7,14 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import org.fletchly.genius.Genius;
 import org.fletchly.genius.service.api.openai.OpenAiApiService;
 import org.fletchly.genius.util.ChatHelper;
+
+import java.util.Arrays;
+
+import static org.bukkit.plugin.java.JavaPlugin.getPlugin;
 
 /**
  * Genius command class
@@ -17,6 +22,8 @@ import org.fletchly.genius.util.ChatHelper;
 @SuppressWarnings("UnstableApiUsage")
 public class GeniusCommand
 {
+    private static final Genius genius = Genius.getInstance();
+
     /**
      * Build Genius command
      *
@@ -76,7 +83,7 @@ public class GeniusCommand
             }
         } catch (Exception e)
         {
-
+            genius.getComponentLogger().error(Component.text("Error making request"), e);
             ctx.getSource().getSender().sendRichMessage("<red>An error occurred: " + e.getMessage());
         }
 

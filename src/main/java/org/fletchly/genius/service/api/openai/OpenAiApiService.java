@@ -40,8 +40,14 @@ public class OpenAiApiService
                         .getFirst()
                 ).join();
 
-        client.close();
-
         return response.replaceFirst("\\r?\\n$", "");
+    }
+
+    /**
+     * Close the HTTP client
+     */
+    public void closeClient()
+    {
+        client.close();
     }
 }

@@ -3,6 +3,7 @@ package org.fletchly.genius;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fletchly.genius.commands.GeniusCommand;
@@ -13,6 +14,9 @@ import java.util.logging.Logger;
 @SuppressWarnings("UnstableApiUsage")
 public final class Genius extends JavaPlugin
 {
+    @Getter
+    private static Genius instance;
+
     private FileConfiguration config;
     private Logger logger;
     private OpenAiApiService api;
@@ -21,6 +25,7 @@ public final class Genius extends JavaPlugin
     @Override
     public void onEnable()
     {
+        instance = this;
         saveDefaultConfig();
 
         // Initialize logger and config
@@ -58,6 +63,9 @@ public final class Genius extends JavaPlugin
     @Override
     public void onDisable()
     {
+        logger.info("Closing HTTP client");
+        api.closeClient();
+
         logger.info("Successfully shut down Genius " + getPluginMeta().getVersion());
     }
 
