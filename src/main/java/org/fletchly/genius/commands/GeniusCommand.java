@@ -7,6 +7,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.sound.Sound;
+import org.fletchly.genius.Genius;
 import org.fletchly.genius.service.api.openai.OpenAiApiService;
 import org.fletchly.genius.util.ChatHelper;
 
@@ -75,6 +76,7 @@ public class GeniusCommand
             }
         } catch (Exception e)
         {
+
             ctx.getSource().getSender().sendRichMessage("<red>An error occurred: " + e.getMessage());
         }
 

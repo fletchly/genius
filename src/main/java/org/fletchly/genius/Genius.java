@@ -23,10 +23,14 @@ public final class Genius extends JavaPlugin
     {
         saveDefaultConfig();
 
+        // Initialize logger and config
         config = getConfig();
         logger = getLogger();
 
+        // Mark config as valid initially
         validConfig = true;
+
+        // Validate config
         String modelType = validateString("api-config.model-type");
         String apiKey = validateString("api-config.api-key");
         String baseUrl = validateString("api-config.base-url");
@@ -35,10 +39,12 @@ public final class Genius extends JavaPlugin
 
         if (validConfig)
         {
+            // Initialize API Service
             api = new OpenAiApiService(apiKey, baseUrl, modelType, systemContext, maxTokens);
-        }
-        else
+            logger.info("Successfully initialized API service for model " + modelType);
+        } else
         {
+            // Warn that API service was not initialized
             logger.warning("Skipping API service initialization due to improper configuration");
         }
 
@@ -61,7 +67,8 @@ public final class Genius extends JavaPlugin
     public void registerCommands()
     {
         // Add command listeners
-        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands ->
+        {
             // Add main genius command
             var geniusCommand = GeniusCommand.getCommand(api, config.getString("bot-name"));
 
@@ -79,6 +86,7 @@ public final class Genius extends JavaPlugin
 
     /**
      * Validate that config string value exists and is not blank
+     *
      * @param path Path in config.yml
      * @return Path value if found, empty string if not
      */
@@ -98,6 +106,7 @@ public final class Genius extends JavaPlugin
 
     /**
      * Validate that config int value exists and is not 0
+     *
      * @param path Path in config.yml
      * @return Path value if found, empty string if not
      */
