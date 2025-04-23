@@ -43,16 +43,16 @@ public final class Genius extends JavaPlugin
         }
 
         // Register commands
-        getLogger().info("Registering commands");
+        logger.info("Registering commands");
         registerCommands();
 
-        getLogger().info("Successfully enabled Genius " + getPluginMeta().getVersion());
+        logger.info("Successfully enabled Genius " + getPluginMeta().getVersion());
     }
 
     @Override
     public void onDisable()
     {
-        getLogger().info("Successfully shut down Genius " + getPluginMeta().getVersion());
+        logger.info("Successfully shut down Genius " + getPluginMeta().getVersion());
     }
 
     /**
@@ -92,7 +92,7 @@ public final class Genius extends JavaPlugin
         }
 
         validConfig = false;
-        getLogger().warning(String.format("Missing or blank config value for %s, please check your config.yml", path));
+        logger.warning(String.format("Missing or blank config value for %s, please check your config.yml", path));
         return "";
     }
 
@@ -111,7 +111,7 @@ public final class Genius extends JavaPlugin
         }
 
         validConfig = false;
-        getLogger().warning(String.format("Missing or blank config value for %s, please check your config.yml", path));
+        logger.warning(String.format("Missing or blank config value for %s, please check your config.yml", path));
         return 0;
     }
 }
