@@ -1,5 +1,5 @@
 name: Genius
-version: '1.0.0'
+version: '2.0.0-alpha'
 main: org.fletchly.genius.Genius
 description: Generative AI integration for Minecraft servers.
 author: fletchly
