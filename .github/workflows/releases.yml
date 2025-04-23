@@ -1,0 +1,42 @@
+name: Build, Test, and Create Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Matches tags starting with "v" (e.g., v1.0, v2.0.1)
+    branches:
+      - main  # Ensures the tag is pushed to the main branch
+
+jobs:
+  build-test-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Java environment
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Step 3: Build and test with Maven
+      - name: Build and Test with Maven
+        run: mvn clean verify
+
+      # Step 4: Create a release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}  # Use the tag associated with the commit
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            Automatically generated release after successful build and tests.
+          draft: false
+          prerelease: false
