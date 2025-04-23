@@ -6,14 +6,17 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fletchly.genius.commands.GeniusCommand;
-import org.fletchly.genius.service.api.ApiService;
-import org.fletchly.genius.service.api.gemini.GeminiApiService;
+import org.fletchly.genius.service.api.openai.OpenAiApiService;
+
+import java.util.logging.Logger;
 
 @SuppressWarnings("UnstableApiUsage")
 public final class Genius extends JavaPlugin
 {
     private FileConfiguration config;
-    private ApiService api;
+    private Logger logger;
+    private OpenAiApiService api;
+    private boolean validConfig;
 
     @Override
     public void onEnable()
@@ -21,57 +24,35 @@ public final class Genius extends JavaPlugin
         saveDefaultConfig();
 
         config = getConfig();
+        logger = getLogger();
 
-        // TODO: Add more robust error handling for blank configs.
-        String modelType = config.getString("api-config.model-type");
-        String apiKey = config.getString("api-config.api-key");
-        String baseUrl = config.getString("api-config.base-url");
-        int maxTokens = Integer.parseInt(config.getString("api-config.max-tokens"));
-        String systemContext = config.getString("api-config.system-context");
+        validConfig = true;
+        String modelType = validateString("api-config.model-type");
+        String apiKey = validateString("api-config.api-key");
+        String baseUrl = validateString("api-config.base-url");
+        int maxTokens = validateInt("api-config.max-tokens");
+        String systemContext = validateString("api-config.system-context");
 
-
-        // Check for model type in config
-        if (modelType != null && !modelType.isBlank())
+        if (validConfig)
         {
-            // Check for API Key in config
-            if (apiKey != null && !apiKey.isBlank())
-            {
-                // Determine which API Service implementation to use based on config
-                switch (modelType)
-                {
-                    case "gemini": // Use Gemini API service
-                        api = new GeminiApiService(apiKey, baseUrl, maxTokens, systemContext);
-                        getLogger().info("Using Gemini as Genius model");
-                        break;
-                    default: // Unknown model type
-                        getLogger().warning("Unknown model type. Please check your config.yml");
-                        break;
-                }
-                getLogger().info("Loaded API Service successfully");
-            }
-            else
-            {
-                // Notify if API key is not set
-                getLogger().warning("API Key not found. Please specify it in config.yml");
-            }
+            api = new OpenAiApiService(apiKey, baseUrl, modelType, systemContext, maxTokens);
         }
         else
         {
-            // Notify if Model type is not set
-            getLogger().warning("Model type not found. Please specify it in config.yml");
+            logger.warning("Skipping API service initialization due to improper configuration");
         }
 
         // Register commands
         getLogger().info("Registering commands");
         registerCommands();
 
-        getLogger().info("Successfully enabled Genius.");
+        getLogger().info("Successfully enabled Genius " + getPluginMeta().getVersion());
     }
 
     @Override
     public void onDisable()
     {
-        getLogger().info("Genius has shut down.");
+        getLogger().info("Successfully shut down Genius " + getPluginMeta().getVersion());
     }
 
     /**
@@ -94,5 +75,43 @@ public final class Genius extends JavaPlugin
             commands.registrar().register(geniusCommand);
             commands.registrar().register(geniusAlias);
         });
+    }
+
+    /**
+     * Validate that config string value exists and is not blank
+     * @param path Path in config.yml
+     * @return Path value if found, empty string if not
+     */
+    private String validateString(String path)
+    {
+        String result = config.getString(path);
+
+        if (result != null && !result.isBlank())
+        {
+            return result;
+        }
+
+        validConfig = false;
+        getLogger().warning(String.format("Missing or blank config value for %s, please check your config.yml", path));
+        return "";
+    }
+
+    /**
+     * Validate that config int value exists and is not 0
+     * @param path Path in config.yml
+     * @return Path value if found, empty string if not
+     */
+    private int validateInt(String path)
+    {
+        int result = config.getInt(path);
+
+        if (result != 0)
+        {
+            return result;
+        }
+
+        validConfig = false;
+        getLogger().warning(String.format("Missing or blank config value for %s, please check your config.yml", path));
+        return 0;
     }
 }
