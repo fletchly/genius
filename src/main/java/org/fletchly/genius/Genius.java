@@ -83,6 +83,7 @@ public final class Genius extends JavaPlugin
             // Add genius alias
             var geniusAlias = LiteralArgumentBuilder
                     .<CommandSourceStack>literal("g")
+                    .requires(sender -> sender.getSender().hasPermission("genius.use"))
                     .redirect(geniusCommand)
                     .build();
 
