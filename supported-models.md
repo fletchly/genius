@@ -4,5 +4,5 @@ This plugin is compatible with any language model that follows the OpenAI Comple
 
 | Name               | Base URL                                                  | Notes                                                                               |
 |--------------------|-----------------------------------------------------------|-------------------------------------------------------------------------------------|
-| `gemini-2.0-flash` | `https://generativelanguage.googleapis.com/v1beta/models/ | To get a free API key from Google, click [here](https://aistudio.google.com/apikey) |
+| `gemini-2.0-flash` | `https://generativelanguage.googleapis.com/v1beta/models/` | To get a free API key from Google, click [here](https://aistudio.google.com/apikey) |
 
