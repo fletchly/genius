@@ -1,5 +1,6 @@
 package org.fletchly.genius.client;
 
+import lombok.Getter;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,11 +33,12 @@ public abstract class AsyncHttpClient {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 if (!response.isSuccessful()) {
-                    responseFuture.completeExceptionally(new IOException("Unexpected code " + response));
+                    response.close();
+                    responseFuture.completeExceptionally(new HttpClientException("Request failed " + response, response.code()));
+                    return;
                 }
-
                 responseFuture.complete(response);
             }
         });
@@ -48,5 +50,15 @@ public abstract class AsyncHttpClient {
         client.dispatcher().executorService().close();
         client.dispatcher().cancelAll();
         client.connectionPool().evictAll();
+    }
+
+    protected static class HttpClientException extends RuntimeException {
+        @Getter
+        private final int statusCode;
+
+        public HttpClientException(String message, int statusCode) {
+            super(message);
+            this.statusCode = statusCode;
+        }
     }
 }

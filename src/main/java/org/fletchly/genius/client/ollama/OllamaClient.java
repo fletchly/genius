@@ -1,8 +1,10 @@
 package org.fletchly.genius.client.ollama;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
+import lombok.Getter;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -27,32 +29,88 @@ public class OllamaClient extends AsyncHttpClient {
         try {
             jsonBody = mapper.writeValueAsBytes(ollamaRequest);
         } catch (JsonProcessingException e) {
-            return CompletableFuture.failedFuture(e);
+            return CompletableFuture.failedFuture(
+                    new OllamaParseException("Failed to serialize request body", e)
+            );
         }
 
         // Create request
         RequestBody requestBody = RequestBody.create(jsonBody, JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Authorization", authorization)
+                .post(requestBody)
+                .build();
 
-        Request request = new Request.Builder().url(url).header("Authorization", authorization).post(requestBody).build();
+        return executeAsync(request)
+                .thenCompose(response -> {
+                    try (response) {
+                        String body = response.body().string();
+                        OllamaResponse ollamaResponse = mapper.readValue(body, OllamaResponse.class);
+                        return CompletableFuture.completedFuture(ollamaResponse);
+                    } catch (JsonProcessingException ex) {
+                        return CompletableFuture.failedFuture(
+                                new OllamaParseException("Failed to deserialize response", ex)
+                        );
+                    } catch (IOException ex) {
+                        return  CompletableFuture.failedFuture(
+                                new OllamaClientException("Couldn't read HTTP response body", ex)
+                        );
+                    }
+                })
+                .exceptionally(ex -> {
+                    // Unwrap CompletionException
+                    Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
 
-        // Execute request
-        return executeAsync(request).thenApply(response -> {
-            try (response) {
-                // Throw exception if request fails
-                if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected HTTP code " + response.code() + ": " + response.body().string());
-                }
-                // Map response to Ollama Response
-                return mapper.readValue(response.body().string(), OllamaResponse.class);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to parse Ollama response", e);
-            }
-        }).exceptionally(throwable -> {
-            throw new RuntimeException("Request to Ollama failed", throwable);
-        });
+                    if (cause instanceof HttpClientException httpEx) {
+                        throw new OllamaHttpException(
+                                "HTTP failure from Ollama API: " + httpEx.getMessage(),
+                                httpEx,
+                                httpEx.getStatusCode()
+                        );
+                    }
+
+                    if (cause instanceof OllamaClientException) {
+                        throw (OllamaClientException) cause;
+                    }
+
+                    if (cause instanceof IOException ioEx) {
+                        throw new OllamaNetworkException("Network error communicating with Ollama", ioEx);
+                    }
+
+                    throw new OllamaClientException("Unexpected error in Ollama client", cause);
+                });
     }
 
     public void closeClient() {
         super.closeClient();
+    }
+
+    public static class OllamaClientException extends RuntimeException {
+        public OllamaClientException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
+    public static class OllamaNetworkException extends OllamaClientException {
+        public OllamaNetworkException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
+    public static class OllamaHttpException extends OllamaClientException {
+        @Getter
+        private final int statusCode;
+
+        public OllamaHttpException(String message, Throwable cause, int statusCode) {
+            super(message, cause);
+            this.statusCode = statusCode;
+        }
+    }
+
+    public static class OllamaParseException extends OllamaClientException {
+        public OllamaParseException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }
