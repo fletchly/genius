@@ -11,6 +11,9 @@ import okhttp3.RequestBody;
 import org.fletchly.genius.client.AsyncHttpClient;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
@@ -23,7 +26,14 @@ public class OllamaClient extends AsyncHttpClient {
     private String apiKey;
 
     public CompletableFuture<OllamaResponse> generateChat(OllamaRequest ollamaRequest) {
-        String url = baseUrl + "/api/chat";
+        URL url;
+        try {
+             url = URI.create(baseUrl).resolve("/api/chat").toURL();
+        } catch (MalformedURLException ex) {
+            return CompletableFuture.failedFuture(new OllamaParseException("Invalid URL provided", ex));
+        }
+
+
         String authorization = "Bearer " + Objects.requireNonNullElse(apiKey, "NONE");
 
         byte[] jsonBody;
