@@ -10,7 +10,7 @@ name: Java CI with Gradle
 on:
   push:
     tags:
-      - '*'  # Triggers on any tag push. Use 'v*' for version tags only (e.g., v1.0.0)
+      - '*v'
 
 jobs:
   build:
@@ -51,6 +51,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # IMPORTANT: need full commit history
     
     - name: Download build artifacts
       uses: actions/download-artifact@v4
@@ -58,12 +60,38 @@ jobs:
         name: build-artifacts
         path: artifacts
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install conventional-changelog-cli
+      run: npm install -g conventional-changelog-cli
+
+    - name: Generate CHANGELOG.md
+      run: |
+        conventional-changelog -p angular -i CHANGELOG.md -s
+
+    - name: Detect prerelease
+      id: prerelease
+      run: |
+        TAG="${GITHUB_REF#refs/tags/}"
+
+        echo "Tag: $TAG"
+
+        # If tag contains a hyphen like 1.0.0-alpha.1 or v1.2.3-beta → prerelease
+        if [[ "$TAG" == *-* ]]; then
+          echo "is_prerelease=true" >> $GITHUB_OUTPUT
+        else
+          echo "is_prerelease=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
         files: artifacts/**/*
-        generate_release_notes: true
+        body_path: CHANGELOG.md
         draft: false
-        prerelease: false
+        prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
