@@ -32,7 +32,7 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
  */
 public class GeniusCommand {
     // Name to appear in chat when sending responses
-    private static final ComponentBuilder<TextComponent, TextComponent.Builder> chatName = text()
+    private static final Component chatName = text()
             .content("[")
             .append(text(Objects.requireNonNullElse(
                     Genius
@@ -41,7 +41,8 @@ public class GeniusCommand {
                             .getString("genius.agentName"),
                             "?"),
                     GREEN))
-            .append(text("] "));
+            .append(text("] "))
+            .build();
 
     // Command structure
     @Getter
@@ -73,8 +74,7 @@ public class GeniusCommand {
         // Check that ollama service was initialized correctly
         if (instance.getOllamaService() == null) {
             final Component chatResponse = chatName
-                    .append(text("Genius is not set up correctly", RED))
-                    .build();
+                    .append(text("Genius is not set up correctly", RED));
             sender.sendMessage(chatResponse);
             sender.playSound(Sound.sound(BLOCK_GLASS_BREAK, MASTER, 1f, 1f), self());
             Genius.getInstance().getLogger().warning("Genius service is not initialized. Check your configuration");
@@ -111,20 +111,20 @@ public class GeniusCommand {
                     // Log error and inform user of failure
                     scheduler.runTask(instance, () -> {
                         final Component chatResponse = chatName
-                                .append(text(userMessage, RED))
-                                .build();
+                                .append(text(userMessage, RED));
                         sender.sendMessage(chatResponse);
                         sender.playSound(Sound.sound(BLOCK_GLASS_BREAK, MASTER, 1f, 1f), self());
                         Genius.getInstance().getLogger().warning("Genius ran into a problem: " + Arrays.toString(exception.getStackTrace()));
                     });
 
-                    return "I'M DEAD X_x"; // never used
+                    return null; // never used
                 })
                 // Display response in chat
                 .thenAccept(response -> scheduler.runTask(instance, () -> {
+                    if (response == null) return;
+
                     final Component chatResponse = chatName
-                            .append(text(response))
-                            .build();
+                            .append(text(response));
                     sender.sendMessage(chatResponse);
                     sender.playSound(Sound.sound(ENTITY_EXPERIENCE_ORB_PICKUP, MASTER, 1f, 1f), self());
                 }))
