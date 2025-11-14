@@ -65,7 +65,6 @@ public final class Genius extends JavaPlugin {
                 "genius.agentName", ConfigUtil.ConfigType.STRING,
                 "genius.systemPrompt", ConfigUtil.ConfigType.STRING,
                 "ollama.baseUrl", ConfigUtil.ConfigType.STRING,
-                "ollama.apiKey", ConfigUtil.ConfigType.STRING,
                 "ollama.model", ConfigUtil.ConfigType.STRING,
                 "ollama.temperature", ConfigUtil.ConfigType.DECIMAL,
                 "ollama.topK", ConfigUtil.ConfigType.INTEGER,
