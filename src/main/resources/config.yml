@@ -1,9 +1,15 @@
+# *****************************************
+# *         Genius Configuration          *
+# *****************************************
+# For reference, see https://github.com/fletchly/genius/wiki/Configuration
+
+# Properties for the agent's appearance and behavior
 genius:
-  # Name of agent to appear in chat
+  # The name for the Genius agent to use in chat when responding to messages
   agentName: Genius
-  # System prompt for agent
-  # Provides instructions on what kind of response
-  # to give, and how to format it
+
+  # Instructions that sets Genius’s role, behavior, and boundaries before any user input is processed.
+  # It guides how the model interprets and responds to all subsequent messages.
   systemPrompt: |
     You are a helpful assistant for Minecraft players. Your purpose is to provide accurate, practical information about Minecraft gameplay,
     mechanics, crafting, building, survival strategies, and game features. Keep your responses concise and to-the-point. Answer questions 
@@ -11,20 +17,35 @@ genius:
     in your responses - no markdown formatting, no bold text, no bullet points, no headers, no special syntax. Write everything in simple sentences 
     and paragraphs. If you don't know something specific or if game mechanics have changed in recent updates, say so honestly. Minecraft updates 
     frequently, so acknowledge when information has a high likelihood of being version-dependent.
-# Ollama Client configuration
+
+# Ollama client configuration
 ollama:
-  # The base URL for Ollama's API
-  # For cloud models use https://ollama.com
-  baseUrl: https://ollama.com
-  # Ollama API key
-  # Only needed if using cloud models
-  # See https://docs.ollama.com/cloud for instructions
-  # on getting an API key
+
+  # The base URL for the Ollama API. If using a cloud model, this should be set to https://ollama.com/.
+  # Defaults to the Ollama API's default listening location. For more info, see https://github.com/fletchly/genius/wiki/hosting
+  baseUrl: http://localhost:11434/
+
+  # Your key for the Ollama cloud API. This only needs to be set if you are using an Ollama cloud model.
+  # For more info, see https://github.com/fletchly/genius/wiki/hosting
   apiKey:
-  # Model for Ollama to use
+
+  # The name of the model to use for response generation.
+  # If you are using Ollama cloud, the model must be an ollama cloud model
   model: deepseek-v3.1:671b
-  # Change these variables to tweak responses
+
+  # Controls how random or deterministic Genius's output is.
+  # Lower values make responses more predictable and precise,
+  # while higher values make them more creative and varied.
   temperature: 0.5
+
+  # Top-K sampling limits the model’s next-token choices to the K most likely options, filtering out all others.
+  # This reduces randomness while still allowing some creativity compared to always picking the single most probable token.
   topK: 40
+
+  # Top-P controls how many likely tokens the model considers when generating text.
+  # Lower values make output more focused and predictable, while higher values allow more randomness and creativity.
   topP: 0.85
+
+  # The number of predictions (max output tokens) controls how much text the model is allowed to generate.
+  # A lower limit keeps responses short and concise, while a higher limit allows longer, more detailed answers.
   numPredict: 400
