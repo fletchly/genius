@@ -51,8 +51,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # IMPORTANT: need full commit history
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -78,8 +76,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: artifacts/**/*
-          body_path: CHANGELOG.md
           draft: false
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
