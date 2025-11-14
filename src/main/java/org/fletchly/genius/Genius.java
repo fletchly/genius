@@ -100,7 +100,7 @@ public final class Genius extends JavaPlugin {
         pluginLogger.info("Registering commands");
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             commands.registrar().register(
-                    GeniusCommand.get().build(),
+                    GeniusCommand.getCommand(),
                     "Ask genius a question",
                     List.of("g", "ask")
             );

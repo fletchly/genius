@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import lombok.Getter;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
@@ -43,6 +44,7 @@ public class GeniusCommand {
             .append(text("] "));
 
     // Command structure
+    @Getter
     private static final LiteralCommandNode<CommandSourceStack> command = Commands.literal("genius")
             .requires(sender ->
                     sender.getSender().hasPermission("genius"))
