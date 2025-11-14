@@ -10,6 +10,7 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.fletchly.genius.Genius;
 import org.fletchly.genius.client.ollama.OllamaClient;
@@ -22,8 +23,7 @@ import static io.papermc.paper.registry.keys.SoundEventKeys.ENTITY_EXPERIENCE_OR
 import static net.kyori.adventure.sound.Sound.Emitter.self;
 import static net.kyori.adventure.sound.Sound.Source.MASTER;
 import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.format.NamedTextColor.GREEN;
-import static net.kyori.adventure.text.format.NamedTextColor.RED;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class GeniusCommand {
     private static final ComponentBuilder<TextComponent, TextComponent.Builder> ChatName = text()
@@ -45,16 +45,21 @@ public class GeniusCommand {
     }
 
     private static int execute(CommandContext<CommandSourceStack> ctx) {
-        String prompt = ctx.getArgument("prompt", String.class);
         final Genius instance = Genius.getInstance();
         final BukkitScheduler scheduler = instance.getServer().getScheduler();
+        final CommandSender sender = ctx.getSource().getSender();
+        String prompt = ctx.getArgument("prompt", String.class);
+
+        final Component chatPrompt =
+                text(String.format("[%s] %s", sender.getName(), prompt), GRAY);
+        sender.sendMessage(chatPrompt);
 
         if (instance.getOllamaService() == null) {
             final Component chatResponse = ChatName
                     .append(text("Genius is not set up correctly", RED))
                     .build();
-            ctx.getSource().getSender().sendMessage(chatResponse);
-            ctx.getSource().getSender().playSound(Sound.sound(BLOCK_GLASS_BREAK, MASTER, 1f, 1f), self());
+            sender.sendMessage(chatResponse);
+            sender.playSound(Sound.sound(BLOCK_GLASS_BREAK, MASTER, 1f, 1f), self());
             Genius.getInstance().getLogger().warning("Genius service is not initialized. Check your configuration");
         }
 
@@ -87,8 +92,8 @@ public class GeniusCommand {
                         final Component chatResponse = ChatName
                                 .append(text(userMessage, RED))
                                 .build();
-                        ctx.getSource().getSender().sendMessage(chatResponse);
-                        ctx.getSource().getSender().playSound(Sound.sound(BLOCK_GLASS_BREAK, MASTER, 1f, 1f), self());
+                        sender.sendMessage(chatResponse);
+                        sender.playSound(Sound.sound(BLOCK_GLASS_BREAK, MASTER, 1f, 1f), self());
                         Genius.getInstance().getLogger().warning("Genius ran into a problem: " + Arrays.toString(exception.getStackTrace()));
                     });
 
@@ -98,8 +103,8 @@ public class GeniusCommand {
                     final Component chatResponse = ChatName
                             .append(text(response))
                             .build();
-                    ctx.getSource().getSender().sendMessage(chatResponse);
-                    ctx.getSource().getSender().playSound(Sound.sound(ENTITY_EXPERIENCE_ORB_PICKUP, MASTER, 1f, 1f), self());
+                    sender.sendMessage(chatResponse);
+                    sender.playSound(Sound.sound(ENTITY_EXPERIENCE_ORB_PICKUP, MASTER, 1f, 1f), self());
                 })));
         return Command.SINGLE_SUCCESS;
     }
