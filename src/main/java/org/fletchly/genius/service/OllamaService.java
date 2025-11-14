@@ -5,6 +5,8 @@ import org.fletchly.genius.client.ollama.OllamaMessage;
 import org.fletchly.genius.client.ollama.OllamaOptions;
 import org.fletchly.genius.client.ollama.OllamaRequest;
 
+import java.util.concurrent.CompletableFuture;
+
 
 public class OllamaService {
     private final OllamaClient client;
@@ -34,7 +36,7 @@ public class OllamaService {
         return new OllamaServiceBuilder();
     }
 
-    public String generateChat(String prompt) {
+    public CompletableFuture<String> generateChat(String prompt) {
         OllamaMessage userPrompt = OllamaMessage.builder()
                 .role("user")
                 .content(prompt)
@@ -47,9 +49,7 @@ public class OllamaService {
                 .options(options)
                 .build();
 
-        var response = client.generateChat(chatRequest).join();
-
-        return response.getMessage().getContent();
+        return client.generateChat(chatRequest).thenApply(ollamaResponse -> ollamaResponse.getMessage().getContent());
     }
 
     public void close() {

@@ -19,22 +19,10 @@ public class OllamaClient extends AsyncHttpClient {
     private String baseUrl;
     private String apiKey;
 
-    /**
-     * Generates a chat response by making an asynchronous HTTP request to the Ollama API
-     * based on the provided {@link OllamaRequest}.
-     *
-     * @param ollamaRequest the Ollama request object containing the necessary data for the API call,
-     *                      including the model, messages, options, and settings for think or stream modes.
-     *                      Must not be null.
-     * @return a CompletableFuture that will be completed with the resulting {@link OllamaResponse}
-     * or exceptionally completed with an error if the request fails or the response cannot be parsed.
-     */
     public CompletableFuture<OllamaResponse> generateChat(OllamaRequest ollamaRequest) {
-        // Initialize base URL and Authorization header values
         String url = baseUrl + "/api/chat";
         String authorization = "Bearer " + apiKey;
 
-        // Attempt to serialize request to JSON
         byte[] jsonBody;
         try {
             jsonBody = mapper.writeValueAsBytes(ollamaRequest);
