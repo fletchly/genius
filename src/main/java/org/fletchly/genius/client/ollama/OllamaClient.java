@@ -11,6 +11,7 @@ import okhttp3.RequestBody;
 import org.fletchly.genius.client.AsyncHttpClient;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Builder
@@ -23,7 +24,7 @@ public class OllamaClient extends AsyncHttpClient {
 
     public CompletableFuture<OllamaResponse> generateChat(OllamaRequest ollamaRequest) {
         String url = baseUrl + "/api/chat";
-        String authorization = "Bearer " + apiKey;
+        String authorization = "Bearer " + Objects.requireNonNullElse(apiKey, "NONE");
 
         byte[] jsonBody;
         try {
