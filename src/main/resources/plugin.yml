@@ -4,3 +4,8 @@ main: org.fletchly.genius.Genius
 api-version: '1.21'
 prefix: Genius
 authors: [ fletchly ]
+
+permissions:
+  genius.use:
+    description: "Ask Genius a question"
+    default: true
