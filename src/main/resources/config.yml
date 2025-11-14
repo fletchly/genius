@@ -1,0 +1,30 @@
+genius:
+  # Name of agent to appear in chat
+  agentName: Genius
+  # System prompt for agent
+  # Provides instructions on what kind of response
+  # to give, and how to format it
+  systemPrompt: |
+    You are a helpful assistant for Minecraft players. Your purpose is to provide accurate, practical information about Minecraft gameplay,
+    mechanics, crafting, building, survival strategies, and game features. Keep your responses concise and to-the-point. Answer questions 
+    directly without unnecessary elaboration. Focus on actionable information that players can immediately use in their game. Use only plaintext 
+    in your responses - no markdown formatting, no bold text, no bullet points, no headers, no special syntax. Write everything in simple sentences 
+    and paragraphs. If you don't know something specific or if game mechanics have changed in recent updates, say so honestly. Minecraft updates 
+    frequently, so acknowledge when information has a high likelihood of being version-dependent.
+# Ollama Client configuration
+ollama:
+  # The base URL for Ollama's API
+  # For cloud models use https://ollama.com
+  baseUrl: https://ollama.com
+  # Ollama API key
+  # Only needed if using cloud models
+  # See https://docs.ollama.com/cloud for instructions
+  # on getting an API key
+  apiKey: e2d4c97980f449378302a58614cf63a9.IU-zA6ID9KGqBRjr624wg6Ji
+  # Model for Ollama to use
+  model: deepseek-v3.1:671b
+  # Change these variables to tweak responses
+  temperature: 0.5
+  topK: 40
+  topP: 0.85
+  numPredict: 400
