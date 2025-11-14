@@ -20,7 +20,7 @@ ollama:
   # Only needed if using cloud models
   # See https://docs.ollama.com/cloud for instructions
   # on getting an API key
-  apiKey: e2d4c97980f449378302a58614cf63a9.IU-zA6ID9KGqBRjr624wg6Ji
+  apiKey:
   # Model for Ollama to use
   model: deepseek-v3.1:671b
   # Change these variables to tweak responses

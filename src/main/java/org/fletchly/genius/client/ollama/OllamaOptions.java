@@ -6,7 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder @Getter @Setter @AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
 public class OllamaOptions {
     private double temperature;
     @JsonProperty("top_k")

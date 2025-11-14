@@ -20,7 +20,7 @@ public abstract class AsyncHttpClient {
      *
      * @param request the HTTP request to be executed asynchronously, must not be null.
      * @return a CompletableFuture that will be completed with the HTTP response
-     *         or exceptionally completed with an error if the request fails.
+     * or exceptionally completed with an error if the request fails.
      */
     protected CompletableFuture<Response> executeAsync(@NotNull Request request) {
         CompletableFuture<Response> responseFuture = new CompletableFuture<>();

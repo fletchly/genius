@@ -30,6 +30,10 @@ public class OllamaService {
                 .build();
     }
 
+    public static OllamaServiceBuilder builder() {
+        return new OllamaServiceBuilder();
+    }
+
     public String generateChat(String prompt) {
         OllamaMessage userPrompt = OllamaMessage.builder()
                 .role("user")
@@ -50,10 +54,6 @@ public class OllamaService {
 
     public void close() {
         client.closeClient();
-    }
-
-    public static OllamaServiceBuilder builder() {
-        return new OllamaServiceBuilder();
     }
 
     public static class OllamaServiceBuilder {

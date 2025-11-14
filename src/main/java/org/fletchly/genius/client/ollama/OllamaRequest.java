@@ -4,7 +4,10 @@ import lombok.*;
 
 import java.util.List;
 
-@Builder @Getter @Setter @AllArgsConstructor
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
 public class OllamaRequest {
     String model;
     @Singular

@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.fletchly.genius.command.GeniusCommand;
 import org.fletchly.genius.service.OllamaService;
 import org.fletchly.genius.util.ConfigUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,13 @@ public final class Genius extends JavaPlugin {
     @Getter
     private FileConfiguration configuration;
 
+    public static Genius getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("Can't get instance. Plugin not enabled yet!");
+        }
+        return instance;
+    }
+
     @Override
     public void onEnable() {
         instance = this;
@@ -34,7 +40,8 @@ public final class Genius extends JavaPlugin {
 
         // Initialize and validate configuration
         boolean validConfig = initializeConfig();
-        if (!validConfig) pluginLogger.warning("Invalid configuration. Skipping Ollama service initialization. Genius will be unavailable until configuration errors are resolved");
+        if (!validConfig)
+            pluginLogger.warning("Invalid configuration. Skipping Ollama service initialization. Genius will be unavailable until configuration errors are resolved");
         ollamaService = validConfig ? initializeOllamaService() : null;
         registerCommands();
 
@@ -48,13 +55,6 @@ public final class Genius extends JavaPlugin {
         configuration = null;
         pluginLogger = null;
         instance = null;
-    }
-
-    public static Genius getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("Can't get instance. Plugin not enabled yet!");
-        }
-        return instance;
     }
 
     private boolean initializeConfig() {

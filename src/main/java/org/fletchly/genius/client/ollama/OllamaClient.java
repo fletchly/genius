@@ -3,12 +3,10 @@ package org.fletchly.genius.client.ollama;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;
-import lombok.Getter;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.fletchly.genius.client.AsyncHttpClient;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -22,12 +20,14 @@ public class OllamaClient extends AsyncHttpClient {
     private String apiKey;
 
     /**
-     * Sends a chat request to the Ollama API and processes the response asynchronously.
+     * Generates a chat response by making an asynchronous HTTP request to the Ollama API
+     * based on the provided {@link OllamaRequest}.
      *
-     * @param ollamaRequest the request object containing the model, messages, and options
-     *                      to be sent to the Ollama API; must not be null.
-     * @return a CompletableFuture containing the parsed response as an {@code OllamaResponse} object
-     *         or an exception if the request or response processing fails.
+     * @param ollamaRequest the Ollama request object containing the necessary data for the API call,
+     *                      including the model, messages, options, and settings for think or stream modes.
+     *                      Must not be null.
+     * @return a CompletableFuture that will be completed with the resulting {@link OllamaResponse}
+     * or exceptionally completed with an error if the request fails or the response cannot be parsed.
      */
     public CompletableFuture<OllamaResponse> generateChat(OllamaRequest ollamaRequest) {
         // Initialize base URL and Authorization header values
