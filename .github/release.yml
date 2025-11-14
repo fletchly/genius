@@ -1,0 +1,17 @@
+changelog:
+  categories:
+    - title: "Features"
+      labels:
+        - "feat"
+    - title: "Bug fixes"
+      labels:
+        - "fix"
+    - title: "Breaking changes"
+      labels:
+        - "breaking"
+    - title: "Documentation"
+      labels:
+        - "doc"
+    - title: "Other changes"
+      labels:
+        - "*"
