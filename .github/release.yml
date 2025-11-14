@@ -3,15 +3,18 @@ changelog:
     - title: "Features"
       labels:
         - "feat"
+        - "enhancement"
     - title: "Bug fixes"
       labels:
         - "fix"
+        - "bug"
     - title: "Breaking changes"
       labels:
         - "breaking"
     - title: "Documentation"
       labels:
         - "doc"
+        - "documentation"
     - title: "Other changes"
       labels:
         - "*"
