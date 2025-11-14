@@ -1,5 +1,5 @@
 name: Genius
-version: '0.0.2-alpha.2'
+version: '0.0.3-beta.3'
 main: org.fletchly.genius.Genius
 api-version: '1.21'
 prefix: Genius
