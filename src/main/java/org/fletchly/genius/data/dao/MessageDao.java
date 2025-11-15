@@ -8,5 +8,5 @@ import java.util.concurrent.CompletableFuture;
 public interface MessageDao {
     CompletableFuture<List<Message>> getMessagesForConversation(int conversationId);
     CompletableFuture<Void> addMessage(int conversationId, String role, String content);
-    CompletableFuture<Void> deleteOldMessages(int conversationId, int keepLastN);
+    CompletableFuture<Void> deleteMessages(int conversationId);
 }

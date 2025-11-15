@@ -1,14 +1,10 @@
 package org.fletchly.genius.data.model;
 
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
+/**
+ * @param role "user" | "assistant" | "tool"
+ */
 @Builder
-public class Message {
-    private int id;
-    private int conversationId;
-    private String role; // "user" | "assistant" | "tool"
-    private String content;
-    private long timestamp;
+public record Message(int id, int conversationId, String role, String content, long timestamp) {
 }
