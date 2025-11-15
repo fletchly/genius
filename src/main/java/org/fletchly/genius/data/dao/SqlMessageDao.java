@@ -6,7 +6,6 @@ import org.fletchly.genius.data.model.Message;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -25,7 +24,7 @@ public class SqlMessageDao implements MessageDao {
     public CompletableFuture<List<Message>> getMessagesForConversation(int conversationId) {
         return CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement ps = db.getConnection().prepareStatement(
-                    "SELECT id, role, content, `timestamp` FROM context.messages WHERE conversation_id = ?;"
+                    "SELECT id, role, content, `timestamp` FROM context.messages WHERE conversation_id = ? ORDER BY `timestamp`;"
             )) {
                 ps.setInt(1, conversationId);
                 ResultSet rs = ps.executeQuery();
