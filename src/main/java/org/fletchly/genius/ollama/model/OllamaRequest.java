@@ -1,4 +1,4 @@
-package org.fletchly.genius.ollama.models;
+package org.fletchly.genius.ollama.model;
 
 import lombok.*;
 

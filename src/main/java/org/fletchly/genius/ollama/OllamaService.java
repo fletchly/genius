@@ -1,8 +1,8 @@
 package org.fletchly.genius.ollama;
 
-import org.fletchly.genius.ollama.models.OllamaMessage;
-import org.fletchly.genius.ollama.models.OllamaOptions;
-import org.fletchly.genius.ollama.models.OllamaRequest;
+import org.fletchly.genius.ollama.model.OllamaMessage;
+import org.fletchly.genius.ollama.model.OllamaOptions;
+import org.fletchly.genius.ollama.model.OllamaRequest;
 
 import java.util.concurrent.CompletableFuture;
 

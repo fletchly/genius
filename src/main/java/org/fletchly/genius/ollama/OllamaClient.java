@@ -8,8 +8,8 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.fletchly.genius.util.AsyncHttpClient;
-import org.fletchly.genius.ollama.models.OllamaRequest;
-import org.fletchly.genius.ollama.models.OllamaResponse;
+import org.fletchly.genius.ollama.model.OllamaRequest;
+import org.fletchly.genius.ollama.model.OllamaResponse;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
