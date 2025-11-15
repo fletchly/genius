@@ -5,16 +5,26 @@ import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fletchly.genius.command.GeniusCommand;
+import org.fletchly.genius.data.Database;
 import org.fletchly.genius.ollama.OllamaService;
 import org.fletchly.genius.util.ConfigUtil;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public final class Genius extends JavaPlugin {
     private static Genius instance;
+
+
+    @Getter
+    private Database db;
+
+    @Getter
+    private ExecutorService dbExecutor;
 
     @Getter
     private OllamaService ollamaService;

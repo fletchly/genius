@@ -12,12 +12,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 public class ConversationService {
-    private final DatabaseManager db;
+    private final Database db;
     private final ExecutorService executor;
     private final MessageDao messageDao;
     private final ConversationDao conversationDao;
 
-    public ConversationService(DatabaseManager db, ExecutorService executor) {
+    public ConversationService(Database db, ExecutorService executor) {
         this.db = db;
         this.executor = executor;
 

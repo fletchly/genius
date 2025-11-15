@@ -15,15 +15,15 @@ import java.sql.Statement;
 /**
  * Database manager for interacting with SQLite DB
  */
-public class DatabaseManager {
+public class Database {
     @Getter
     private final Connection connection;
 
     private final Genius genius;
 
-    public DatabaseManager(File file) throws SQLException, IOException {
+    public Database(File file, Genius genius) throws SQLException, IOException {
         // Get current plugin instance
-        genius = Genius.getInstance();
+        this.genius = genius;
 
         try {
             Class.forName("org.sqlite.JDBC");

@@ -1,6 +1,6 @@
 package org.fletchly.genius.data.dao;
 
-import org.fletchly.genius.data.DatabaseManager;
+import org.fletchly.genius.data.Database;
 import org.fletchly.genius.data.model.Message;
 
 import java.sql.PreparedStatement;
@@ -12,10 +12,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 public class SqlMessageDao implements MessageDao {
-    private final DatabaseManager db;
+    private final Database db;
     private final ExecutorService executor;
 
-    public SqlMessageDao(DatabaseManager db, ExecutorService executor) {
+    public SqlMessageDao(Database db, ExecutorService executor) {
         this.db = db;
         this.executor = executor;
     }
