@@ -1,4 +1,4 @@
-package org.fletchly.genius.data.models;
+package org.fletchly.genius.data.model;
 
 import lombok.Builder;
 import lombok.Getter;
