@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fletchly.genius.command.GeniusCommand;
-import org.fletchly.genius.service.OllamaService;
+import org.fletchly.genius.ollama.OllamaService;
 import org.fletchly.genius.util.ConfigUtil;
 
 import java.util.List;

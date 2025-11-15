@@ -1,4 +1,4 @@
-package org.fletchly.genius.client;
+package org.fletchly.genius.util;
 
 import lombok.Getter;
 import okhttp3.*;

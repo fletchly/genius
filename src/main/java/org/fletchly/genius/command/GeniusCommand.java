@@ -2,7 +2,6 @@ package org.fletchly.genius.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -10,12 +9,10 @@ import io.papermc.paper.command.brigadier.Commands;
 import lombok.Getter;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.fletchly.genius.Genius;
-import org.fletchly.genius.client.ollama.OllamaClient;
+import org.fletchly.genius.ollama.OllamaClient;
 
 import java.util.Arrays;
 import java.util.Objects;
