@@ -1,6 +1,7 @@
 package org.fletchly.genius.ollama;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Value;
 import org.fletchly.genius.common.Message;
 import org.fletchly.genius.ollama.client.OllamaClient;
@@ -23,9 +24,16 @@ import java.util.concurrent.CompletableFuture;
 public class OllamaService {
     private static final boolean DISABLE = false;
 
+    @Getter
     OllamaClient client;
+
+    @Getter
     OllamaMessage systemPromptMessage;
+
+    @Getter
     OllamaOptions options;
+
+    @Getter
     String model;
 
     public CompletableFuture<Message> generateChat(Message... messages) {
