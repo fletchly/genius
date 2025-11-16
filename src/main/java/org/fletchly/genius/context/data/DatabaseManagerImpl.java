@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fletchly.genius.util.ConfigurationManager;
+import org.intellij.lang.annotations.Language;
 
 import javax.inject.Inject;
 import java.nio.file.Path;
@@ -49,33 +50,38 @@ public class DatabaseManagerImpl implements DatabaseManager {
     }
 
     private void setUpTables() throws SQLException {
+        @Language("SQLite")
         String initScript = """
-                PRAGMA foreign_keys = ON;
-                CREATE TABLE IF NOT EXISTS conversations
+                pragma foreign_keys = true;
+                create table if not exists conversations
                 (
-                    id          INTEGER PRIMARY KEY AUTO_INCREMENT,
-                    player_uuid TEXT    NOT NULL,
-                    created_at  INTEGER NOT NULL,
-                    updated_at  INTEGER NOT NULL
+                    id          INTEGER primary key autoincrement,
+                    player_uuid TEXT    not null unique,
+                    created_at  INTEGER not null,
+                    updated_at  INTEGER not null
                 );
-                CREATE TABLE IF NOT EXISTS messages
+                create table if not exists messages
                 (
-                    id              INTEGER PRIMARY KEY AUTO_INCREMENT,
-                    conversation_id INTEGER NOT NULL,
-                    role            TEXT    NOT NULL,
-                    content         TEXT    NOT NULL,
-                    created_at      INTEGER NOT NULL,
-                    FOREIGN KEY (conversation_id) REFERENCES conversations (id) ON DELETE CASCADE
+                    id              INTEGER primary key autoincrement,
+                    conversation_id INTEGER not null
+                        references conversations
+                            on delete cascade,
+                    role            TEXT    not null,
+                    content         TEXT    not null,
+                    created_at      INTEGER not null
                 );
-                CREATE INDEX idx_conversations_player_uuid ON conversations (player_uuid);
-                CREATE INDEX idx_messages_conversation_id ON messages (conversation_id);
-                CREATE INDEX idx_messages_timestamp ON messages (created_at);
+                create index if not exists idx_messages_conversation_id on messages (conversation_id);
+                create index if not exists idx_messages_timestamp on messages (created_at);
                 """;
 
         try (Connection c = ds.getConnection()) {
             for (String sql : initScript.split(";")) {
+                String trimmed = sql.trim();
+                if (trimmed.isEmpty()) {
+                    continue; // ← Skip empty statements
+                }
                 try (Statement s = c.createStatement()) {
-                    s.execute(sql.trim());
+                    s.execute(trimmed);
                 }
             }
         }

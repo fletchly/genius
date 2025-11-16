@@ -13,6 +13,8 @@ public final class Genius extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+
         component = DaggerPluginComponent.builder()
                 .pluginModule(new PluginModule(this))
                 .build();

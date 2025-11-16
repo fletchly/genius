@@ -29,9 +29,9 @@ public class MessageDaoImpl implements MessageDao {
     }
 
     @Override
-    public CompletableFuture<Optional<List<ContextMessage>>> findByConversationId(long conversationId) {
+    public CompletableFuture<List<ContextMessage>> findByConversationId(long conversationId) {
         @Language("SQLite")
-        String sql = "SELECT id, role, content, created_at FROM messages WHERE conversation_id = ?;";
+        String sql = "SELECT id, role, content, created_at FROM messages WHERE conversation_id = ? ORDER BY created_at;";
 
         return CompletableFuture.supplyAsync(() -> {
             try (Connection c = db.getDataSource().getConnection();
@@ -43,17 +43,17 @@ public class MessageDaoImpl implements MessageDao {
                         messages.add(
                                 ContextMessage.builder()
                                         .conversationId(conversationId)
-                                        .role(rs.getString("rs"))
+                                        .role(rs.getString("role"))
                                         .content(rs.getString("content"))
                                         .createdAt(rs.getLong("created_at"))
                                         .build()
                         );
                     }
-                    return Optional.of(messages);
+                    return messages;
                 }
             } catch (SQLException ex) {
                 logger.warning("Database error, (returning empty): " + ex);
-                return Optional.empty();
+                return List.of();
             }
         }, executorService);
     }

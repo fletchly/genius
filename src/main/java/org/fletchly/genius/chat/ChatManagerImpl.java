@@ -1,35 +1,54 @@
 package org.fletchly.genius.chat;
 
 import org.fletchly.genius.common.Message;
+import org.fletchly.genius.context.ContextService;
+import org.fletchly.genius.context.model.ContextMessage;
 import org.fletchly.genius.ollama.OllamaService;
 import org.fletchly.genius.ollama.client.exceptions.OllamaClientHttpException;
 import org.fletchly.genius.ollama.client.exceptions.OllamaClientParseException;
 import org.fletchly.genius.ollama.model.OllamaMessage;
-import org.fletchly.genius.util.ConfigurationManager;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
 public class ChatManagerImpl implements ChatManager {
     private final OllamaService ollamaService;
+    private final ContextService contextService;
     private final Logger logger;
 
     @Inject
-    public ChatManagerImpl(OllamaService ollamaService, Logger logger) {
+    public ChatManagerImpl(OllamaService ollamaService, ContextService contextService, Logger logger) {
         this.ollamaService = ollamaService;
+        this.contextService = contextService;
         this.logger = logger;
     }
 
     @Override
-    public CompletableFuture<String> generateChat(String prompt) {
+    public CompletableFuture<String> generateChat(UUID playerUuid, String prompt) {
         OllamaMessage ollamaMessage = OllamaMessage.builder()
                 .role(Message.Roles.USER)
                 .content(prompt)
                 .build();
 
-        return ollamaService.generateChat(ollamaMessage)
-                .thenApply(Message::content)
+        return contextService.getOrCreateConversationForPlayer(playerUuid)
+                .thenCompose(conversation -> {
+                    List<Message> fullMessages = new ArrayList<>(conversation.messages());
+                    contextService.addMessageForPlayer(playerUuid, ContextMessage.builder()
+                            .conversationId(conversation.id())
+                            .role(ollamaMessage.role())
+                            .content(ollamaMessage.content())
+                            .build());
+                    fullMessages.add(ollamaMessage);
+                    return ollamaService.generateChat(fullMessages.toArray(new Message[0]));
+                })
+                .thenApply(response -> {
+                    contextService.addMessageForPlayer(playerUuid, response);
+                    return response.content();
+                })
                 .exceptionally(throwable -> {
                     // Unwrap exception
                     Throwable cause = throwable.getCause() != null

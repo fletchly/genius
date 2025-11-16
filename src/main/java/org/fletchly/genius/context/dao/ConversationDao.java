@@ -7,7 +7,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface ConversationDao {
-    CompletableFuture<Optional<ContextConversation>> getByPlayerUuid(UUID playerUuid);
-    CompletableFuture<Void> upsert(ContextConversation conversation);
+    CompletableFuture<Optional<ContextConversation>> getOrInsertByPlayerUuid(UUID playerUuid);
     CompletableFuture<Void> deleteByPlayerUuid(UUID playerUuid);
 }

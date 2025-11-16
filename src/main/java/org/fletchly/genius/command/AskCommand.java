@@ -16,6 +16,8 @@ import org.fletchly.genius.util.ConfigurationManager;
 
 import javax.inject.Inject;
 
+import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static io.papermc.paper.registry.keys.SoundEventKeys.BLOCK_GLASS_BREAK;
@@ -53,8 +55,9 @@ public class AskCommand {
 
     private int execute(CommandContext<CommandSourceStack> ctx) {
         String prompt = ctx.getArgument("prompt", String.class);
+        UUID playerUuid = Objects.requireNonNull(ctx.getSource().getExecutor()).getUniqueId();
 
-        chatManager.generateChat(prompt)
+        chatManager.generateChat(playerUuid, prompt)
                 .exceptionally(throwable -> sendFailure(throwable, ctx.getSource().getSender()))
                 .thenAccept(response -> sendSuccess(response, ctx.getSource().getSender()));
 

@@ -50,7 +50,7 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
         ollamaTopK = fileConfiguration.getInt(Paths.OLLAMA_TOP_K);
         ollamaTopP = fileConfiguration.getDouble(Paths.OLLAMA_TOP_P);
         ollamaNumPredict = fileConfiguration.getInt(Paths.OLLAMA_NUM_PREDICT);
-        contextDbPath = fileConfiguration.getString(Paths.CONTEXT_MAX_PLAYER_MESSAGES);
+        contextDbPath = fileConfiguration.getString(Paths.CONTEXT_DB_PATH);
         contextMaxPlayerMessages = fileConfiguration.getInt(Paths.CONTEXT_MAX_PLAYER_MESSAGES);
     }
 
