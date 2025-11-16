@@ -41,6 +41,14 @@ tasks {
     }
 }
 
+shadowJar {
+    archiveClassifier.set('')  // Remove the '-all' suffix
+}
+
+jar {
+    enabled = false
+}
+
 test {
     useJUnitPlatform()
     testLogging {
