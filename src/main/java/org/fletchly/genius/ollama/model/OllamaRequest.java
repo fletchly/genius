@@ -15,6 +15,7 @@ public record OllamaRequest(
         @NotNull
         @Singular
         List<OllamaMessage> messages,
+        @NotNull
         OllamaOptions options,
         boolean stream,
         boolean think

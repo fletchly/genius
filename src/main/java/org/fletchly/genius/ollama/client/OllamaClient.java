@@ -27,11 +27,6 @@ public class OllamaClient {
     private static final int CONNECT_TIMEOUT_S = 30; // Connection timeout (in S)
     private static final String JSON = "application/json"; // JSON content type
     private static final int HTTP_OK = 200; // HTTP OK response code
-
-
-
-    // JSON object mapper
-    @Builder.Default
     private static final ObjectMapper mapper = new ObjectMapper();
 
     // Base HTTP client

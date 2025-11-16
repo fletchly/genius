@@ -4,7 +4,7 @@ public interface Message {
     String role();
     String content();
 
-    public enum Role {
+    enum Role {
         USER,
         ASSISTANT,
         TOOL,
