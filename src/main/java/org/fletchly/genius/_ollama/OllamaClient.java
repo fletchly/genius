@@ -1,4 +1,4 @@
-package org.fletchly.genius.ollama;
+package org.fletchly.genius._ollama;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +8,8 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.fletchly.genius.util.AsyncHttpClient;
-import org.fletchly.genius.ollama.model.OllamaRequest;
-import org.fletchly.genius.ollama.model.OllamaResponse;
+import org.fletchly.genius._ollama.model.OllamaRequest;
+import org.fletchly.genius._ollama.model.OllamaResponse;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

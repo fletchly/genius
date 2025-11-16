@@ -1,11 +1,11 @@
 package org.fletchly.genius.data;
 
-import lombok.Getter;
 import org.fletchly.genius.data.dao.ConversationDao;
 import org.fletchly.genius.data.dao.MessageDao;
 import org.fletchly.genius.data.dao.SqlConversationDao;
 import org.fletchly.genius.data.dao.SqlMessageDao;
 import org.fletchly.genius.data.model.Conversation;
+import org.fletchly.genius.data.model.Message;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -40,27 +40,33 @@ public class ConversationService {
                 );
     }
 
-    public CompletableFuture<Void> addMessage(UUID playerUuid, Role role, String content) {
+    public CompletableFuture<Void> addMessage(UUID playerUuid, Message.Role role, String content) {
         return getConversationForPlayer(playerUuid).thenCompose(conversation ->
                 messageDao.addMessage(conversation.id(), role.getRole(), content)
         );
     }
 
+    public CompletableFuture<Void> addMessage(UUID playerUuid, Message message) {
+        return getConversationForPlayer(playerUuid).thenCompose(conversation ->
+                messageDao.addMessage(conversation.id(), message.role(), message.content())
+        );
+    }
+
     public CompletableFuture<Void> addUserMessage(UUID playerUuid, String content) {
         return getConversationForPlayer(playerUuid).thenCompose(conversation ->
-                messageDao.addMessage(conversation.id(), Role.USER.getRole(), content)
+                messageDao.addMessage(conversation.id(), Message.Role.USER.getRole(), content)
         );
     }
 
     public CompletableFuture<Void> addToolMessage(UUID playerUuid, String content) {
         return getConversationForPlayer(playerUuid).thenCompose(conversation ->
-                messageDao.addMessage(conversation.id(), Role.TOOL.getRole(), content)
+                messageDao.addMessage(conversation.id(), Message.Role.TOOL.getRole(), content)
         );
     }
 
     public CompletableFuture<Void> addAssistantMessage(UUID playerUuid, String content) {
         return getConversationForPlayer(playerUuid).thenCompose(conversation ->
-                messageDao.addMessage(conversation.id(), Role.ASSISTANT.getRole(), content)
+                messageDao.addMessage(conversation.id(), Message.Role.ASSISTANT.getRole(), content)
         );
     }
 
@@ -68,18 +74,5 @@ public class ConversationService {
         return getConversationForPlayer(playerUuid).thenCompose(conversation ->
                 messageDao.deleteMessages(conversation.id())
         );
-    }
-
-    public enum Role {
-        USER("user"),
-        TOOL("tool"),
-        ASSISTANT("assistant");
-
-        @Getter
-        private final String role;
-
-        Role(String role) {
-            this.role = role;
-        }
     }
 }

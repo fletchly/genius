@@ -1,20 +1,14 @@
 package org.fletchly.genius.ollama.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import org.fletchly.genius.common.Message;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OllamaResponse {
-    private String model;
-    @JsonProperty("created_at")
-    private String createdAt;
-    private OllamaMessage message;
+public record OllamaResponse(
+        String model,
+        String createdAt,
+        OllamaMessage message
+) {
 }

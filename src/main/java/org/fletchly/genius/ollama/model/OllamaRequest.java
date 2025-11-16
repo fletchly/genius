@@ -1,20 +1,22 @@
 package org.fletchly.genius.ollama.model;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
+import lombok.Singular;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Builder
-@Getter
-@Setter
-@AllArgsConstructor
-public class OllamaRequest {
-    String model;
-    @Singular
-    List<OllamaMessage> messages;
-    OllamaOptions options;
-    @Builder.Default
-    boolean think = false;
-    @Builder.Default
-    boolean stream = false;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record OllamaRequest(
+        @NotNull
+        String model,
+        @NotNull
+        @Singular
+        List<OllamaMessage> messages,
+        OllamaOptions options,
+        boolean stream,
+        boolean think
+) {
 }

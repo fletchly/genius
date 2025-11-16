@@ -12,7 +12,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.fletchly.genius.Genius;
-import org.fletchly.genius.ollama.OllamaClient;
+import org.fletchly.genius._ollama.OllamaClient;
 
 import java.util.Arrays;
 import java.util.Objects;
