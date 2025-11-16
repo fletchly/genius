@@ -1,5 +1,8 @@
-# Genius  
-[![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/genius/actions/workflows/build.yml)  
+![](/doc/banner.png)
+
+[![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/genius/actions/workflows/build.yml)
+
+# Genius
 *Large language model (LLM) integration for minecraft servers*
 
 ## Features
@@ -10,9 +13,7 @@
 ## Installation
 1. Download latest release from the [releases](https://github.com/fletchly/genius/releases/latest) page.
 2. Drop the .jar file into your server’s plugins/ folder.
-3. Start the server to generate configuration files. 
-4. Edit plugins/MyPlugin/config.yml as needed.
-5. Restart server to apply configuration changes
+3. Follow the [getting started](https://github.com/fletchly/genius/wiki/Getting-Started) guide to configure the plugin.
 
 ## Commands
 | Command | Aliases | Permissions  | Description           |
