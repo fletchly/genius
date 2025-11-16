@@ -27,7 +27,7 @@ ollama:
 
   # Your key for the Ollama cloud API. This only needs to be set if you are using an Ollama cloud model.
   # For more info, see https://github.com/fletchly/genius/wiki/hosting
-  apiKey:
+  apiKey: API_KEY
 
   # The name of the model to use for response generation.
   # If you are using Ollama cloud, the model must be an ollama cloud model
