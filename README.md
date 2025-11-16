@@ -1,4 +1,5 @@
 # Genius  
+[![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/genius/actions/workflows/build.yml)  
 *Large language model (LLM) integration for minecraft servers*
 
 ## Features
