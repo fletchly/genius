@@ -6,6 +6,6 @@ prefix: Genius
 authors: [ fletchly ]
 
 permissions:
-  genius.use:
+  genius.ask:
     description: "Ask Genius a question"
     default: true

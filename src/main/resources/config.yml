@@ -27,7 +27,7 @@ ollama:
 
   # Your key for the Ollama cloud API. This only needs to be set if you are using an Ollama cloud model.
   # For more info, see https://github.com/fletchly/genius/wiki/hosting
-  apiKey:
+  apiKey: API_KEY
 
   # The name of the model to use for response generation.
   # If you are using Ollama cloud, the model must be an ollama cloud model
@@ -49,3 +49,12 @@ ollama:
   # The number of predictions (max output tokens) controls how much text the model is allowed to generate.
   # A lower limit keeps responses short and concise, while a higher limit allows longer, more detailed answers.
   numPredict: 400
+# Context database configuration
+context:
+  # Location of the SQLite context database
+  # This is where player conversation history is stored
+  dbPath: context.db
+
+  # Maximum number of messages per player to store in the database at one time
+  # A higher limit will allow players to continue conversations for longer.
+  maxPlayerMessages: 10
