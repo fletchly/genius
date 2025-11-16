@@ -63,7 +63,7 @@ class OllamaServiceTest {
 
         Message userMessage = OllamaMessage.builder().role("user").content("Hello, who are you?").build();
 
-        OllamaMessage assistantOllamaResponse = OllamaMessage.builder().role(Message.Role.ASSISTANT.toString()).content("I am a helpful assistant.").build();
+        OllamaMessage assistantOllamaResponse = OllamaMessage.builder().role(Message.Roles.ASSISTANT).content("I am a helpful assistant.").build();
         OllamaResponse ollamaResponse = OllamaResponse.builder()
                 .message(assistantOllamaResponse)
                 .build();
@@ -125,7 +125,7 @@ class OllamaServiceTest {
         // Then
         assertEquals(model, service.getModel());
         assertEquals(systemPrompt, service.getSystemPromptMessage().content());
-        assertEquals(Message.Role.SYSTEM.toString(), service.getSystemPromptMessage().role());
+        assertEquals(Message.Roles.SYSTEM, service.getSystemPromptMessage().role());
 
         OllamaOptions options = service.getOptions();
         assertEquals(temperature, options.temperature());

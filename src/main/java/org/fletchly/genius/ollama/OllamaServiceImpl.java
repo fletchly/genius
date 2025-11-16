@@ -117,7 +117,7 @@ public class OllamaServiceImpl implements OllamaService {
                     .build();
 
             OllamaMessage systemPromptMessage = OllamaMessage.builder()
-                    .role(Message.Role.SYSTEM.toString())
+                    .role(Message.Roles.SYSTEM)
                     .content(systemPrompt)
                     .build();
 

@@ -3,7 +3,7 @@ autonumber
 
 actor Player
 participant Command
-participant ManagerService
+participant ChatManager
 participant ConversationService
 participant OllamaService
 participant OllamaClient
@@ -12,17 +12,18 @@ participant HttpClient
 
 
 Player -> Command: "/genius <prompt>"
-Command -> ManagerService: generateChat(uuid, prompt)
-ManagerService -> ConversationService: getMessagesForPlayer(uuid)
-ConversationService -->> ManagerService: context messages
-ManagerService -> OllamaService: context messages + player message
+Command -> ChatManager: generateChat(prompt)
+ChatManager -> ConversationService: getMessagesForPlayer()
+ConversationService -->> ChatManager: context messages
+ChatManager -> OllamaService: context messages + player message
 OllamaService -> OllamaClient: fetchResponse(ollama request)
 OllamaClient -> HttpClient: sendAsync(http request)
 
 HttpClient -->> OllamaClient: http response
 OllamaClient -->> OllamaService: ollama response
-OllamaService -->> ManagerService: ollama message
-ManagerService -->> Command: response
+OllamaService -->> ChatManager: ollama message
+ChatManager -->> ConversationService: appendConversation(message)
+ChatManager -->> Command: response
 Command -> Player: "[Genius] <response>"
 
 @enduml
