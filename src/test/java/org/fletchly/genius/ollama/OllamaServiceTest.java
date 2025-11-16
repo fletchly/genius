@@ -1,7 +1,7 @@
 package org.fletchly.genius.ollama;
 
 import org.fletchly.genius.common.Message;
-import org.fletchly.genius.ollama.client.OllamaClient;
+import org.fletchly.genius.ollama.client.OllamaClientImpl;
 import org.fletchly.genius.ollama.model.OllamaMessage;
 import org.fletchly.genius.ollama.model.OllamaOptions;
 import org.fletchly.genius.ollama.model.OllamaRequest;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 class OllamaServiceTest {
 
     @Mock
-    private OllamaClient mockOllamaClient;
+    private OllamaClientImpl mockOllamaClient;
 
     @Captor
     private ArgumentCaptor<OllamaRequest> ollamaRequestCaptor;
@@ -59,7 +59,7 @@ class OllamaServiceTest {
                 .numPredict(1024)
                 .build();
 
-        ollamaService = new OllamaService(mockOllamaClient, systemPromptMessage, options, model);
+        ollamaService = new OllamaServiceImpl(mockOllamaClient, systemPromptMessage, options, model);
 
         Message userMessage = OllamaMessage.builder().role("user").content("Hello, who are you?").build();
 
@@ -95,7 +95,7 @@ class OllamaServiceTest {
     }
 
     /**
-     * Tests that {@link OllamaService.OllamaServiceBuilder} correctly builds an {@link OllamaService}
+     * Tests that {@link OllamaServiceImpl.OllamaServiceBuilder} correctly builds an {@link OllamaServiceImpl}
      * instance with the specified configuration.
      */
     @Test
@@ -111,7 +111,7 @@ class OllamaServiceTest {
         int numPredict = 2048;
 
         // When
-        OllamaService service = OllamaService.builder()
+        OllamaServiceImpl service = OllamaServiceImpl.builder()
                 .model(model)
                 .systemPrompt(systemPrompt)
                 .baseUrl(baseUrl)

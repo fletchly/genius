@@ -46,13 +46,13 @@ class OllamaClientTest {
 
     @BeforeEach
     void setUp() {
-        ollamaClientWithKey = OllamaClient.builder()
+        ollamaClientWithKey = OllamaClientImpl.builder()
                 .httpClient(mockHttpClient)
                 .baseUrl(BASE_URL)
                 .apiKey(API_KEY)
                 .build();
 
-        ollamaClientWithoutKey = OllamaClient.builder()
+        ollamaClientWithoutKey = OllamaClientImpl.builder()
                 .httpClient(mockHttpClient)
                 .baseUrl(BASE_URL)
                 .apiKey(null)
@@ -117,7 +117,7 @@ class OllamaClientTest {
     @Test
     void fetchResponse_InvalidUrl_Fails() {
         // Given
-        OllamaClient clientWithInvalidUrl = OllamaClient.builder()
+        OllamaClientImpl clientWithInvalidUrl = OllamaClientImpl.builder()
                 .httpClient(mockHttpClient)
                 .baseUrl("this is not a valid url")
                 .build();
