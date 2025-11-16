@@ -4,9 +4,9 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.fletchly.genius.command.GeniusCommand;
+//import org.fletchly.genius.command.GeniusCommand;
 import org.fletchly.genius.data.Database;
-import org.fletchly.genius._ollama.OllamaService;
+//import org.fletchly.genius._ollama.OllamaService;
 import org.fletchly.genius.util.ConfigUtil;
 
 import java.util.List;
@@ -25,8 +25,8 @@ public final class Genius extends JavaPlugin {
     @Getter
     private ExecutorService dbExecutor;
 
-    @Getter
-    private OllamaService ollamaService;
+//    @Getter
+//    private OllamaService ollamaService;
 
     @Getter
     private Logger pluginLogger;
@@ -51,7 +51,7 @@ public final class Genius extends JavaPlugin {
         boolean validConfig = initializeConfig();
         if (!validConfig)
             pluginLogger.warning("Invalid configuration. Skipping Ollama service initialization. Genius will be unavailable until configuration errors are resolved");
-        ollamaService = validConfig ? initializeOllamaService() : null;
+//        ollamaService = validConfig ? initializeOllamaService() : null;
         registerCommands();
 
         pluginLogger.info("Successfully enabled Genius!");
@@ -59,8 +59,8 @@ public final class Genius extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        ollamaService.close();
-        ollamaService = null;
+//        ollamaService.close();
+//        ollamaService = null;
         configuration = null;
         pluginLogger = null;
         instance = null;
@@ -88,30 +88,30 @@ public final class Genius extends JavaPlugin {
         return validationErrors.isEmpty();
     }
 
-    private OllamaService initializeOllamaService() {
-        pluginLogger.info("Initializing Ollama service");
-
-        return OllamaService.builder()
-                .systemPrompt(Objects.requireNonNull(configuration.getString("genius.systemPrompt")).replaceAll("\n", ""))
-                .baseUrl(configuration.getString("ollama.baseUrl"))
-                .apiKey(configuration.getString("ollama.apiKey"))
-                .model(configuration.getString("ollama.model"))
-                .temperature(configuration.getDouble("ollama.temperature"))
-                .topK(configuration.getInt("ollama.topK"))
-                .topP(configuration.getDouble("ollama.topP"))
-                .numPredict(configuration.getInt("ollama.numPredict"))
-                .build();
-
-    }
+//    private OllamaService initializeOllamaService() {
+//        pluginLogger.info("Initializing Ollama service");
+//
+//        return OllamaService.builder()
+//                .systemPrompt(Objects.requireNonNull(configuration.getString("genius.systemPrompt")).replaceAll("\n", ""))
+//                .baseUrl(configuration.getString("ollama.baseUrl"))
+//                .apiKey(configuration.getString("ollama.apiKey"))
+//                .model(configuration.getString("ollama.model"))
+//                .temperature(configuration.getDouble("ollama.temperature"))
+//                .topK(configuration.getInt("ollama.topK"))
+//                .topP(configuration.getDouble("ollama.topP"))
+//                .numPredict(configuration.getInt("ollama.numPredict"))
+//                .build();
+//
+//    }
 
     private void registerCommands() {
-        pluginLogger.info("Registering commands");
-        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(
-                    GeniusCommand.getCommand(),
-                    "Ask genius a question",
-                    List.of("g", "ask")
-            );
-        });
+//        pluginLogger.info("Registering commands");
+//        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+//            commands.registrar().register(
+//                    GeniusCommand.getCommand(),
+//                    "Ask genius a question",
+//                    List.of("g", "ask")
+//            );
+//        });
     }
 }
