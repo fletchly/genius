@@ -8,12 +8,13 @@ import org.fletchly.genius.ollama.OllamaService;
 import org.fletchly.genius.util.ConfigurationManager;
 
 import javax.inject.Singleton;
+import java.util.logging.Logger;
 
 @Module
 public class ChatModule {
     @Provides
     @Singleton
-    public ChatManager provideChatManager(ConfigurationManager configurationManager, OllamaService ollamaService) {
-        return new ChatManagerImpl(configurationManager, ollamaService);
+    public ChatManager provideChatManager(OllamaService ollamaService, Logger logger) {
+        return new ChatManagerImpl(ollamaService, logger);
     }
 }

@@ -16,6 +16,10 @@ public final class Genius extends JavaPlugin {
         component = DaggerPluginComponent.builder()
                 .pluginModule(new PluginModule(this))
                 .build();
+
+        registerCommands();
+
+        this.getLogger().info(String.format("Successfully enabled Genius v%s!", this.getPluginMeta().getVersion()));
     }
 
     @Override
