@@ -1,6 +1,5 @@
 package org.fletchly.genius;
 
-import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fletchly.genius.util.ConfigurationManager;
 

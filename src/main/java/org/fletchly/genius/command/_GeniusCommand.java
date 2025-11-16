@@ -24,7 +24,7 @@
 //import static net.kyori.adventure.text.Component.text;
 //import static net.kyori.adventure.text.format.NamedTextColor.*;
 //
-///**
+/// **
 // * /genius command structure and logic
 // */
 //public class GeniusCommand {

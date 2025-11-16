@@ -31,7 +31,7 @@ public class ConfigurationManager {
      * the provided file configuration.
      *
      * @param fileConfiguration the file configuration object containing the configuration values
-     * @param logger the logger instance to log warnings and messages
+     * @param logger            the logger instance to log warnings and messages
      */
     public ConfigurationManager(FileConfiguration fileConfiguration, Logger logger) {
         defaults = fileConfiguration.getDefaults();

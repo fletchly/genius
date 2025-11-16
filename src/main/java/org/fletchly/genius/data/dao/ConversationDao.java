@@ -7,6 +7,8 @@ import java.util.concurrent.CompletableFuture;
 
 public interface ConversationDao {
     CompletableFuture<Conversation> getOrCreateForPlayer(UUID playerUuid);
+
     CompletableFuture<Void> updateTimestamp(int conversationId);
+
     CompletableFuture<Void> deleteConversation(int conversationId);
 }

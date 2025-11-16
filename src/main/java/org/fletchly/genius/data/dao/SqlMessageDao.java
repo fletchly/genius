@@ -53,8 +53,7 @@ public class SqlMessageDao implements MessageDao {
     public CompletableFuture<Void> addMessage(int conversationId, String role, String content) {
         long now = System.currentTimeMillis();
         return CompletableFuture.runAsync(() -> {
-            try (PreparedStatement ps = db.getConnection().prepareStatement("" +
-                    "INSERT INTO context.messages(conversation_id, role, content, `timestamp`) VALUES (?, ?, ?, ?);"
+            try (PreparedStatement ps = db.getConnection().prepareStatement("INSERT INTO context.messages(conversation_id, role, content, `timestamp`) VALUES (?, ?, ?, ?);"
             )) {
                 ps.setInt(1, conversationId);
                 ps.setString(2, role);

@@ -44,8 +44,8 @@ public class OllamaClientImpl implements OllamaClient {
      * @param request the {@code OllamaRequest} containing the model, messages, options, and flags
      *                for the API interaction.
      * @return a {@code CompletableFuture<OllamaResponse>} representing the result of the
-     *         asynchronous operation. The future completes with the deserialized {@code OllamaResponse}
-     *         if the operation is successful, or with an exception if any errors occur.
+     * asynchronous operation. The future completes with the deserialized {@code OllamaResponse}
+     * if the operation is successful, or with an exception if any errors occur.
      */
     public CompletableFuture<OllamaResponse> fetchResponse(OllamaRequest request) {
         // Attempt to parse URL
@@ -100,8 +100,8 @@ public class OllamaClientImpl implements OllamaClient {
      *
      * @param httpResponse the HTTP response containing the status code and body of the request.
      * @return a {@code CompletableFuture<String>} that completes with the response body if the status
-     *         code is 200, or completes exceptionally with an {@code OllamaClientHttpException} if the
-     *         status code indicates an error.
+     * code is 200, or completes exceptionally with an {@code OllamaClientHttpException} if the
+     * status code indicates an error.
      */
     private @NotNull CompletableFuture<String> checkStatus(HttpResponse<String> httpResponse) {
         // Check for 200 OK response
@@ -126,8 +126,8 @@ public class OllamaClientImpl implements OllamaClient {
      * @param body the JSON string representation of the response body to be parsed into
      *             an {@code OllamaResponse} object.
      * @return a {@code CompletableFuture<OllamaResponse>} object that completes successfully
-     *         with the parsed {@code OllamaResponse} if the input is valid JSON, or completes
-     *         exceptionally with an {@code OllamaClientParseException} in case of a parsing error.
+     * with the parsed {@code OllamaResponse} if the input is valid JSON, or completes
+     * exceptionally with an {@code OllamaClientParseException} in case of a parsing error.
      */
     private @NotNull CompletableFuture<OllamaResponse> parseBody(String body) {
         try {
@@ -148,8 +148,8 @@ public class OllamaClientImpl implements OllamaClient {
      *
      * @param throwable the exception or error that occurred during processing.
      * @return a {@code CompletableFuture<OllamaResponse>} that completes exceptionally. If the {@code throwable}
-     *         is an {@code OllamaClientException}, it is propagated as is. For other exceptions, an
-     *         {@code OllamaClientException} is created and returned.
+     * is an {@code OllamaClientException}, it is propagated as is. For other exceptions, an
+     * {@code OllamaClientException} is created and returned.
      */
     private @NotNull CompletableFuture<OllamaResponse> handleExceptions(Throwable throwable) {
         // Unwrap exception

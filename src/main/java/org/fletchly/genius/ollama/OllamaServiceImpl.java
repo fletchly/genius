@@ -58,7 +58,7 @@ public class OllamaServiceImpl implements OllamaService {
                 .thenApply(OllamaResponse::message);
     }
 
-    private OllamaMessage mapMessage (Message message) {
+    private OllamaMessage mapMessage(Message message) {
         return OllamaMessage.builder()
                 .role(message.role())
                 .content(message.content())

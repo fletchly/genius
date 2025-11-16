@@ -2,6 +2,7 @@ package org.fletchly.genius.common;
 
 public interface Message {
     String role();
+
     String content();
 
     enum Role {
