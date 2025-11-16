@@ -27,8 +27,8 @@ dependencies {
     testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.0.0")
     testImplementation("org.mockito:mockito-core:5.+")
     testImplementation("org.mockito:mockito-junit-jupiter:5.+")
-    implementation 'com.google.dagger:dagger:2.x'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.x'
+    implementation 'com.google.dagger:dagger:2.+'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.+'
 }
 
 tasks {

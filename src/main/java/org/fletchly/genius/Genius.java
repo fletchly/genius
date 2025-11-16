@@ -1,41 +1,36 @@
 package org.fletchly.genius;
 
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.fletchly.genius.util.ConfigurationManager;
+import org.fletchly.genius.di.DaggerPluginComponent;
+import org.fletchly.genius.di.PluginComponent;
+import org.fletchly.genius.di.PluginModule;
+
+import java.util.List;
 
 public final class Genius extends JavaPlugin {
-    private static Genius instance;
-
-    private static ConfigurationManager configurationManager;
-
-    public static Genius getInstance() {
-        if (instance == null) {
-            throw new IllegalStateException("Can't get instance. Plugin not enabled yet!");
-        }
-        return instance;
-    }
+    private PluginComponent component;
 
     @Override
     public void onEnable() {
-        // Set instance
-        instance = this;
+        component = DaggerPluginComponent.builder()
+                .pluginModule(new PluginModule(this))
+                .build();
     }
 
     @Override
     public void onDisable() {
-        configurationManager = null;
-        instance = null;
-        getLogger().info("Goodbye!");
+        this.getLogger().info("Goodbye!");
     }
 
-    /**
-     * Initializes the ConfigurationManager instance for the plugin. This method creates and assigns
-     * a new {@link ConfigurationManager} using the current plugin's configuration and logger. It also
-     * logs any validation errors encountered during the initialization of configuration properties.
-     */
-    private void initializeConfigurationManager() {
-        getLogger().info("Initializing Configuration Manager...");
-        configurationManager = new ConfigurationManager(getConfig(), getLogger());
-        configurationManager.logValidationErrors();
+    private void registerCommands() {
+        this.getLogger().info("Registering commands");
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            commands.registrar().register(
+                    component.askCommand().createCommandNode(),
+                    "Ask genius a question",
+                    List.of("g")
+            );
+        });
     }
 }

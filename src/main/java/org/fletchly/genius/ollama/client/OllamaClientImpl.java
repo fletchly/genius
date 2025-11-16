@@ -2,39 +2,40 @@ package org.fletchly.genius.ollama.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Builder;
 import org.fletchly.genius.ollama.client.exceptions.OllamaClientException;
 import org.fletchly.genius.ollama.client.exceptions.OllamaClientHttpException;
 import org.fletchly.genius.ollama.client.exceptions.OllamaClientParseException;
 import org.fletchly.genius.ollama.model.OllamaRequest;
 import org.fletchly.genius.ollama.model.OllamaResponse;
+import org.fletchly.genius.util.ConfigurationManager;
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
  * Http client for communicating with the Ollama API
  */
-@Builder
 public class OllamaClientImpl implements OllamaClient {
     private static final int CONNECT_TIMEOUT_S = 30; // Connection timeout (in S)
     private static final String JSON = "application/json"; // JSON content type
     private static final int HTTP_OK = 200; // HTTP OK response code
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    // Base HTTP client
+    private final ConfigurationManager configurationManager;
     private final HttpClient httpClient;
 
-    // API parameters
-    private final String baseUrl;
-    private final String apiKey;
+    @Inject
+    public OllamaClientImpl(ConfigurationManager configurationManager, HttpClient httpClient) {
+        this.configurationManager = configurationManager;
+        this.httpClient = httpClient;
+    }
 
     /**
      * Sends an asynchronous HTTP request to the Ollama chat API with the provided request payload,
@@ -48,6 +49,9 @@ public class OllamaClientImpl implements OllamaClient {
      * if the operation is successful, or with an exception if any errors occur.
      */
     public CompletableFuture<OllamaResponse> fetchResponse(OllamaRequest request) {
+        String baseUrl = configurationManager.ollamaBaseUrl();
+        String apiKey = configurationManager.ollamaApiKey();
+
         // Attempt to parse URL
         URI uri;
         try {
@@ -74,7 +78,7 @@ public class OllamaClientImpl implements OllamaClient {
         // Set authorization
         // Token is set to NONE when none is provided.
         // Handles self-hosted (no authentication needed) scenarios
-        String authorization = "Bearer " + Objects.requireNonNullElse(apiKey, "NONE");
+        String authorization = "Bearer " + apiKey;
 
         // Construct request
         HttpRequest httpRequest = HttpRequest.newBuilder()
