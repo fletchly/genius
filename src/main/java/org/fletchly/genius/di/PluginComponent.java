@@ -7,7 +7,7 @@ import org.fletchly.genius.command.AskCommand;
 import javax.inject.Singleton;
 
 @Singleton
-@Component(modules = { PluginModule.class, OllamaModule.class, ChatModule.class, CommandModule.class })
+@Component(modules = { PluginModule.class, OllamaModule.class, ChatModule.class, CommandModule.class, DataModule.class })
 public interface PluginComponent {
     AskCommand askCommand();
 }
