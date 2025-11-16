@@ -1,0 +1,34 @@
+@startuml
+title Deployment Diagram - PaperMC Ollama Plugin
+
+node "Minecraft Server JVM" {
+    node "Paper Server" {
+        component "Ollama Plugin"
+        component "Other Plugins"
+
+        node "Main Thread" {
+            component "Bukkit API\n(synchronous)"
+            component "Tool Handlers\n(give_item, ...)"
+        }
+
+        node "Async Worker Threads" {
+            component "OllamaClient\n(HTTP)"
+            component "AiCommand Async Tasks"
+        }
+    }
+
+    database "Context Storage\n(SQLite / JSON)" as DB
+}
+
+node "Ollama Host" {
+    component "Ollama Server"
+    component "Model Runtime\n(LLM)"
+}
+
+"Ollama Plugin" --> DB : persist contexts
+"Ollama Plugin" --> "Ollama Server" : HTTP JSON
+"Async Worker Threads" --> "Ollama Server" : REST API calls
+
+"Main Thread" --> "Player" : chat messages / tool effects
+
+@enduml
