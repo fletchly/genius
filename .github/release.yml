@@ -1,20 +1,17 @@
 changelog:
   categories:
-    - title: "Features"
+    - title: "Added"
       labels:
-        - "feat"
-        - "enhancement"
-    - title: "Bug fixes"
+        - "added"
+    - title: "Changed"
       labels:
-        - "fix"
-        - "bug"
-    - title: "Breaking changes"
+        - "changed"
+    - title: "Removed"
       labels:
-        - "breaking"
+        - "removed"
+    - title: "Fixed"
+      labels:
+        - "fixed"
     - title: "Documentation"
       labels:
-        - "doc"
         - "documentation"
-    - title: "Other changes"
-      labels:
-        - "*"
