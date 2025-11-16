@@ -26,8 +26,6 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
     private final Integer ollamaTopK;
     private final Double ollamaTopP;
     private final Integer ollamaNumPredict;
-    private final String contextDbPath;
-    private final Integer contextMaxPlayerMessages;
 
     /**
      * Constructs a ConfigurationManager instance and initializes configuration values from
@@ -50,8 +48,6 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
         ollamaTopK = fileConfiguration.getInt(Paths.OLLAMA_TOP_K);
         ollamaTopP = fileConfiguration.getDouble(Paths.OLLAMA_TOP_P);
         ollamaNumPredict = fileConfiguration.getInt(Paths.OLLAMA_NUM_PREDICT);
-        contextDbPath = fileConfiguration.getString(Paths.CONTEXT_DB_PATH);
-        contextMaxPlayerMessages = fileConfiguration.getInt(Paths.CONTEXT_MAX_PLAYER_MESSAGES);
     }
 
     @Override
@@ -136,24 +132,6 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
     }
 
     @Override
-    public @NotNull String contextDbPath() {
-        if (contextDbPath == null) {
-            logInvalidProperty(Paths.CONTEXT_DB_PATH);
-            return Objects.requireNonNull(defaults.getString(Paths.CONTEXT_DB_PATH));
-        }
-        return contextDbPath;
-    }
-
-    @Override
-    public @NotNull Integer contextMaxPlayerMessages() {
-        if (contextMaxPlayerMessages == null) {
-            logInvalidProperty(Paths.CONTEXT_MAX_PLAYER_MESSAGES);
-            return defaults.getInt(Paths.CONTEXT_MAX_PLAYER_MESSAGES);
-        }
-        return contextMaxPlayerMessages;
-    }
-
-    @Override
     public void logValidationErrors() {
         geniusAgentName();
         geniusSystemPrompt();
@@ -194,7 +172,5 @@ public class ConfigurationManagerImpl implements ConfigurationManager {
         public static final String OLLAMA_TOP_K = "ollama.topK";
         public static final String OLLAMA_TOP_P = "ollama.topP";
         public static final String OLLAMA_NUM_PREDICT = "ollama.numPredict";
-        public static final String CONTEXT_DB_PATH = "context.dbPath";
-        public static final String CONTEXT_MAX_PLAYER_MESSAGES = "context.maxPlayerMessages";
     }
 }

@@ -22,10 +22,6 @@ public interface ConfigurationManager {
 
     @NotNull Integer ollamaNumPredict();
 
-    @NotNull String contextDbPath();
-
-    @NotNull Integer contextMaxPlayerMessages();
-
     /**
      * Validates essential configuration properties and logs warnings for any properties
      * that are null or invalid. For each invalid or missing property, a default value
