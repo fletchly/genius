@@ -3,7 +3,7 @@
 [![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/genius/actions/workflows/build.yml)
 
 # Genius
-*Large language model (LLM) integration for Minecraft servers*
+*Large language model (LLM) integration for Minecraft servers.*
 
 ## Features
 - Custom model support via Ollama API
