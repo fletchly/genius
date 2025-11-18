@@ -6,13 +6,19 @@
 *Large language model (LLM) integration for Minecraft servers.*
 
 > [!CAUTION]
-> This plugin is currently in **early beta** stage.
+> This plugin is still in **early beta** stages of development and has **not** been fully tested.
+>
+> Even though it doesn't interact with critical server systems (like worlds, player data, or core mechanics), beta software always carries some risk.
+>
 > That means:
 > - Expect bugs, crashes, and unexpected behavior
 > - Some features may be incomplete, broken, or subject to major changes
 > - Performance is not yet optimized
+>
+> **Use at your own risk!**
 > 
 > If you encounter issues, please report them on the issue tracker with as much detail as possible (logs, steps to reproduce, etc.). Your feedback helps improve the plugin!
+> 
 > Thank you for supporting the development of Genius. 💡
 
 
