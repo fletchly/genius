@@ -1,0 +1,4 @@
+name: Genius
+version: '0.0.0'
+main: io.fletchly.genius.Genius
+api-version: '1.21'
