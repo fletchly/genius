@@ -1,7 +1,9 @@
 plugins {
     kotlin("jvm") version "2.2.21"
+    kotlin("kapt") version "2.2.21"
     id("com.gradleup.shadow") version "8.3.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
 }
 
 group = "io.fletchly"
@@ -14,9 +16,26 @@ repositories {
     }
 }
 
+val paper_version: String by project
+val dagger_version: String by project
+val ktor_version: String by project
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    // Paper plugin dev tools
+    compileOnly("io.papermc.paper:paper-api:$paper_version")
+    paperweight.paperDevBundle(paper_version)
+
+    // Dagger 2 dependency injection
+    implementation("com.google.dagger:dagger:$dagger_version")
+    kapt("com.google.dagger:dagger-compiler:$dagger_version")
+
+    // Ktor
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+
+    // Kotlin Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 }
 
 tasks {
