@@ -1,11 +1,12 @@
 package io.fletchly.genius.config
 
 import org.bukkit.configuration.file.FileConfiguration
+import javax.inject.Inject
 
 /**
  * Configuration manager
  */
-class ConfigManager(private val config: FileConfiguration) {
+class ConfigManager @Inject constructor(private val config: FileConfiguration) {
     val geniusAgentName: String get() = config.getString(GENIUS_AGENT_NAME, "Genius")!! // Will never be null because default is provided
     val ollamaBaseUrl: String get() = config.getString(OLLAMA_BASE_URL, "http://localhost:11434/")!!
     val ollamaApiKey: String? get() = config.getString(OLLAMA_API_KEY).takeIf { it?.isNotBlank() == true }
