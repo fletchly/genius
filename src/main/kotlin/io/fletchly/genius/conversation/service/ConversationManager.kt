@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * Manages player conversations
  */
-class ConversationManagerService @Inject constructor(
+class ConversationManager @Inject constructor(
     private val contextService: ContextService,
     private val chatService: ChatService
 ) {
