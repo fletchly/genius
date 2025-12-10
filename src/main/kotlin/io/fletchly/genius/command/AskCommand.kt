@@ -14,6 +14,9 @@ import org.bukkit.entity.Player
 import javax.inject.Inject
 
 class AskCommand @Inject constructor(configManager: ConfigManager) {
+    val description = "Ask genius a question"
+    val aliases = listOf("g")
+
     private val displayName = text("[")
             .append {
                 text(configManager.geniusAgentName, GREEN)
