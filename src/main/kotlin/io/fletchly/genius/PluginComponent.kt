@@ -10,14 +10,16 @@ import io.fletchly.genius.ollama.OllamaModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [
-    PluginModule::class,
-    ConfigModule::class,
-    ContextModule::class,
-    CommandModule::class,
-    ConversationModule::class,
-    OllamaModule::class
-])
+@Component(
+    modules = [
+        PluginModule::class,
+        ConfigModule::class,
+        ContextModule::class,
+        CommandModule::class,
+        ConversationModule::class,
+        OllamaModule::class
+    ]
+)
 interface PluginComponent {
     fun askCommand(): AskCommand
 }

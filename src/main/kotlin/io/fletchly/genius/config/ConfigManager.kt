@@ -7,7 +7,11 @@ import javax.inject.Inject
  * Configuration manager
  */
 class ConfigManager @Inject constructor(private val config: FileConfiguration) {
-    val geniusAgentName: String get() = config.getString(GENIUS_AGENT_NAME, "Genius")!! // Will never be null because default is provided
+    val geniusAgentName: String
+        get() = config.getString(
+            GENIUS_AGENT_NAME,
+            "Genius"
+        )!! // Will never be null because default is provided
     val ollamaBaseUrl: String get() = config.getString(OLLAMA_BASE_URL, "http://localhost:11434/")!!
     val ollamaApiKey: String? get() = config.getString(OLLAMA_API_KEY).takeIf { it?.isNotBlank() == true }
     val ollamaModel: String get() = config.getString(OLLAMA_MODEL, "deepseek-v3.1:671b")!!

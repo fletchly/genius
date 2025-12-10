@@ -11,5 +11,6 @@ import javax.inject.Singleton
 class ContextModule {
     @Provides
     @Singleton
-    fun provideContextService(configManager: ConfigManager): ContextService = ConcurrentHashMapContextService(configManager)
+    fun provideContextService(configManager: ConfigManager): ContextService =
+        ConcurrentHashMapContextService(configManager)
 }

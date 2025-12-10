@@ -34,14 +34,14 @@ class AskCommand @Inject constructor(
     private val agentName = configManager.geniusAgentName
 
     private val displayName = text("[")
-            .append { text(agentName, NamedTextColor.GREEN) }
-            .append { text("] ") }
+        .append { text(agentName, NamedTextColor.GREEN) }
+        .append { text("] ") }
 
     fun createCommandNode(): LiteralCommandNode<CommandSourceStack> {
         return Commands.literal("ask")
             .requires {
                 it.executor is Player &&
-                it.sender.hasPermission("genius.ask")
+                        it.sender.hasPermission("genius.ask")
             }
             .then(
                 Commands.argument("prompt", StringArgumentType.greedyString())
@@ -110,7 +110,7 @@ class AskCommand @Inject constructor(
         )
 
         // Display response in chat
-        ctx.source.sender.sendMessage { displayName.append { text(message, NamedTextColor.RED) }  }
+        ctx.source.sender.sendMessage { displayName.append { text(message, NamedTextColor.RED) } }
     }
 
     private fun executeAsync(ctx: CommandContext<CommandSourceStack>) {

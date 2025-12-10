@@ -3,7 +3,7 @@ package io.fletchly.genius.conversation.service
 import io.fletchly.genius.context.service.ContextService
 import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.service.ChatService
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 /**

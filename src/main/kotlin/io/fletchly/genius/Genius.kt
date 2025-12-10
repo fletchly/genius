@@ -1,11 +1,7 @@
 package io.fletchly.genius
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.plus
+import kotlinx.coroutines.*
 import org.bukkit.plugin.java.JavaPlugin
 
 class Genius : JavaPlugin() {

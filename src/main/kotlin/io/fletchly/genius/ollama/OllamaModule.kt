@@ -18,5 +18,9 @@ class OllamaModule {
 
     @Provides
     @Singleton
-    fun provideChatService(configManager: ConfigManager, promptManager: PromptManager, httpClient: HttpClient): ChatService = OllamaChatService(configManager, promptManager, httpClient)
+    fun provideChatService(
+        configManager: ConfigManager,
+        promptManager: PromptManager,
+        httpClient: HttpClient
+    ): ChatService = OllamaChatService(configManager, promptManager, httpClient)
 }

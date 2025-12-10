@@ -17,8 +17,9 @@ import javax.inject.Inject
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(configManager: ConfigManager): HttpClient {
+class OllamaHttpClient @Inject constructor(configManager: ConfigManager) : HttpClient {
     val baseUrl = configManager.ollamaBaseUrl
+
     // Throw exception if no API key is provided
     val apiKey = configManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
 

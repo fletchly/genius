@@ -13,7 +13,7 @@ class OllamaChatService @Inject constructor(
     private val configManager: ConfigManager,
     private val promptManager: PromptManager,
     private val httpClient: HttpClient
-): ChatService {
+) : ChatService {
     override suspend fun generateChat(messages: List<Message>): Message {
         // Build Ollama response parameters
         val ollamaOptions = OllamaOptions(

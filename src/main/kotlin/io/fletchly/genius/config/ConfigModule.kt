@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import io.fletchly.genius.Genius
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.plugin.java.JavaPlugin
 import javax.inject.Singleton
 
 @Module

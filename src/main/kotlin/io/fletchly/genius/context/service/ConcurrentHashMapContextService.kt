@@ -5,16 +5,20 @@ import io.fletchly.genius.conversation.model.Message
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
+import kotlin.collections.ArrayDeque
+import kotlin.collections.List
+import kotlin.collections.listOf
+import kotlin.collections.toList
 
-class ConcurrentHashMapContextService @Inject constructor(configManager: ConfigManager): ContextService {
-    private val maxPlayerMessages= configManager.contextMaxPlayerMessages
+class ConcurrentHashMapContextService @Inject constructor(configManager: ConfigManager) : ContextService {
+    private val maxPlayerMessages = configManager.contextMaxPlayerMessages
     private val playerContext = ConcurrentHashMap<UUID, ArrayDeque<Message>>()
 
     override suspend fun addChat(
         message: Message,
         playerUUID: UUID
     ): List<Message> {
-        val messages =  playerContext.compute(playerUUID) { _, messages ->
+        val messages = playerContext.compute(playerUUID) { _, messages ->
             val queue = messages ?: ArrayDeque()
             if (queue.size >= maxPlayerMessages) {
                 queue.removeFirst()
