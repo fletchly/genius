@@ -19,7 +19,7 @@ class ConfigManager @Inject constructor(private val config: FileConfiguration) {
     val ollamaTopK: Int get() = config.getInt(OLLAMA_TOP_K, 40)
     val ollamaTopP: Double get() = config.getDouble(OLLAMA_TOP_P, 0.85)
     val ollamaNumPredict: Int get() = config.getInt(OLLAMA_NUM_PREDICT, 400)
-    val contextMaxPlayerMessages: Int get() = config.getInt(CONTEXT_MAX_PLAYER_MESSAGES, 10)
+    val contextMaxPlayerMessages: Int get() = config.getInt(CONTEXT_MAX_PLAYER_MESSAGES, 20)
 
     /**
      * Path mappings for config file

@@ -42,4 +42,4 @@ ollama:
 context:
   # Maximum number of messages per player to store in the database at one time
   # A higher limit will allow players to continue conversations for longer.
-  maxPlayerMessages: 10
+  maxPlayerMessages: 20

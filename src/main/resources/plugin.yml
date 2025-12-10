@@ -1,5 +1,5 @@
 name: Genius
-version: '0.0.0'
+version: '0.0.1-beta'
 main: io.fletchly.genius.Genius
 api-version: '1.21'
 prefix: "Genius"
@@ -7,6 +7,11 @@ authors:
   - fletchly
 
 permissions:
-  genius.ask:
-    description: "Ask Genius a question"
-    default: true
+  genius:
+    children:
+      genius.ask:
+        description: "Ask Genius a question"
+        default: true
+      genius.manage:
+        description: "Manage Genius"
+        default: op

@@ -46,13 +46,13 @@ class AskCommand @Inject constructor(
             .then(
                 Commands.argument("prompt", StringArgumentType.greedyString())
                     .executes {
-                        execute(it)
+                        generateChat(it)
                     }
             )
             .build()
     }
 
-    private fun execute(ctx: CommandContext<CommandSourceStack>): Int {
+    private fun generateChat(ctx: CommandContext<CommandSourceStack>): Int {
         sendPlayerMessage(ctx)
         executeAsync(ctx)
         return Command.SINGLE_SUCCESS

@@ -11,4 +11,9 @@ interface ContextService {
      * Add chat to context for given player and return updated context
      */
     suspend fun addChat(message: Message, playerUUID: UUID): List<Message>
+
+    /**
+     * Clear context for current session
+     */
+    suspend fun clearContext()
 }

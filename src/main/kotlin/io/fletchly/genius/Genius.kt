@@ -43,6 +43,11 @@ class Genius : JavaPlugin() {
                 component.askCommand().description,
                 component.askCommand().aliases
             )
+
+            it.registrar().register(
+                component.manageCommand().createCommandNode(),
+                component.manageCommand().description
+            )
         }
 
         logger.info { "Successfully registered commands" }

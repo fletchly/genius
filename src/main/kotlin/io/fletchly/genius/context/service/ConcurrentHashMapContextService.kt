@@ -28,4 +28,8 @@ class ConcurrentHashMapContextService @Inject constructor(configManager: ConfigM
         }
         return messages?.toList() ?: listOf(message)
     }
+
+    override suspend fun clearContext() {
+        playerContext.clear()
+    }
 }
