@@ -1,4 +1,4 @@
-package io.fletchly.genius.conversation
+package io.fletchly.genius.conversation.model
 
 data class Message(
     val content: String,

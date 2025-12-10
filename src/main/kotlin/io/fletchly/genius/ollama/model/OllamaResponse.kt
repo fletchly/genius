@@ -1,6 +1,6 @@
 package io.fletchly.genius.ollama.model
 
-import io.fletchly.genius.conversation.Message
+import io.fletchly.genius.conversation.model.Message
 import kotlinx.serialization.SerialName
 
 data class OllamaResponse(

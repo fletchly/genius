@@ -1,7 +1,7 @@
 package io.fletchly.genius.context.service
 
 import io.fletchly.genius.config.ConfigManager
-import io.fletchly.genius.conversation.Message
+import io.fletchly.genius.conversation.model.Message
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject

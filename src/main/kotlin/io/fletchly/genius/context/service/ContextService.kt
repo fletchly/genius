@@ -1,6 +1,6 @@
 package io.fletchly.genius.context.service
 
-import io.fletchly.genius.conversation.Message
+import io.fletchly.genius.conversation.model.Message
 import java.util.UUID
 
 /**
