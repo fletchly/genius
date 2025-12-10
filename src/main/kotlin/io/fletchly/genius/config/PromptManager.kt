@@ -8,9 +8,10 @@ import javax.inject.Inject
  * System prompt manager
  */
 class PromptManager @Inject constructor(private val plugin: JavaPlugin) {
+    private val promptPath = "system-prompt.md"
     private var _prompt: String = loadDefaultPrompt()
     val prompt: String get() = _prompt
-    private val promptPath = "system-prompt.md"
+
 
     init {
         saveDefaultPrompt()

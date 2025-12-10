@@ -5,12 +5,12 @@ import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -18,7 +18,11 @@ import javax.inject.Inject
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(private val configManager: ConfigManager): HttpClient {
+class OllamaHttpClient @Inject constructor(configManager: ConfigManager): HttpClient {
+    val baseUrl = configManager.ollamaBaseUrl
+    // Throw exception if no API key is provided
+    val apiKey = configManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
+
     /**
      * Internal Ktor client
      */
@@ -26,7 +30,16 @@ class OllamaHttpClient @Inject constructor(private val configManager: ConfigMana
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true
+                encodeDefaults = true
             })
+        }
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
+        }
+        defaultRequest {
+            url(baseUrl)
+            header(HttpHeaders.Authorization, "Bearer $apiKey")
         }
     }
 
@@ -34,17 +47,10 @@ class OllamaHttpClient @Inject constructor(private val configManager: ConfigMana
      * Fetch chat response from Ollama API
      */
     override suspend fun fetchChatResponse(request: OllamaRequest): OllamaResponse {
-        val baseUrl = configManager.ollamaBaseUrl
-        // Throw exception if no API key is provided
-        val apiKey = configManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
-
         return try {
-            val response: HttpResponse = client.post(baseUrl) {
+            val response: HttpResponse = client.post {
                 url {
                     appendPathSegments("api", "chat")
-                }
-                headers {
-                    append(HttpHeaders.Authorization, "Bearer $apiKey")
                 }
                 contentType(ContentType.Application.Json)
                 setBody(request)
