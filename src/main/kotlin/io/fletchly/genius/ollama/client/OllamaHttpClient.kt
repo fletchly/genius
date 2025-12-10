@@ -18,7 +18,7 @@ import javax.inject.Inject
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(private val config: ConfigManager): HttpClient {
+class OllamaHttpClient @Inject constructor(private val configManager: ConfigManager): HttpClient {
     /**
      * Internal Ktor client
      */
@@ -34,9 +34,9 @@ class OllamaHttpClient @Inject constructor(private val config: ConfigManager): H
      * Fetch chat response from Ollama API
      */
     override suspend fun fetchChatResponse(request: OllamaRequest): OllamaResponse {
-        val baseUrl = config.ollamaBaseUrl
+        val baseUrl = configManager.ollamaBaseUrl
         // Throw exception if no API key is provided
-        val apiKey = config.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
+        val apiKey = configManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
 
         return try {
             val response: HttpResponse = client.post(baseUrl) {
