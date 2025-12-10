@@ -14,9 +14,9 @@ import io.papermc.paper.registry.keys.SoundEventKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import net.kyori.adventure.sound.Sound
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player
 import java.util.logging.Logger
 import javax.inject.Inject
@@ -31,11 +31,11 @@ class AskCommand @Inject constructor(
     val description = "Ask genius a question"
     val aliases = listOf("g")
 
+    private val agentName = configManager.geniusAgentName
+
     private val displayName = text("[")
-            .append {
-                text(configManager.geniusAgentName, NamedTextColor.GREEN)
-                text("] ")
-            }
+            .append { text(agentName, NamedTextColor.GREEN) }
+            .append { text("] ") }
 
     fun createCommandNode(): LiteralCommandNode<CommandSourceStack> {
         return Commands.literal("ask")
@@ -67,7 +67,11 @@ class AskCommand @Inject constructor(
         val prompt = ctx.getArgument("prompt", String::class.java)
 
         // Build message
-        val playerMessage = text { it.append(Component.text("[$playerName] $prompt", NamedTextColor.DARK_GRAY)) }
+        val playerMessage = text {
+            it.content("[$playerName] $prompt")
+            it.color(NamedTextColor.GRAY)
+            it.decoration(TextDecoration.ITALIC, true)
+        }
 
         // Display message in chat
         ctx.source.sender.sendMessage { playerMessage }
