@@ -1,5 +1,7 @@
 ![](/doc/images/banner.png)
 
+[![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/fletchly/genius/actions/workflows/build.yml)
+
 # Genius
 *Large language model (LLM) integration for Minecraft servers.*
 
