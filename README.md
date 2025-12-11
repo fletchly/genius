@@ -1,6 +1,9 @@
 ![](/doc/images/banner.png)
 
-[![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/fletchly/genius/actions/workflows/build.yml)
+[![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/fletchly/genius/actions/workflows/build.yml) |
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/:2AkWPYRz)
+
+
 
 # Genius
 *Large language model (LLM) integration for Minecraft servers.*
