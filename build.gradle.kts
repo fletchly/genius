@@ -53,6 +53,14 @@ kotlin {
     jvmToolchain(targetJavaVersion)
 }
 
+tasks.jar {
+    enabled = false
+}
+
+tasks.shadowJar {
+    archiveClassifier = ""
+}
+
 tasks.build {
     dependsOn("shadowJar")
 }
