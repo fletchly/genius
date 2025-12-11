@@ -48,7 +48,9 @@ class PromptManager @Inject constructor(private val plugin: JavaPlugin) {
      * Save default prompt to server
      */
     private fun saveDefaultPrompt() {
-        plugin.saveResource(promptPath, false)
+        if (plugin.getResource(promptPath) !== null) {
+            plugin.saveResource(promptPath, false)
+        }
     }
 
     /**
