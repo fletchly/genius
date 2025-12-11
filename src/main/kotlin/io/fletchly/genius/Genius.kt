@@ -12,6 +12,7 @@ class Genius : JavaPlugin() {
         saveDefaultConfig()
         registerPluginScope()
         buildComponent()
+        registerEvents()
         registerCommands()
         logger.info { "Successfully enabled Genius ${pluginMeta.version}!" }
     }
@@ -32,6 +33,14 @@ class Genius : JavaPlugin() {
 
     private fun cleanUpPluginScope() {
         scope.cancel()
+    }
+
+    private fun registerEvents() {
+        logger.info { "Registering event listeners" }
+
+        server.pluginManager.registerEvents(component.playerListener(), this)
+
+        logger.info { "Successfully registered event listeners" }
     }
 
     private fun registerCommands() {

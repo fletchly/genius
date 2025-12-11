@@ -7,6 +7,8 @@ import io.fletchly.genius.command.ManageCommand
 import io.fletchly.genius.config.ConfigModule
 import io.fletchly.genius.context.ContextModule
 import io.fletchly.genius.conversation.ConversationModule
+import io.fletchly.genius.listeners.ListenerModule
+import io.fletchly.genius.listeners.PlayerListener
 import io.fletchly.genius.ollama.OllamaModule
 import javax.inject.Singleton
 
@@ -18,11 +20,14 @@ import javax.inject.Singleton
         ContextModule::class,
         CommandModule::class,
         ConversationModule::class,
-        OllamaModule::class
+        OllamaModule::class,
+        ListenerModule::class
     ]
 )
 interface PluginComponent {
     fun askCommand(): AskCommand
 
     fun manageCommand(): ManageCommand
+
+    fun playerListener(): PlayerListener
 }

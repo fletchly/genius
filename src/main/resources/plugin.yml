@@ -1,5 +1,5 @@
 name: Genius
-version: '0.0.1-beta'
+version: '0.1.0-beta'
 main: io.fletchly.genius.Genius
 api-version: '1.21'
 prefix: "Genius"
