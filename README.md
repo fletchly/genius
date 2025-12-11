@@ -1,7 +1,8 @@
 ![](/doc/images/banner.png)
 
+[![Github](https://img.shields.io/badge/github-genius-blue?logo=github)](https://github.com/fletchly/genius)
+[![Modrinth](https://img.shields.io/badge/modrinth-genius-00AF5C?logo=modrinth)](https://modrinth.com/plugin/genius)
 [![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/fletchly/genius/actions/workflows/build.yml)
-![Modrinth Downloads](https://img.shields.io/modrinth/dt/:2AkWPYRz)
 
 
 
