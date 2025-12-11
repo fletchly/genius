@@ -1,0 +1,64 @@
+package io.fletchly.genius
+
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
+import kotlinx.coroutines.*
+import org.bukkit.plugin.java.JavaPlugin
+
+class Genius : JavaPlugin() {
+    private lateinit var component: PluginComponent
+    lateinit var scope: CoroutineScope
+
+    override fun onEnable() {
+        saveDefaultConfig()
+        registerPluginScope()
+        buildComponent()
+        registerEvents()
+        registerCommands()
+        logger.info { "Successfully enabled Genius ${pluginMeta.version}!" }
+    }
+
+    override fun onDisable() {
+        cleanUpPluginScope()
+    }
+
+    private fun buildComponent() {
+        component = DaggerPluginComponent.builder()
+            .pluginModule(PluginModule(this))
+            .build()
+    }
+
+    private fun registerPluginScope() {
+        scope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
+    }
+
+    private fun cleanUpPluginScope() {
+        scope.cancel()
+    }
+
+    private fun registerEvents() {
+        logger.info { "Registering event listeners" }
+
+        server.pluginManager.registerEvents(component.playerListener(), this)
+
+        logger.info { "Successfully registered event listeners" }
+    }
+
+    private fun registerCommands() {
+        logger.info { "Registering commands" }
+
+        lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
+            it.registrar().register(
+                component.askCommand().createCommandNode(),
+                component.askCommand().description,
+                component.askCommand().aliases
+            )
+
+            it.registrar().register(
+                component.manageCommand().createCommandNode(),
+                component.manageCommand().description
+            )
+        }
+
+        logger.info { "Successfully registered commands" }
+    }
+}
