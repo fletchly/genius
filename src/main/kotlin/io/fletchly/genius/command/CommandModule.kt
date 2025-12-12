@@ -43,7 +43,9 @@ class CommandModule {
         conversationManager: ConversationManager,
     ) = AskCommand(configurationManager, plugin, pluginScope, pluginLogger, conversationManager)
 
-    fun provideManageCommand(
+    @Provides
+    @Singleton
+    fun provideClearContextCommand(
         pluginScope: CoroutineScope,
         pluginLogger: Logger,
         contextService: ContextService,
