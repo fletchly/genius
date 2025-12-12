@@ -15,3 +15,6 @@ permissions:
       genius.manage:
         description: "Manage Genius"
         default: op
+      genius.info:
+        description: "Get info on Genius"
+        default: true
