@@ -21,8 +21,8 @@ package io.fletchly.genius.ollama
 
 import dagger.Module
 import dagger.Provides
-import io.fletchly.genius.config.ConfigManager
-import io.fletchly.genius.config.PromptManager
+import io.fletchly.genius.config.manager.ConfigurationManager
+import io.fletchly.genius.config.manager.SystemPromptManager
 import io.fletchly.genius.ollama.client.HttpClient
 import io.fletchly.genius.ollama.client.OllamaHttpClient
 import io.fletchly.genius.ollama.service.ChatService
@@ -33,13 +33,13 @@ import javax.inject.Singleton
 class OllamaModule {
     @Provides
     @Singleton
-    fun provideHttpClient(configManager: ConfigManager): HttpClient = OllamaHttpClient(configManager)
+    fun provideHttpClient(configurationManager: ConfigurationManager): HttpClient = OllamaHttpClient(configurationManager)
 
     @Provides
     @Singleton
     fun provideChatService(
-        configManager: ConfigManager,
-        promptManager: PromptManager,
+        configurationManager: ConfigurationManager,
+        systemPromptManager: SystemPromptManager,
         httpClient: HttpClient
-    ): ChatService = OllamaChatService(configManager, promptManager, httpClient)
+    ): ChatService = OllamaChatService(configurationManager, systemPromptManager, httpClient)
 }

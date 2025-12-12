@@ -19,8 +19,8 @@
 
 package io.fletchly.genius.ollama.service
 
-import io.fletchly.genius.config.ConfigManager
-import io.fletchly.genius.config.PromptManager
+import io.fletchly.genius.config.manager.ConfigurationManager
+import io.fletchly.genius.config.manager.SystemPromptManager
 import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.client.HttpClient
 import io.fletchly.genius.ollama.client.HttpClientException
@@ -29,28 +29,28 @@ import io.fletchly.genius.ollama.model.OllamaRequest
 import javax.inject.Inject
 
 class OllamaChatService @Inject constructor(
-    private val configManager: ConfigManager,
-    private val promptManager: PromptManager,
+    private val configurationManager: ConfigurationManager,
+    private val systemPromptManager: SystemPromptManager,
     private val httpClient: HttpClient
 ) : ChatService {
     override suspend fun generateChat(messages: List<Message>): Message {
         // Build Ollama response parameters
         val ollamaOptions = OllamaOptions(
-            temperature = configManager.ollamaTemperature,
-            topK = configManager.ollamaTopK,
-            topP = configManager.ollamaTopP,
-            numPredict = configManager.ollamaNumPredict
+            temperature = configurationManager.ollamaTemperature,
+            topK = configurationManager.ollamaTopK,
+            topP = configurationManager.ollamaTopP,
+            numPredict = configurationManager.ollamaNumPredict
         )
 
         // Build system prompt
         val systemPromptMessage = Message(
-            content = promptManager.prompt,
+            content = systemPromptManager.prompt,
             role = Message.SYSTEM
         )
 
         // Build request
         val request = OllamaRequest(
-            model = configManager.ollamaModel,
+            model = configurationManager.ollamaModel,
             options = ollamaOptions,
             messages = listOf(systemPromptMessage) + messages
         )

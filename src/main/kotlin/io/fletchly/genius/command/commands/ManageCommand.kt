@@ -1,8 +1,8 @@
-package io.fletchly.genius.command.registry
+package io.fletchly.genius.command.commands
 
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
-import io.fletchly.genius.command.GeniusCommand
+import io.fletchly.genius.command.commands.GeniusCommand
 import io.fletchly.genius.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands

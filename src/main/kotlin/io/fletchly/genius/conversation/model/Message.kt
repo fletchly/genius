@@ -21,11 +21,25 @@ package io.fletchly.genius.conversation.model
 
 import kotlinx.serialization.Serializable
 
+/**
+ * Universal message model
+ *
+ * @property content message content
+ * @property role role of message sender
+ */
 @Serializable
 data class Message(
     val content: String,
     val role: String
 ) {
+    /**
+     * Sender roles
+     *
+     * @property SYSTEM system instructions (system prompts)
+     * @property USER messages from the user
+     * @property ASSISTANT messages from the assistant
+     * @property TOOL messages from tools
+     */
     companion object Role {
         const val SYSTEM = "system"
         const val USER = "user"

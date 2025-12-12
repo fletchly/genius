@@ -1,5 +1,5 @@
 package io.fletchly.genius.ollama.client
-import io.fletchly.genius.config.ConfigManager
+import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
@@ -16,7 +16,7 @@ import org.mockito.Mockito
 
 class OllamaHttpClientTests {
 
-    private lateinit var configManager: ConfigManager
+    private lateinit var configurationManager: ConfigurationManager
     private lateinit var server: MockWebServer
 
     @BeforeEach
@@ -24,9 +24,9 @@ class OllamaHttpClientTests {
         server = MockWebServer()
         server.start()
 
-        configManager = Mockito.mock(ConfigManager::class.java)
-        Mockito.`when`(configManager.ollamaBaseUrl).thenReturn(server.url("/").toString())
-        Mockito.`when`(configManager.ollamaApiKey).thenReturn("test-api-key")
+        configurationManager = Mockito.mock(ConfigurationManager::class.java)
+        Mockito.`when`(configurationManager.ollamaBaseUrl).thenReturn(server.url("/").toString())
+        Mockito.`when`(configurationManager.ollamaApiKey).thenReturn("test-api-key")
     }
 
     @AfterEach
@@ -36,10 +36,10 @@ class OllamaHttpClientTests {
 
     @Test
     fun `constructor should throw HttpClientException when api key is null`() {
-        Mockito.`when`(configManager.ollamaApiKey).thenReturn(null)
+        Mockito.`when`(configurationManager.ollamaApiKey).thenReturn(null)
 
         val exception = assertThrows<HttpClientException> {
-            OllamaHttpClient(configManager)
+            OllamaHttpClient(configurationManager)
         }
 
         assertEquals("No Ollama API key provided!", exception.message)
@@ -47,7 +47,7 @@ class OllamaHttpClientTests {
 
     @Test
     fun `constructor should initialize with valid config`() {
-        val client = OllamaHttpClient(configManager)
+        val client = OllamaHttpClient(configurationManager)
         assertEquals(server.url("/").toString(), client.baseUrl)
         assertEquals("test-api-key", client.apiKey)
     }
@@ -79,7 +79,7 @@ class OllamaHttpClientTests {
             .code(200)
             .build())
 
-        val client = OllamaHttpClient(configManager)
+        val client = OllamaHttpClient(configurationManager)
 
         val request = OllamaRequest(
             model = "gemma3",
@@ -109,7 +109,7 @@ class OllamaHttpClientTests {
             .build()
         )
 
-        val client = OllamaHttpClient(configManager)
+        val client = OllamaHttpClient(configurationManager)
 
         val request = OllamaRequest(
             model = "gemma3",

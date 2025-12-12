@@ -55,15 +55,20 @@ class Genius : JavaPlugin() {
     }
 
     private fun registerEvents() {
-        logger.info { "Registering event listeners" }
+        logger.info { "Registering ${component.listeners().size} event listeners" }
+        var registered = 0
 
-        server.pluginManager.registerEvents(component.playerListener(), this)
+        for (listener in component.listeners()) {
+            server.pluginManager.registerEvents(listener, this)
+            registered++
+        }
 
-        logger.info { "Successfully registered event listeners" }
+        logger.info { "Successfully registered ${registered}/${component.listeners().size} event listeners" }
     }
 
     private fun registerCommands() {
-        logger.info { "Registering commands" }
+        logger.info { "Registering ${component.commands().size} commands" }
+        var registered = 0
 
         for (command in component.commands()) {
             lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
@@ -73,8 +78,9 @@ class Genius : JavaPlugin() {
                     command.aliases
                 )
             }
+            registered++
         }
 
-        logger.info { "Successfully registered commands" }
+        logger.info { "Successfully registered ${registered}/${component.commands().size} commands" }
     }
 }

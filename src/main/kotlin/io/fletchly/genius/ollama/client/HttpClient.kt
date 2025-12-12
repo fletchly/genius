@@ -25,6 +25,10 @@ import io.fletchly.genius.ollama.model.OllamaResponse
 interface HttpClient {
     /**
      * Fetch chat response from Ollama API
+     *
+     * @param request request body to send to Ollama
+     *
+     * @return response body from Ollama
      */
     suspend fun fetchChatResponse(request: OllamaRequest): OllamaResponse
 }

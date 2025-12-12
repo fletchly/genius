@@ -17,20 +17,25 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.listeners
+package io.fletchly.genius.event
 
 import dagger.Module
 import dagger.Provides
+import org.bukkit.event.Listener
 import io.fletchly.genius.context.service.ContextService
+import io.fletchly.genius.event.listeners.PlayerListener
 import kotlinx.coroutines.CoroutineScope
 import java.util.logging.Logger
 
 @Module
-class ListenerModule {
+class EventModule {
     @Provides
     fun providePlayerListener(
         pluginLogger: Logger,
         pluginScope: CoroutineScope,
         contextService: ContextService
         ) = PlayerListener(pluginLogger, pluginScope, contextService)
+
+    @Provides
+    fun provideListeners(playerListener: PlayerListener): List<Listener> = listOf(playerListener)
 }

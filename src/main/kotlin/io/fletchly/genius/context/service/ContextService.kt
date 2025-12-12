@@ -23,7 +23,7 @@ import io.fletchly.genius.conversation.model.Message
 import java.util.*
 
 /**
- * Manages player context
+ * Manages player conversation context
  */
 interface ContextService {
     /**
@@ -37,7 +37,7 @@ interface ContextService {
     suspend fun clearContext()
 
     /**
-     * Clear context for specified player
+     * Clear context for specific player
      */
     suspend fun clearContext(playerUuid: UUID)
 }

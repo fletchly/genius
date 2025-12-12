@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.config
+package io.fletchly.genius.config.manager
 
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
@@ -25,8 +25,10 @@ import javax.inject.Inject
 
 /**
  * System prompt manager
+ *
+ * @property prompt Genius system prompt
  */
-class PromptManager @Inject constructor(private val plugin: JavaPlugin) {
+class SystemPromptManager @Inject constructor(private val plugin: JavaPlugin) {
     private val promptPath = "system-prompt.md"
     private var _prompt: String = loadDefaultPrompt()
     val prompt: String get() = _prompt
@@ -37,16 +39,11 @@ class PromptManager @Inject constructor(private val plugin: JavaPlugin) {
         loadPromptFile()
     }
 
-    /**
-     * Load bundled default prompt from resources
-     */
     private fun loadDefaultPrompt(): String = plugin.getResource(promptPath)!!
         .bufferedReader()
         .use { it.readText() }
 
-    /**
-     * Save default prompt to server
-     */
+
     private fun saveDefaultPrompt() {
         if (plugin.getResource(promptPath) !== null) {
             plugin.saveResource(promptPath, false)
@@ -54,16 +51,13 @@ class PromptManager @Inject constructor(private val plugin: JavaPlugin) {
     }
 
     /**
-     * Reload prompt
+     * Reload system prompt from file
      */
     fun reload() {
         loadPromptFile()
         plugin.logger.info("System prompt reloaded from $promptPath")
     }
 
-    /**
-     * Load the contents of the prompt file
-     */
     private fun loadPromptFile() {
         val file = File(plugin.dataFolder, promptPath)
         _prompt = if (file.exists()) {

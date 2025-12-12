@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.context.service
 
-import io.fletchly.genius.config.ConfigManager
+import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.conversation.model.Message
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -29,8 +29,11 @@ import kotlin.collections.List
 import kotlin.collections.listOf
 import kotlin.collections.toList
 
-class ConcurrentHashMapContextService @Inject constructor(configManager: ConfigManager) : ContextService {
-    private val maxPlayerMessages = configManager.contextMaxPlayerMessages
+/**
+ * [ContextService] implementation that stores conversation context in a [ConcurrentHashMap]
+ */
+class ConcurrentHashMapContextService @Inject constructor(configurationManager: ConfigurationManager) : ContextService {
+    private val maxPlayerMessages = configurationManager.contextMaxPlayerMessages
     private val playerContext = ConcurrentHashMap<UUID, ArrayDeque<Message>>()
 
     override suspend fun addChat(

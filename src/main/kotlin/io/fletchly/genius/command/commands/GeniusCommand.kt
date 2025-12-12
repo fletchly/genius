@@ -1,4 +1,4 @@
-package io.fletchly.genius.command
+package io.fletchly.genius.command.commands
 
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode

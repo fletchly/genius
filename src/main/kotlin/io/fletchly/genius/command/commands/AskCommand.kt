@@ -1,11 +1,11 @@
-package io.fletchly.genius.command.registry
+package io.fletchly.genius.command.commands
 
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.Genius
-import io.fletchly.genius.command.GeniusCommand
-import io.fletchly.genius.config.ConfigManager
+import io.fletchly.genius.command.commands.GeniusCommand
+import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.conversation.service.ConversationManager
 import io.fletchly.genius.ollama.service.ChatServiceException
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -25,7 +25,7 @@ import javax.inject.Inject
  * Structure and logic for /ask
  */
 class AskCommand @Inject constructor(
-    configManager: ConfigManager,
+    configurationManager: ConfigurationManager,
     private val plugin: Genius,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,
@@ -45,7 +45,7 @@ class AskCommand @Inject constructor(
         }
 
     private val displayName = Component.text("[")
-        .append { Component.text(configManager.geniusAgentName, NamedTextColor.GREEN) }
+        .append { Component.text(configurationManager.geniusAgentName, NamedTextColor.GREEN) }
         .append { Component.text("] ") }
 
     override fun execute(ctx: CommandContext<CommandSourceStack>): Int {

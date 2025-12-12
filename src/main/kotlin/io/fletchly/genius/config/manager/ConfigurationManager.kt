@@ -17,12 +17,25 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.config
+package io.fletchly.genius.config.manager
 
 import org.bukkit.configuration.file.FileConfiguration
 import javax.inject.Inject
 
-class ConfigManager @Inject constructor(private val config: FileConfiguration) {
+/**
+ * Global configuration manager
+ *
+ * @property geniusAgentName name for Genius to use in chat
+ * @property ollamaBaseUrl base URL for Ollama API service
+ * @property ollamaApiKey credential for Ollama API service
+ * @property ollamaModel model for Ollama to use for chat generation
+ * @property ollamaTemperature output temperature
+ * @property ollamaTopK output top-k sampling
+ * @property ollamaTopP output top-K sampling
+ * @property ollamaNumPredict number of predictions (tokens) to limit the response to
+ * @property contextMaxPlayerMessages maximum messages per player to hold in conversation context
+ */
+class ConfigurationManager @Inject constructor(private val config: FileConfiguration) {
     val geniusAgentName: String
         get() = config.getString(
             GENIUS_AGENT_NAME,
@@ -38,7 +51,7 @@ class ConfigManager @Inject constructor(private val config: FileConfiguration) {
     val contextMaxPlayerMessages: Int get() = config.getInt(CONTEXT_MAX_PLAYER_MESSAGES, 20)
 
     /**
-     * Path mappings for config file
+     * Path mappings for config.yml file
      */
     private companion object Paths {
         const val GENIUS_AGENT_NAME = "genius.agentName"

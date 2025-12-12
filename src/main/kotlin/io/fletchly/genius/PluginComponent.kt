@@ -20,14 +20,15 @@
 package io.fletchly.genius
 
 import dagger.Component
-import io.fletchly.genius.command.GeniusCommand
+import io.fletchly.genius.command.commands.GeniusCommand
 import io.fletchly.genius.command.CommandModule
 import io.fletchly.genius.config.ConfigModule
 import io.fletchly.genius.context.ContextModule
 import io.fletchly.genius.conversation.ConversationModule
-import io.fletchly.genius.listeners.ListenerModule
-import io.fletchly.genius.listeners.PlayerListener
+import io.fletchly.genius.event.EventModule
+import io.fletchly.genius.event.listeners.PlayerListener
 import io.fletchly.genius.ollama.OllamaModule
+import org.bukkit.event.Listener
 import javax.inject.Singleton
 
 @Singleton
@@ -39,11 +40,11 @@ import javax.inject.Singleton
         CommandModule::class,
         ConversationModule::class,
         OllamaModule::class,
-        ListenerModule::class
+        EventModule::class
     ]
 )
 interface PluginComponent {
     fun commands(): List<GeniusCommand>
 
-    fun playerListener(): PlayerListener
+    fun listeners(): List<Listener>
 }

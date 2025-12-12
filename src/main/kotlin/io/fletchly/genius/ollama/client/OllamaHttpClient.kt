@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.ollama.client
 
-import io.fletchly.genius.config.ConfigManager
+import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
 import io.ktor.client.call.*
@@ -36,15 +36,12 @@ import javax.inject.Inject
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(configManager: ConfigManager) : HttpClient {
-    val baseUrl = configManager.ollamaBaseUrl
+class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationManager) : HttpClient {
+    val baseUrl = configurationManager.ollamaBaseUrl
 
     // Throw exception if no API key is provided
-    val apiKey = configManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
+    val apiKey = configurationManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
 
-    /**
-     * Internal Ktor client
-     */
     private val client = io.ktor.client.HttpClient(CIO) {
         install(ContentNegotiation) {
             json(Json {
@@ -58,9 +55,6 @@ class OllamaHttpClient @Inject constructor(configManager: ConfigManager) : HttpC
         }
     }
 
-    /**
-     * Fetch chat response from Ollama API
-     */
     override suspend fun fetchChatResponse(request: OllamaRequest): OllamaResponse {
         return try {
             val response: HttpResponse = client.post {
@@ -76,9 +70,6 @@ class OllamaHttpClient @Inject constructor(configManager: ConfigManager) : HttpC
         }
     }
 
-    /**
-     * Handle Http responses
-     */
     private suspend inline fun <reified T> handleResponse(response: HttpResponse): T {
         if (response.status.isSuccess()) {
             return response.body()
