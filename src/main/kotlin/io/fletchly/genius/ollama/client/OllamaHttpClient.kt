@@ -49,6 +49,20 @@ class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationMa
                 encodeDefaults = true
             })
         }
+        install(HttpTimeout) {
+            requestTimeoutMillis = REQUEST_TIMEOUT_MILLIS
+            connectTimeoutMillis = CONNECT_TIMEOUT_MILLIS
+            socketTimeoutMillis = SOCKET_TIMEOUT_MILLIS
+        }
+        install(HttpRequestRetry) {
+            retryOnServerErrors(maxRetries = MAX_RETRIES)
+            retryOnException(maxRetries = MAX_RETRIES, retryOnTimeout = true)
+            exponentialDelay(
+                baseDelayMs = 1000L,
+                maxDelayMs = 60000L,
+                randomizationMs = 1000L
+            )
+        }
         defaultRequest {
             url(baseUrl)
             header(HttpHeaders.Authorization, "Bearer $apiKey")
@@ -76,5 +90,12 @@ class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationMa
         } else {
             throw HttpClientException("Request to Ollama API failed with status: ${response.status}", null)
         }
+    }
+
+    private companion object ClientOptions {
+        const val REQUEST_TIMEOUT_MILLIS: Long = 10 * 60 * 1000 // 10 minutes
+        const val CONNECT_TIMEOUT_MILLIS: Long = 10 * 1000 // 10 seconds
+        const val SOCKET_TIMEOUT_MILLIS: Long = 10 * 60 * 1000 // 10 minutes
+        const val MAX_RETRIES = 5
     }
 }
