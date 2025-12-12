@@ -1,8 +1,9 @@
-package io.fletchly.genius.command.commands
+package io.fletchly.genius.command.commands.manage
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
+import io.fletchly.genius.command.commands.GeniusCommand
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -15,9 +16,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import java.util.UUID
 import javax.inject.Inject
-import kotlin.uuid.Uuid
 
 class InfoCommand @Inject constructor(
     private val configurationManager: ConfigurationManager,
@@ -26,18 +25,16 @@ class InfoCommand @Inject constructor(
 ): GeniusCommand {
     override val description = "Get info on Genius"
     override val aliases: List<String> = listOf()
-    override val permission = "genius.info"
+    override val permission = "genius.manage.info"
     override val commandNode: LiteralCommandNode<CommandSourceStack>
         get() {
-            return Commands.literal("genius")
-                .then(
-                    Commands.literal("info")
-                        .requires {
-                            it.sender.hasPermission(permission)
-                        }
-                        .executes { execute(it) }
-                )
+            return Commands.literal("info")
+                .requires {
+                    it.sender.hasPermission(permission)
+                }
+                .executes { execute(it) }
                 .build()
+
         }
 
     override fun execute(ctx: CommandContext<CommandSourceStack>): Int {
@@ -60,7 +57,7 @@ class InfoCommand @Inject constructor(
                     }
             }
 
-        if ( executor is Player ) {
+        if (executor is Player) {
             val playerUuid = executor.uniqueId
 
             val job = pluginScope.launch {
@@ -68,9 +65,9 @@ class InfoCommand @Inject constructor(
                 val maxPlayerMessages = configurationManager.contextMaxPlayerMessages
 
                 textComponent.append {
-                    Component.text("Context used: ")
+                    Component.text("\nContext used: ")
                         .append {
-                            Component.text("\n$playerContextSize/$maxPlayerMessages/")
+                            Component.text("$playerContextSize/$maxPlayerMessages")
                                 .color(NamedTextColor.YELLOW)
                         }
                 }
@@ -86,8 +83,8 @@ class InfoCommand @Inject constructor(
         sendInfo(textComponent, sender)
         return Command.SINGLE_SUCCESS
     }
-}
 
-private fun sendInfo(textComponent: TextComponent.Builder, sender: CommandSender) {
-    sender.sendMessage(textComponent)
+    private fun sendInfo(textComponent: TextComponent.Builder, sender: CommandSender) {
+        sender.sendMessage(textComponent)
+    }
 }

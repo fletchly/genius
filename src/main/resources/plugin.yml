@@ -12,14 +12,16 @@ permissions:
       genius.ask:
         description: "Ask Genius a question"
         default: true
-      genius.clear:
+      genius.manage:
         children:
-          genius.clear.self:
-            description: "Clear conversation context for yourself"
+          genius.manage.clear:
+            children:
+              genius.manage.clear.self:
+                description: "Clear conversation context for yourself"
+                default: true
+              genius.manage.clear.any:
+                description: "Clear conversation context for anyone"
+                default: op
+          genius.manage.info:
+            description: "Get info on Genius"
             default: true
-          genius.clear.any:
-            description: "Clear conversation context for anyone"
-            default: op
-      genius.info:
-        description: "Get info on Genius"
-        default: true
