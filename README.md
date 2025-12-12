@@ -2,6 +2,7 @@
 
 [![Github](https://img.shields.io/badge/github-genius-blue?logo=github)](https://github.com/fletchly/genius)
 [![Modrinth](https://img.shields.io/badge/modrinth-genius-00AF5C?logo=modrinth)](https://modrinth.com/plugin/genius)
+![GitHub Release](https://img.shields.io/github/v/release/fletchly/genius?include_prereleases)
 [![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/fletchly/genius/actions/workflows/build.yml)
 
 # Genius
