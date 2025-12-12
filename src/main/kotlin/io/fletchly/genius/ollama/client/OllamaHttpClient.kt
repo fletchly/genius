@@ -31,6 +31,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import java.io.IOException
 import javax.inject.Inject
 
 /**
@@ -40,10 +41,10 @@ class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationMa
     private val baseUrl: String by lazy { configurationManager.ollamaBaseUrl }
     private val apiKey: String by lazy {
         configurationManager.ollamaApiKey
-            ?: throw HttpClientException("No Ollama API key provided!", null)
+            ?: throw GeniusHttpClientException.ConfigurationError("No Ollama API key provided!")
     }
 
-    private val client: HttpClient by lazy {
+    override val ktorClient: HttpClient by lazy {
         HttpClient(CIO) {
             install(ContentNegotiation) {
                 json(Json {
@@ -73,20 +74,16 @@ class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationMa
         }
     }
 
-    /**
-     * Generate chat using Ollama API
-     *
-     * @param request structured request for Ollama API
-     * @return structured response from Ollama API
-     */
     override suspend fun chat(request: OllamaRequest): OllamaResponse =
         try {
-            client.post("/api/chat") {
+            ktorClient.post("/api/chat") {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }.body<OllamaResponse>()
-        } catch (e: Exception) {
-            throw HttpClientException("Request to Ollama API failed: ${e.message}", e)
+        } catch (e: IOException) {
+            throw GeniusHttpClientException.NetworkError(e)
+        } catch (e: ServerResponseException) {
+            throw GeniusHttpClientException.ServerError(e.response.status)
         }
 
     private companion object {

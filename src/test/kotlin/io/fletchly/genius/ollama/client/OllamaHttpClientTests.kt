@@ -38,7 +38,7 @@ class OllamaHttpClientTests {
     fun `constructor should throw HttpClientException when api key is null`() {
         Mockito.`when`(configurationManager.ollamaApiKey).thenReturn(null)
 
-        val exception = assertThrows<HttpClientException> {
+        val exception = assertThrows<GeniusHttpClientException> {
             OllamaHttpClient(configurationManager)
         }
 
@@ -122,10 +122,10 @@ class OllamaHttpClientTests {
             )
         )
 
-        val exception: HttpClientException
+        val exception: GeniusHttpClientException
 
         runBlocking {
-            exception = assertThrows<HttpClientException> {
+            exception = assertThrows<GeniusHttpClientException> {
                 client.chat(request)
             }
         }

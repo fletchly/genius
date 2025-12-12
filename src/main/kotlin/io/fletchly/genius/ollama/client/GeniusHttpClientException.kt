@@ -19,7 +19,13 @@
 
 package io.fletchly.genius.ollama.client
 
+import io.ktor.http.HttpStatusCode
+
 /**
- * Exception to handle HttpClient errors
+ * Exception to handle GeniusHttpClient errors
  */
-class HttpClientException(message: String, cause: Throwable?) : Exception(message, cause)
+sealed class GeniusHttpClientException(message: String, cause: Throwable?) : Exception(message, cause) {
+    class ConfigurationError(msg: String) : GeniusHttpClientException(msg, null)
+    class NetworkError(cause: Throwable) : GeniusHttpClientException("Network failure", cause)
+    class ServerError(val status: HttpStatusCode) : GeniusHttpClientException("Server error: $status", null)
+}

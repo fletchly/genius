@@ -23,7 +23,7 @@ import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.config.manager.SystemPromptManager
 import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.client.GeniusHttpClient
-import io.fletchly.genius.ollama.client.HttpClientException
+import io.fletchly.genius.ollama.client.GeniusHttpClientException
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
 import javax.inject.Inject
@@ -58,7 +58,7 @@ class OllamaChatService @Inject constructor(
         // Use Http client to fetch response
         return try {
             httpClient.chat(request).message
-        } catch (httpClientException: HttpClientException) {
+        } catch (httpClientException: GeniusHttpClientException) {
             throw ChatServiceException("An HTTP error occurred: ${httpClientException.message}", httpClientException)
         } catch (e: Exception) {
             throw ChatServiceException("An unknown error occured: ${e.message}", e)
