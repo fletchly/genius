@@ -56,6 +56,9 @@ class AskCommand @Inject constructor(
         .append { text(agentName, NamedTextColor.GREEN) }
         .append { text("] ") }
 
+    /**
+     * Creates command structure
+     */
     fun createCommandNode(): LiteralCommandNode<CommandSourceStack> {
         return Commands.literal("ask")
             .requires {
@@ -71,6 +74,11 @@ class AskCommand @Inject constructor(
             .build()
     }
 
+    /**
+     * Executes chat generation logic
+     *
+     * @param ctx command context
+     */
     private fun generateChat(ctx: CommandContext<CommandSourceStack>): Int {
         sendPlayerMessage(ctx)
         executeAsync(ctx)
@@ -78,29 +86,30 @@ class AskCommand @Inject constructor(
     }
 
     /**
-     * Display player prompt in chat
+     * Displays player message in chat
+     *
+     * @param ctx command context
      */
     private fun sendPlayerMessage(ctx: CommandContext<CommandSourceStack>) {
-        // Get required values from command context
         val playerName = ctx.source.executor!!.name // safe to assume not null here because of command requirements
         val prompt = ctx.getArgument("prompt", String::class.java)
 
-        // Build message
         val playerMessage = text {
             it.content("[$playerName] $prompt")
             it.color(NamedTextColor.GRAY)
             it.decoration(TextDecoration.ITALIC, true)
         }
 
-        // Display message in chat
         ctx.source.sender.sendMessage { playerMessage }
     }
 
     /**
-     * Display Genius response in chat
+     * Displays response in chat
+     *
+     * @param response message to send to player
+     * @param ctx command context
      */
     private fun sendResponse(response: String, ctx: CommandContext<CommandSourceStack>) {
-        // Play success sound
         ctx.source.sender.playSound(
             Sound.sound(
                 SoundEventKeys.ENTITY_EXPERIENCE_ORB_PICKUP,
@@ -110,15 +119,15 @@ class AskCommand @Inject constructor(
             ), Sound.Emitter.self()
         )
 
-        // Display response in chat
         ctx.source.sender.sendMessage { displayName.append { text(response) } }
     }
 
     /**
-     * Display error messages in chat
+     * Displays error message in chat
+     *
+     * @param message error message
      */
     private fun sendFailure(message: String, ctx: CommandContext<CommandSourceStack>) {
-        // Play failure sound
         ctx.source.sender.playSound(
             Sound.sound(
                 SoundEventKeys.BLOCK_GLASS_BREAK,
@@ -128,10 +137,14 @@ class AskCommand @Inject constructor(
             ), Sound.Emitter.self()
         )
 
-        // Display response in chat
         ctx.source.sender.sendMessage { displayName.append { text(message, NamedTextColor.RED) } }
     }
 
+    /**
+     * Executes core command logic asynchronously
+     *
+     * @param ctx command context
+     */
     private fun executeAsync(ctx: CommandContext<CommandSourceStack>) {
         val prompt = ctx.getArgument("prompt", String::class.java)
         val playerUUID = ctx.source.executor!!.uniqueId // safe to assume not null here because of command requirements
@@ -139,16 +152,21 @@ class AskCommand @Inject constructor(
         pluginScope.launch {
             try {
                 val response = conversationManager.generateChat(prompt, playerUUID)
+                // Use plugin scheduler to safely access chat API from coroutine context
                 plugin.server.scheduler.runTask(plugin, Runnable {
                     sendResponse(response, ctx)
                 })
             } catch (chatServiceEx: ChatServiceException) {
                 pluginLogger.warning { chatServiceEx.message }
-                sendFailure("An error occurred while generating a response", ctx)
+                plugin.server.scheduler.runTask(plugin, Runnable {
+                    sendFailure("An error occurred while generating a response", ctx)
+                })
 
             } catch (ex: Exception) {
                 pluginLogger.warning { ex.message }
-                sendFailure("An unknown error occurred", ctx)
+                plugin.server.scheduler.runTask(plugin, Runnable {
+                    sendFailure("An unknown error occurred", ctx)
+                })
             }
         }
     }

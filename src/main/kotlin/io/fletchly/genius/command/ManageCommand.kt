@@ -39,6 +39,9 @@ class ManageCommand @Inject constructor(
 ) {
     val description = "Manage Genius"
 
+    /**
+     * Creates command structure
+     */
     fun createCommandNode(): LiteralCommandNode<CommandSourceStack> {
         return Commands.literal("genius")
             .requires {
@@ -51,6 +54,9 @@ class ManageCommand @Inject constructor(
             .build()
     }
 
+    /**
+     * Executes context-clearing logic
+     */
     private fun clearContext(ctx: CommandContext<CommandSourceStack>): Int {
         ctx.source.sender.sendMessage(text("Clearing context for all players...", NamedTextColor.YELLOW))
 
