@@ -25,6 +25,7 @@ import io.fletchly.genius.Genius
 import io.fletchly.genius.command.commands.AskCommand
 import io.fletchly.genius.command.commands.InfoCommand
 import io.fletchly.genius.command.commands.ManageCommand
+import io.fletchly.genius.command.commands.ClearContextCommand
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ContextService
 import io.fletchly.genius.conversation.service.ConversationManager
@@ -44,11 +45,13 @@ class CommandModule {
         conversationManager: ConversationManager,
     ) = AskCommand(configurationManager, plugin, pluginScope, pluginLogger, conversationManager)
 
-    fun provideManageCommand(
+    @Provides
+    @Singleton
+    fun provideClearContextCommand(
         pluginScope: CoroutineScope,
         pluginLogger: Logger,
         contextService: ContextService,
-    ) = ManageCommand(contextService, pluginScope, pluginLogger)
+    ) = ClearContextCommand(contextService, pluginScope, pluginLogger)
 
     @Provides
     @Singleton
@@ -62,11 +65,11 @@ class CommandModule {
     @Singleton
     fun provideCommands(
         askCommand: AskCommand,
-        manageCommand: ManageCommand,
+        clearContextCommand: ClearContextCommand
         infoCommand: InfoCommand
     ) = listOf(
         askCommand,
-        manageCommand,
         infoCommand
+        clearContextCommand
     )
 }
