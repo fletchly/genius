@@ -7,7 +7,8 @@
 # Genius
 *Large language model (LLM) integration for Minecraft servers.*
 
-> [!CAUTION]
+> ⚠️ Caution
+> 
 > This plugin is still in **early beta** stages of development and has **not** been fully tested.
 >
 > Even though it doesn't interact with critical server systems (like worlds, player data, or core mechanics), beta software always carries some risk.
@@ -24,9 +25,10 @@
 > Thank you for supporting the development of Genius. 💡
 
 ## Features
-- Custom model support via Ollama API
-- Configurable response parameters
-- Async execution
+- Custom model support via Ollama API.
+- Individual player conversation context
+- Configurable response parameters.
+- Asynchronous execution.
 
 ## Documentation
 Full documentation is available on the [Genius wiki](https://fletchly.github.io/genius-wiki/)
