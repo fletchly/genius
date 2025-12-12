@@ -63,7 +63,7 @@ class CommandModule {
 
     @Provides
     @Singleton
-    fun provideManageCommang(
+    fun provideManageCommand(
         infoCommand: InfoCommand,
         clearContextCommand: ClearContextCommand
     ) = ManageCommand(clearContextCommand, infoCommand)
