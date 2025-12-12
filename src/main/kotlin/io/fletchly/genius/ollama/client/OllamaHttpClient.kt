@@ -37,10 +37,10 @@ import javax.inject.Inject
  * Http client for interacting with the Ollama API
  */
 class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationManager) : HttpClient {
-    val baseUrl = configurationManager.ollamaBaseUrl
+    private val baseUrl = configurationManager.ollamaBaseUrl
 
     // Throw exception if no API key is provided
-    val apiKey = configurationManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
+    private val apiKey = configurationManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
 
     private val client = io.ktor.client.HttpClient(CIO) {
         install(ContentNegotiation) {
