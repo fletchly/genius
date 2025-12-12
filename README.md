@@ -5,7 +5,7 @@
 [![Build](https://github.com/fletchly/genius/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/fletchly/genius/actions/workflows/build.yml)
 
 # Genius
-*Large language model (LLM) integration for Minecraft servers.*
+*Large language model (LLM) integration for Paper Minecraft servers.*
 
 > ⚠️ Caution
 > 
@@ -24,9 +24,12 @@
 >
 > Thank you for supporting the development of Genius. 💡
 
+## Supported Versions
+Genius supports Minecraft servers running on Paper 1.21.x
+
 ## Features
 - Custom model support via Ollama API.
-- Individual player conversation context
+- Individual player conversation context.
 - Configurable response parameters.
 - Asynchronous execution.
 
