@@ -26,12 +26,13 @@ import io.fletchly.genius.ollama.client.GeniusHttpClient
 import io.fletchly.genius.ollama.client.GeniusHttpClientException
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
+import io.fletchly.genius.ollama.model.OllamaResponse
 import javax.inject.Inject
 
 class OllamaChatService @Inject constructor(
     private val configurationManager: ConfigurationManager,
     private val systemPromptManager: SystemPromptManager,
-    private val httpClient: GeniusHttpClient
+    private val httpClient: GeniusHttpClient<OllamaRequest, OllamaResponse>
 ) : ChatService {
     override suspend fun generateChat(messages: List<Message>): Message {
         // Build Ollama response parameters

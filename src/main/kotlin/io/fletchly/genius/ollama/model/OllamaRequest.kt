@@ -24,9 +24,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OllamaRequest(
+    override val messages: List<Message>,
     val model: String,
-    val messages: List<Message>,
     val options: OllamaOptions,
     val stream: Boolean = false,
     val think: Boolean = false
-)
+): GeniusRequest

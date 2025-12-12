@@ -22,7 +22,7 @@ package io.fletchly.genius.ollama.client
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
-import io.ktor.client.HttpClient
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -37,7 +37,7 @@ import javax.inject.Inject
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationManager) : GeniusHttpClient {
+class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationManager) : GeniusHttpClient<OllamaRequest, OllamaResponse> {
     private val baseUrl: String by lazy { configurationManager.ollamaBaseUrl }
     private val apiKey: String by lazy {
         configurationManager.ollamaApiKey
@@ -84,12 +84,14 @@ class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationMa
             throw GeniusHttpClientException.NetworkError(e)
         } catch (e: ServerResponseException) {
             throw GeniusHttpClientException.ServerError(e.response.status)
+        } catch (e: ClientRequestException) {
+            throw GeniusHttpClientException.ClientError(e.response.status)
         }
 
     private companion object {
-        const val REQUEST_TIMEOUT_MILLIS: Long = 10 * 60 * 1000 // 10 minutes
+        const val REQUEST_TIMEOUT_MILLIS: Long = 2 * 60 * 1000 // 2 minutes
         const val CONNECT_TIMEOUT_MILLIS: Long = 10 * 1000 // 10 seconds
-        const val SOCKET_TIMEOUT_MILLIS: Long = 10 * 60 * 1000 // 10 minutes
+        const val SOCKET_TIMEOUT_MILLIS: Long = 2 * 60 * 1000 // 2 minutes
         const val MAX_RETRIES = 5
     }
 }

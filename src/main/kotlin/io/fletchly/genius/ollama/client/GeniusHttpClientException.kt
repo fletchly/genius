@@ -27,5 +27,6 @@ import io.ktor.http.HttpStatusCode
 sealed class GeniusHttpClientException(message: String, cause: Throwable?) : Exception(message, cause) {
     class ConfigurationError(msg: String) : GeniusHttpClientException(msg, null)
     class NetworkError(cause: Throwable) : GeniusHttpClientException("Network failure", cause)
-    class ServerError(val status: HttpStatusCode) : GeniusHttpClientException("Server error: $status", null)
+    class ServerError(status: HttpStatusCode) : GeniusHttpClientException("Server error: $status", null)
+    class ClientError(status: HttpStatusCode) : GeniusHttpClientException("Client error: $status", null)
 }

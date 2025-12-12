@@ -19,11 +19,13 @@
 
 package io.fletchly.genius.ollama.client
 
+import io.fletchly.genius.ollama.model.GeniusRequest
+import io.fletchly.genius.ollama.model.GeniusResponse
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
 import io.ktor.client.HttpClient
 
-interface GeniusHttpClient {
+interface GeniusHttpClient<Req: GeniusRequest, Res: GeniusResponse> {
     /**
      * Internal ktor HttpClient
      */
@@ -35,5 +37,5 @@ interface GeniusHttpClient {
      * @param request structured request for Ollama API
      * @return structured response from Ollama API
      */
-    suspend fun chat(request: OllamaRequest): OllamaResponse
+    suspend fun chat(request: Req): Res
 }
