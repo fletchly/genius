@@ -20,6 +20,7 @@ repositories {
 val paper_version: String by project
 val dagger_version: String by project
 val ktor_version: String by project
+val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
     // Paper plugin dev tools
     compileOnly("io.papermc.paper:paper-api:$paper_version")
@@ -37,6 +38,17 @@ dependencies {
 
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+
+    // Testing
+    testImplementation(platform("org.junit:junit-bom:6.0.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.0.0")
+
+    testImplementation("org.mockito:mockito-core:5.14.0")
+    mockitoAgent("org.mockito:mockito-core:5.14.0") { isTransitive = false }
+
+    testImplementation("com.squareup.okhttp3:mockwebserver3:5.3.0")
 }
 
 tasks {
@@ -46,30 +58,33 @@ tasks {
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21.10")
     }
+    jar {
+        enabled = false
+    }
+    shadowJar {
+        archiveClassifier = ""
+    }
+    build {
+        dependsOn("shadowJar")
+    }
+    processResources {
+        val props = mapOf("version" to version)
+        inputs.properties(props)
+        filteringCharset = "UTF-8"
+        filesMatching("plugin.yml") {
+            expand(props)
+        }
+    }
+    test {
+        useJUnitPlatform()
+        jvmArgs.add("-javaagent:${mockitoAgent.asPath}")
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
 }
 
 val targetJavaVersion = 21
 kotlin {
     jvmToolchain(targetJavaVersion)
-}
-
-tasks.jar {
-    enabled = false
-}
-
-tasks.shadowJar {
-    archiveClassifier = ""
-}
-
-tasks.build {
-    dependsOn("shadowJar")
-}
-
-tasks.processResources {
-    val props = mapOf("version" to version)
-    inputs.properties(props)
-    filteringCharset = "UTF-8"
-    filesMatching("plugin.yml") {
-        expand(props)
-    }
 }

@@ -1,0 +1,17 @@
+name: Genius
+version: '0.1.0-beta'
+main: io.fletchly.genius.Genius
+api-version: '1.21'
+prefix: "Genius"
+authors:
+  - fletchly
+
+permissions:
+  genius:
+    children:
+      genius.ask:
+        description: "Ask Genius a question"
+        default: true
+      genius.manage:
+        description: "Manage Genius"
+        default: op
