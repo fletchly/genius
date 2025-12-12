@@ -65,17 +65,14 @@ class Genius : JavaPlugin() {
     private fun registerCommands() {
         logger.info { "Registering commands" }
 
-        lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
-            it.registrar().register(
-                component.askCommand().createCommandNode(),
-                component.askCommand().description,
-                component.askCommand().aliases
-            )
-
-            it.registrar().register(
-                component.manageCommand().createCommandNode(),
-                component.manageCommand().description
-            )
+        for (command in component.commands()) {
+            lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
+                it.registrar().register(
+                    command.commandNode,
+                    command.description,
+                    command.aliases
+                )
+            }
         }
 
         logger.info { "Successfully registered commands" }

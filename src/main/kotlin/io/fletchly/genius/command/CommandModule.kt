@@ -22,6 +22,8 @@ package io.fletchly.genius.command
 import dagger.Module
 import dagger.Provides
 import io.fletchly.genius.Genius
+import io.fletchly.genius.command.registry.AskCommand
+import io.fletchly.genius.command.registry.ManageCommand
 import io.fletchly.genius.config.ConfigManager
 import io.fletchly.genius.context.service.ContextService
 import io.fletchly.genius.conversation.service.ConversationManager
@@ -33,19 +35,15 @@ import javax.inject.Singleton
 class CommandModule {
     @Provides
     @Singleton
-    fun provideAskCommand(
+    fun provideCommands(
         configManager: ConfigManager,
         plugin: Genius,
         pluginScope: CoroutineScope,
         pluginLogger: Logger,
-        conversationManager: ConversationManager
-    ) = AskCommand(configManager, plugin, pluginScope, pluginLogger, conversationManager)
-
-    @Provides
-    @Singleton
-    fun provideManageCommand(
+        conversationManager: ConversationManager,
         contextService: ContextService,
-        pluginScope: CoroutineScope,
-        pluginLogger: Logger
-    ) = ManageCommand(contextService, pluginScope, pluginLogger)
+    ) = listOf(
+        AskCommand(configManager, plugin, pluginScope, pluginLogger, conversationManager),
+        ManageCommand(contextService, pluginScope, pluginLogger)
+    )
 }

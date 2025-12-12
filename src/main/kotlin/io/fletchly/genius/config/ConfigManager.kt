@@ -22,9 +22,6 @@ package io.fletchly.genius.config
 import org.bukkit.configuration.file.FileConfiguration
 import javax.inject.Inject
 
-/**
- * Configuration manager
- */
 class ConfigManager @Inject constructor(private val config: FileConfiguration) {
     val geniusAgentName: String
         get() = config.getString(
