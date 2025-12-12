@@ -4,7 +4,6 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.Genius
-import io.fletchly.genius.command.commands.GeniusCommand
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.conversation.service.ConversationManager
 import io.fletchly.genius.ollama.service.ChatServiceException
@@ -37,11 +36,11 @@ class AskCommand @Inject constructor(
     override val commandNode: LiteralCommandNode<CommandSourceStack>
         get() {
             return Commands.literal("ask").requires {
-                    it.executor is Player && it.sender.hasPermission(permission)
-                }.then(
-                    Commands.argument("prompt", StringArgumentType.greedyString()).executes {
-                            execute(it)
-                        }).build()
+                it.executor is Player && it.sender.hasPermission(permission)
+            }.then(
+                Commands.argument("prompt", StringArgumentType.greedyString()).executes {
+                    execute(it)
+                }).build()
         }
 
     private val displayName = Component.text("[")

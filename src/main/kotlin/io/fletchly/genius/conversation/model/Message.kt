@@ -19,6 +19,10 @@
 
 package io.fletchly.genius.conversation.model
 
+import io.fletchly.genius.conversation.model.Message.Role.ASSISTANT
+import io.fletchly.genius.conversation.model.Message.Role.SYSTEM
+import io.fletchly.genius.conversation.model.Message.Role.TOOL
+import io.fletchly.genius.conversation.model.Message.Role.USER
 import kotlinx.serialization.Serializable
 
 /**

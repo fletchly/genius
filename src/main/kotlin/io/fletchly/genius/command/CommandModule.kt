@@ -23,7 +23,6 @@ import dagger.Module
 import dagger.Provides
 import io.fletchly.genius.Genius
 import io.fletchly.genius.command.commands.AskCommand
-import io.fletchly.genius.command.commands.GeniusCommand
 import io.fletchly.genius.command.commands.ManageCommand
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ContextService

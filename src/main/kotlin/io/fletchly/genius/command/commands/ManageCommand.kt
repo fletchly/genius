@@ -2,7 +2,6 @@ package io.fletchly.genius.command.commands
 
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
-import io.fletchly.genius.command.commands.GeniusCommand
 import io.fletchly.genius.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
@@ -20,7 +19,7 @@ class ManageCommand @Inject constructor(
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger
-): GeniusCommand {
+) : GeniusCommand {
     override val description = "Manage Genius"
     override val aliases = listOf<String>()
     override val permission = "genius.manage"
@@ -32,7 +31,7 @@ class ManageCommand @Inject constructor(
                 }
                 .then(
                     Commands.literal("clear")
-                        .executes { execute(it)}
+                        .executes { execute(it) }
                 )
                 .build()
         }

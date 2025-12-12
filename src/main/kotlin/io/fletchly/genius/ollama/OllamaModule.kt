@@ -33,7 +33,8 @@ import javax.inject.Singleton
 class OllamaModule {
     @Provides
     @Singleton
-    fun provideHttpClient(configurationManager: ConfigurationManager): HttpClient = OllamaHttpClient(configurationManager)
+    fun provideHttpClient(configurationManager: ConfigurationManager): HttpClient =
+        OllamaHttpClient(configurationManager)
 
     @Provides
     @Singleton

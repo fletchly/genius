@@ -16,7 +16,7 @@ class PlayerListener @Inject constructor(
     private val pluginLogger: Logger,
     private val pluginScope: CoroutineScope,
     private val contextService: ContextService
-): Listener {
+) : Listener {
     /**
      * Player quit event handler
      */
