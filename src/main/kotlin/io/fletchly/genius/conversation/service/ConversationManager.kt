@@ -36,19 +36,23 @@ class ConversationManager @Inject constructor(
      * Generate chat given prompt
      *
      * @param prompt message to use for chat generation
-     * @param playerUUID UUID of player sending message
+     * @param playerUuid UUID of player sending message
      *
      * @return message with assistant response
      */
-    suspend fun generateChat(prompt: String, playerUUID: UUID): String {
+    suspend fun generateChat(prompt: String, playerUuid: UUID): String {
         val playerMessage = Message(
             content = prompt,
             role = Message.USER
         )
 
-        val playerContext = contextService.addChat(playerMessage, playerUUID)
+        contextService.addChat(playerMessage, playerUuid)
+
+        val playerContext = contextService.getContext(playerUuid)
 
         val response = chatService.generateChat(playerContext)
+
+        contextService.addChat(response, playerUuid)
 
         return response.content
     }
