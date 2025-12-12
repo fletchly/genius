@@ -48,14 +48,14 @@ class InfoCommand @Inject constructor(
 
         val textComponent = Component.text()
             .append {
-                Component.text("$agentName info\n")
+                Component.text("$agentName info")
                     .color(NamedTextColor.GREEN)
                     .decoration(TextDecoration.BOLD, true)
             }
             .append {
-                Component.text("Model: ")
+                Component.text("\nModel: ")
                     .append {
-                        Component.text("$model\n")
+                        Component.text(model)
                             .color(NamedTextColor.YELLOW)
                     }
             }
@@ -70,7 +70,7 @@ class InfoCommand @Inject constructor(
                 textComponent.append {
                     Component.text("Context used: ")
                         .append {
-                            Component.text("$maxPlayerMessages/$playerContextSize\n")
+                            Component.text("\n$playerContextSize/$maxPlayerMessages/")
                                 .color(NamedTextColor.YELLOW)
                         }
                 }
