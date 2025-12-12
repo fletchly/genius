@@ -20,3 +20,6 @@ permissions:
           genius.clear.any:
             description: "Clear conversation context for anyone"
             default: op
+      genius.info:
+        description: "Get info on Genius"
+        default: true

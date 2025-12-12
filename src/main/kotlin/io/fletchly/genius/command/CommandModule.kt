@@ -23,6 +23,8 @@ import dagger.Module
 import dagger.Provides
 import io.fletchly.genius.Genius
 import io.fletchly.genius.command.commands.AskCommand
+import io.fletchly.genius.command.commands.InfoCommand
+import io.fletchly.genius.command.commands.ManageCommand
 import io.fletchly.genius.command.commands.ClearContextCommand
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ContextService
@@ -53,11 +55,21 @@ class CommandModule {
 
     @Provides
     @Singleton
+    fun provideInfoCommand(
+        configurationManager: ConfigurationManager,
+        contextService: ContextService,
+        pluginScope: CoroutineScope
+    ) = InfoCommand(configurationManager, contextService, pluginScope)
+
+    @Provides
+    @Singleton
     fun provideCommands(
         askCommand: AskCommand,
         clearContextCommand: ClearContextCommand
+        infoCommand: InfoCommand
     ) = listOf(
         askCommand,
+        infoCommand
         clearContextCommand
     )
 }
