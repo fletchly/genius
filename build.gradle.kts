@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.fletchly"
-version = "0.1.0-beta"
+version = "0.1.0-beta.1"
 
 repositories {
     mavenCentral()
