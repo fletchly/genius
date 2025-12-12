@@ -76,16 +76,21 @@ class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationMa
 
     override suspend fun chat(request: OllamaRequest): OllamaResponse =
         try {
-            ktorClient.post("/api/chat") {
+            val response = ktorClient.post("/api/chat") {
                 contentType(ContentType.Application.Json)
                 setBody(request)
-            }.body<OllamaResponse>()
+            }
+
+            when (response.status.value) {
+                in 400..499 -> throw GeniusHttpClientException.ClientError(response.status)
+                in 500..599 -> throw GeniusHttpClientException.ServerError(response.status)
+            }
+
+            response.body<OllamaResponse>()
+        } catch (e: HttpRequestTimeoutException) {
+            throw GeniusHttpClientException.TimeoutError(e)
         } catch (e: IOException) {
             throw GeniusHttpClientException.NetworkError(e)
-        } catch (e: ServerResponseException) {
-            throw GeniusHttpClientException.ServerError(e.response.status)
-        } catch (e: ClientRequestException) {
-            throw GeniusHttpClientException.ClientError(e.response.status)
         }
 
     private companion object {
