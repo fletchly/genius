@@ -4,7 +4,6 @@ import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
-import io.ktor.http.Url
 import kotlinx.coroutines.runBlocking
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
@@ -15,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 
-class OllamaHttpClientTest {
+class OllamaHttpClientTests {
 
     private lateinit var configManager: ConfigManager
     private lateinit var server: MockWebServer
