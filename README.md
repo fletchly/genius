@@ -36,3 +36,7 @@ Genius supports Minecraft servers running on Paper 1.21.x
 
 ## Documentation
 Full documentation is available on the [Genius wiki](https://fletchly.github.io/genius-wiki/)
+
+## Demo
+
+https://youtu.be/xHKZ-8uYC8w
