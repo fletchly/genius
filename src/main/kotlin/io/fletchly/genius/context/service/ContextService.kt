@@ -27,9 +27,14 @@ import java.util.*
  */
 interface ContextService {
     /**
-     * Add chat to context for given player and return updated context
+     * Get context for given player
      */
-    suspend fun addChat(message: Message, playerUuid: UUID): List<Message>
+    suspend fun getContext(playerUuid: UUID): List<Message>
+
+    /**
+     * Add chat to context for given player
+     */
+    suspend fun addChat(message: Message, playerUuid: UUID)
 
     /**
      * Clear context for all players in the current session

@@ -33,11 +33,15 @@ class ConcurrentHashMapContextService @Inject constructor(configurationManager: 
     private val maxPlayerMessages = configurationManager.contextMaxPlayerMessages
     private val playerContext = ConcurrentHashMap<UUID, ArrayDeque<Message>>()
 
+    override suspend fun getContext(playerUuid: UUID): List<Message> {
+        return playerContext[playerUuid]?.toList() ?: listOf()
+    }
+
     override suspend fun addChat(
         message: Message,
         playerUuid: UUID
-    ): List<Message> {
-        val messages = playerContext.compute(playerUuid) { _, messages ->
+    ) {
+        playerContext.compute(playerUuid) { _, messages ->
             val queue = messages ?: ArrayDeque()
             if (queue.size >= maxPlayerMessages) {
                 queue.removeFirst()
@@ -45,7 +49,6 @@ class ConcurrentHashMapContextService @Inject constructor(configurationManager: 
             queue.add(message)
             queue
         }
-        return messages?.toList() ?: listOf(message)
     }
 
     override suspend fun clearContext() {
