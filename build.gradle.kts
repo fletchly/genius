@@ -20,6 +20,7 @@ repositories {
 val paper_version: String by project
 val dagger_version: String by project
 val ktor_version: String by project
+val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
     // Paper plugin dev tools
     compileOnly("io.papermc.paper:paper-api:$paper_version")
@@ -43,7 +44,11 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.0.0")
-    testImplementation("org.mockito:mockito-core:5.+")
+
+    testImplementation("org.mockito:mockito-core:5.14.0")
+    mockitoAgent("org.mockito:mockito-core:5.14.0") { isTransitive = false }
+
+    testImplementation("com.squareup.okhttp3:mockwebserver3:5.3.0")
 }
 
 tasks {
@@ -72,6 +77,7 @@ tasks {
     }
     test {
         useJUnitPlatform()
+        jvmArgs.add("-javaagent:${mockitoAgent.asPath}")
         testLogging {
             events("passed", "skipped", "failed")
         }
