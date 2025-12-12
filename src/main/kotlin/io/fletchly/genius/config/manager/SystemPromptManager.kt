@@ -45,7 +45,7 @@ class SystemPromptManager @Inject constructor(private val plugin: JavaPlugin) {
 
 
     private fun saveDefaultPrompt() {
-        if (plugin.getResource(promptPath) !== null) {
+        if (plugin.getResource(promptPath) == null) {
             plugin.saveResource(promptPath, false)
         }
     }
