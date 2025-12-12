@@ -94,7 +94,7 @@ class OllamaHttpClientTests {
 
         val response: OllamaResponse
         runBlocking {
-            response = client.fetchChatResponse(request)
+            response = client.chat(request)
         }
 
         assertEquals("gemma3", response.model)
@@ -126,7 +126,7 @@ class OllamaHttpClientTests {
 
         runBlocking {
             exception = assertThrows<HttpClientException> {
-                client.fetchChatResponse(request)
+                client.chat(request)
             }
         }
 
