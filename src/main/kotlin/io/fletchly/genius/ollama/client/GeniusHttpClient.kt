@@ -19,16 +19,23 @@
 
 package io.fletchly.genius.ollama.client
 
+import io.fletchly.genius.ollama.model.GeniusRequest
+import io.fletchly.genius.ollama.model.GeniusResponse
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
+import io.ktor.client.HttpClient
 
-interface HttpClient {
+interface GeniusHttpClient<Req: GeniusRequest, Res: GeniusResponse> {
     /**
-     * Fetch chat response from Ollama API
-     *
-     * @param request request body to send to Ollama
-     *
-     * @return response body from Ollama
+     * Internal ktor HttpClient
      */
-    suspend fun fetchChatResponse(request: OllamaRequest): OllamaResponse
+     val ktorClient: HttpClient
+
+    /**
+     * Generate chat using Ollama API
+     *
+     * @param request structured request for Ollama API
+     * @return structured response from Ollama API
+     */
+    suspend fun chat(request: Req): Res
 }

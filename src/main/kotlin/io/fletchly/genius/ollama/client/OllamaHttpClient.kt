@@ -22,59 +22,81 @@ package io.fletchly.genius.ollama.client
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import java.io.IOException
 import javax.inject.Inject
 
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationManager) : HttpClient {
-    val baseUrl = configurationManager.ollamaBaseUrl
+class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationManager) : GeniusHttpClient<OllamaRequest, OllamaResponse> {
+    private val baseUrl: String by lazy { configurationManager.ollamaBaseUrl }
+    private val apiKey: String by lazy {
+        configurationManager.ollamaApiKey
+            ?: throw GeniusHttpClientException.ConfigurationError("No Ollama API key provided!")
+    }
 
-    // Throw exception if no API key is provided
-    val apiKey = configurationManager.ollamaApiKey ?: throw HttpClientException("No Ollama API key provided!", null)
-
-    private val client = io.ktor.client.HttpClient(CIO) {
-        install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-                encodeDefaults = true
-            })
-        }
-        defaultRequest {
-            url(baseUrl)
-            header(HttpHeaders.Authorization, "Bearer $apiKey")
+    override val ktorClient: HttpClient by lazy {
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    encodeDefaults = true
+                })
+            }
+            install(HttpTimeout) {
+                requestTimeoutMillis = REQUEST_TIMEOUT_MILLIS
+                connectTimeoutMillis = CONNECT_TIMEOUT_MILLIS
+                socketTimeoutMillis = SOCKET_TIMEOUT_MILLIS
+            }
+            install(HttpRequestRetry) {
+                maxRetries = MAX_RETRIES
+                retryOnServerErrors()
+                retryOnException(retryOnTimeout = true)
+                exponentialDelay(
+                    baseDelayMs = 1000L,
+                    maxDelayMs = 60_000L,
+                    randomizationMs = 1000L
+                )
+            }
+            defaultRequest {
+                url(baseUrl)
+                bearerAuth(apiKey)
+            }
         }
     }
 
-    override suspend fun fetchChatResponse(request: OllamaRequest): OllamaResponse {
-        return try {
-            val response: HttpResponse = client.post {
-                url {
-                    appendPathSegments("api", "chat")
-                }
+    override suspend fun chat(request: OllamaRequest): OllamaResponse =
+        try {
+            val response = ktorClient.post("/api/chat") {
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }
-            handleResponse(response)
-        } catch (e: Exception) {
-            throw HttpClientException("Request to Ollama API failed: ${e.message}", e)
-        }
-    }
 
-    private suspend inline fun <reified T> handleResponse(response: HttpResponse): T {
-        if (response.status.isSuccess()) {
-            return response.body()
-        } else {
-            throw HttpClientException("Request to Ollama API failed with status: ${response.status}", null)
+            when (response.status.value) {
+                in 400..499 -> throw GeniusHttpClientException.ClientError(response.status)
+                in 500..599 -> throw GeniusHttpClientException.ServerError(response.status)
+            }
+
+            response.body<OllamaResponse>()
+        } catch (e: HttpRequestTimeoutException) {
+            throw GeniusHttpClientException.TimeoutError(e)
+        } catch (e: IOException) {
+            throw GeniusHttpClientException.NetworkError(e)
         }
+
+    private companion object {
+        const val REQUEST_TIMEOUT_MILLIS: Long = 2 * 60 * 1000 // 2 minutes
+        const val CONNECT_TIMEOUT_MILLIS: Long = 10 * 1000 // 10 seconds
+        const val SOCKET_TIMEOUT_MILLIS: Long = 2 * 60 * 1000 // 2 minutes
+        const val MAX_RETRIES = 5
     }
 }

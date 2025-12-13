@@ -22,16 +22,17 @@ package io.fletchly.genius.ollama.service
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.config.manager.SystemPromptManager
 import io.fletchly.genius.conversation.model.Message
-import io.fletchly.genius.ollama.client.HttpClient
-import io.fletchly.genius.ollama.client.HttpClientException
+import io.fletchly.genius.ollama.client.GeniusHttpClient
+import io.fletchly.genius.ollama.client.GeniusHttpClientException
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
+import io.fletchly.genius.ollama.model.OllamaResponse
 import javax.inject.Inject
 
 class OllamaChatService @Inject constructor(
     private val configurationManager: ConfigurationManager,
     private val systemPromptManager: SystemPromptManager,
-    private val httpClient: HttpClient
+    private val httpClient: GeniusHttpClient<OllamaRequest, OllamaResponse>
 ) : ChatService {
     override suspend fun generateChat(messages: List<Message>): Message {
         // Build Ollama response parameters
@@ -57,8 +58,8 @@ class OllamaChatService @Inject constructor(
 
         // Use Http client to fetch response
         return try {
-            httpClient.fetchChatResponse(request).message
-        } catch (httpClientException: HttpClientException) {
+            httpClient.chat(request).message
+        } catch (httpClientException: GeniusHttpClientException) {
             throw ChatServiceException("An HTTP error occurred: ${httpClientException.message}", httpClientException)
         } catch (e: Exception) {
             throw ChatServiceException("An unknown error occured: ${e.message}", e)

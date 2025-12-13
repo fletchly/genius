@@ -20,13 +20,7 @@
 package io.fletchly.genius.ollama.model
 
 import io.fletchly.genius.conversation.model.Message
-import kotlinx.serialization.Serializable
 
-@Serializable
-data class OllamaRequest(
-    override val messages: List<Message>,
-    val model: String,
-    val options: OllamaOptions,
-    val stream: Boolean = false,
-    val think: Boolean = false
-): GeniusRequest
+interface GeniusResponse {
+    val message: Message
+}

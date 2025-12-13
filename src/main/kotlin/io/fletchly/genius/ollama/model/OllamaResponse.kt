@@ -25,8 +25,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class OllamaResponse(
+    override val message: Message,
     val model: String,
     @SerialName("created_at")
     val createdAt: String,
-    val message: Message
-)
+): GeniusResponse
