@@ -29,14 +29,18 @@ import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
 import io.fletchly.genius.ollama.service.ChatService
 import io.fletchly.genius.ollama.service.OllamaChatService
+import java.util.logging.Logger
 import javax.inject.Singleton
 
 @Module
 class OllamaModule {
     @Provides
     @Singleton
-    fun provideHttpClient(configurationManager: ConfigurationManager): GeniusHttpClient<OllamaRequest, OllamaResponse> =
-        OllamaHttpClient(configurationManager)
+    fun provideHttpClient(
+        pluginLogger: Logger,
+        configurationManager: ConfigurationManager
+    ): GeniusHttpClient<OllamaRequest, OllamaResponse> =
+        OllamaHttpClient(pluginLogger, configurationManager)
 
     @Provides
     @Singleton
