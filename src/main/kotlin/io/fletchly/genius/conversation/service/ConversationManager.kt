@@ -21,6 +21,7 @@ package io.fletchly.genius.conversation.service
 
 import io.fletchly.genius.context.service.ContextService
 import io.fletchly.genius.conversation.model.Message
+import io.fletchly.genius.ollama.client.GeniusHttpClientException
 import io.fletchly.genius.ollama.service.ChatService
 import java.util.*
 import javax.inject.Inject
@@ -40,7 +41,7 @@ class ConversationManager @Inject constructor(
      *
      * @return message with assistant response
      */
-    suspend fun generateChat(prompt: String, playerUuid: UUID): String {
+    suspend fun chat(prompt: String, playerUuid: UUID): String {
         val playerMessage = Message(
             content = prompt,
             role = Message.USER
@@ -50,10 +51,20 @@ class ConversationManager @Inject constructor(
 
         val playerContext = contextService.getContext(playerUuid)
 
-        val response = chatService.chat(playerContext)
-
-        contextService.addChat(response, playerUuid)
-
-        return response.content
+        try {
+            val response = chatService.chat(playerContext)
+            contextService.addChat(response, playerUuid)
+            return response.content
+        } catch (_: GeniusHttpClientException.ConfigurationError) {
+            throw ConversationManagerException("Configuration has errors")
+        } catch (_: GeniusHttpClientException.TimeoutError) {
+            throw ConversationManagerException("Request timed out")
+        } catch (_: GeniusHttpClientException.NetworkError) {
+            throw ConversationManagerException("Network ran into an error")
+        } catch (_: GeniusHttpClientException.ServerError) {
+            throw ConversationManagerException("Chat server ran into an error")
+        } catch (_: GeniusHttpClientException.ClientError) {
+            throw ConversationManagerException("Error with client request")
+        }
     }
 }

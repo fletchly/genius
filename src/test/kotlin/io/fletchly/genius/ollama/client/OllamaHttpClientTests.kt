@@ -5,6 +5,7 @@ import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
+import java.util.logging.Logger
 import kotlinx.coroutines.runBlocking
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
@@ -18,12 +19,15 @@ import org.mockito.Mockito
 
 class OllamaHttpClientTests {
     private lateinit var configurationManager: ConfigurationManager
+    private lateinit var pluginLogger: Logger
     private lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
         server = MockWebServer()
         server.start()
+
+        pluginLogger = Mockito.mock(Logger::class.java)
 
         configurationManager = Mockito.mock(ConfigurationManager::class.java)
         Mockito.`when`(configurationManager.ollamaBaseUrl).thenReturn(server.url("/").toString())
@@ -41,7 +45,7 @@ class OllamaHttpClientTests {
 
         val exception = assertThrows<GeniusHttpClientException.ConfigurationError> {
             runBlocking {
-                OllamaHttpClient(configurationManager).chat(GOOD_REQUEST)
+                OllamaHttpClient(pluginLogger, configurationManager).chat(GOOD_REQUEST)
             }
         }
 
@@ -58,7 +62,7 @@ class OllamaHttpClientTests {
 
         val exception = assertThrows<GeniusHttpClientException.ClientError> {
             runBlocking {
-                OllamaHttpClient(configurationManager).chat(GOOD_REQUEST)
+                OllamaHttpClient(pluginLogger, configurationManager).chat(GOOD_REQUEST)
             }
         }
 
@@ -76,7 +80,7 @@ class OllamaHttpClientTests {
 //
 //        val exception = assertThrows<GeniusHttpClientException.TimeoutError> {
 //            runBlocking {
-//                OllamaHttpClient(configurationManager).chat(GOOD_REQUEST)
+//                OllamaHttpClient(pluginLogger, configurationManager).chat(GOOD_REQUEST)
 //            }
 //        }
 //
@@ -92,7 +96,7 @@ class OllamaHttpClientTests {
             .build())
 
         val response = runBlocking {
-            OllamaHttpClient(configurationManager).chat(GOOD_REQUEST)
+            OllamaHttpClient(pluginLogger, configurationManager).chat(GOOD_REQUEST)
         }
 
         assertInstanceOf<OllamaResponse>(response)

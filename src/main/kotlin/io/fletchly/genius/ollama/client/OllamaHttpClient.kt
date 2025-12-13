@@ -32,12 +32,13 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import java.io.IOException
+import java.util.logging.Logger
 import javax.inject.Inject
 
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationManager) : GeniusHttpClient<OllamaRequest, OllamaResponse> {
+class OllamaHttpClient @Inject constructor(private val pluginLogger: Logger, configurationManager: ConfigurationManager) : GeniusHttpClient<OllamaRequest, OllamaResponse> {
     private val baseUrl: String by lazy { configurationManager.ollamaBaseUrl }
     private val apiKey: String by lazy {
         configurationManager.ollamaApiKey
@@ -82,14 +83,25 @@ class OllamaHttpClient @Inject constructor(configurationManager: ConfigurationMa
             }
 
             when (response.status.value) {
-                in 400..499 -> throw GeniusHttpClientException.ClientError(response.status)
-                in 500..599 -> throw GeniusHttpClientException.ServerError(response.status)
+                in 400..499 -> {
+                    pluginLogger.warning {
+                        "[OllamaHttpClient] Got ${response.status.value} Client Error response from Ollama API! [${response}]"
+                    }
+                    throw GeniusHttpClientException.ClientError(response.status)
+                }
+                in 500..599 -> {
+                    pluginLogger.warning {
+                        "[OllamaHttpClient] Got ${response.status.value} Server Error Error response from Ollama API! [${response}]"
+                        throw GeniusHttpClientException.ServerError(response.status)
+                    }
+                }
             }
-
             response.body<OllamaResponse>()
         } catch (e: HttpRequestTimeoutException) {
+            pluginLogger.warning { "[OllamaHttpClient] Request timed out! [${e.message}]" }
             throw GeniusHttpClientException.TimeoutError(e)
         } catch (e: IOException) {
+            pluginLogger.warning { "[OllamaHttpClient] Network Error! [${e.message}]" }
             throw GeniusHttpClientException.NetworkError(e)
         }
 

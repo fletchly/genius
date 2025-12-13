@@ -17,6 +17,9 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.ollama.service
+package io.fletchly.genius.conversation.service
 
-class ChatServiceException(message: String, cause: Throwable?) : Exception(message, cause)
+/**
+ * Exception to handle ConversationManager errors
+ */
+class ConversationManagerException(message: String): Exception(message, null) { }
