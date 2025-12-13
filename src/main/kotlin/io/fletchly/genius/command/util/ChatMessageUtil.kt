@@ -22,7 +22,6 @@ package io.fletchly.genius.command.util
 import io.fletchly.genius.config.manager.ConfigurationManager
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.format.TextDecoration
 import javax.inject.Inject
 
 /**
@@ -38,9 +37,15 @@ class ChatMessageUtil @Inject constructor(
     }
 
     private val agentName = configurationManager.geniusAgentName
-    private val agentDisplayName = text("[")
+    private val agentIcon = configurationManager.geniusAgentPrefix
+    private val playerIcon = configurationManager.geniusPlayerPrefix
+    private val agentDisplayName = text("$agentIcon ", NamedTextColor.YELLOW)
         .append { text(agentName, NamedTextColor.GREEN) }
-        .append { text("] ") }
+        .append { text(" → ") }
+
+    private fun playerDisplayName(playerName: String) = text("$playerIcon ", NamedTextColor.AQUA)
+        .append { text(playerName, NamedTextColor.WHITE) }
+        .append { text(" → ") }
 
     /**
      * Build player message chat component
@@ -49,7 +54,7 @@ class ChatMessageUtil @Inject constructor(
      * @param message message content
      * @return formatted player message
      */
-    fun playerMessage(playerName: String, message: String) = text("[$playerName] ")
+    fun playerMessage(playerName: String, message: String) = playerDisplayName(playerName)
         .append {
             text(message)
                 .color(MessageLevel.INFO.color)

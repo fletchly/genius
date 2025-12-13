@@ -5,8 +5,14 @@
 
 # Properties for the agent's appearance and behavior
 genius:
-  # The name for the Genius agent to use in chat when responding to messages
+  # The name used when displaying messages from the agent in chat
   agentName: Genius
+
+  # The prefix used when displaying messages from the agent in chat
+  agentPrefix: 💡
+
+  # The prefix used when displaying messages from players in chat
+  playerPrefix: 👤
 # Ollama client configuration
 ollama:
 
@@ -14,9 +20,9 @@ ollama:
   # Defaults to the Ollama API's default listening location. For more info, see https://github.com/fletchly/genius/wiki/hosting
   baseUrl: http://localhost:11434/
 
-  # Your key for the Ollama cloud API. This only needs to be set if you are using an Ollama cloud model.
+  # Your key for the Ollama cloud API. This only needs to be changed if you are using an Ollama cloud model.
   # For more info, see https://github.com/fletchly/genius/wiki/hosting
-  apiKey: API_KEY
+  apiKey: local
 
   # The name of the model to use for response generation.
   # If you are using Ollama cloud, the model must be an ollama cloud model

@@ -56,13 +56,7 @@ class AskCommand @Inject constructor(
         val playerName = ctx.source.executor!!.name // safe to assume not null here because of command requirements
         val prompt = ctx.getArgument("prompt", String::class.java)
 
-        val playerMessage = Component.text {
-            it.content("[$playerName] $prompt")
-            it.color(NamedTextColor.GRAY)
-            it.decoration(TextDecoration.ITALIC, true)
-        }
-
-        ctx.source.sender.sendMessage { playerMessage }
+        ctx.source.sender.sendMessage { chatMessageUtil.playerMessage(playerName, prompt) }
     }
 
     private fun chat(ctx: CommandContext<CommandSourceStack>) {
@@ -70,9 +64,31 @@ class AskCommand @Inject constructor(
         val playerUUID = ctx.source.executor!!.uniqueId // safe to assume not null here because of command requirements
         val sender = ctx.source.sender
 
+        fun playFailureSound() {
+            sender.playSound(
+                Sound.sound(
+                    SoundEventKeys.BLOCK_GLASS_BREAK,
+                    Sound.Source.MASTER,
+                    1f,
+                    1f
+                ), Sound.Emitter.self()
+            )
+        }
+
+        fun playSuccessSound() {
+            sender.playSound(
+                Sound.sound(
+                    SoundEventKeys.ENTITY_EXPERIENCE_ORB_PICKUP,
+                    Sound.Source.MASTER,
+                    1f,
+                    1f
+                ), Sound.Emitter.self()
+            )
+        }
+
         fun sendSuccess(message: String) {
-            pluginSchedulerUtil.runTask {
-                playSuccessSound(sender)
+            pluginSchedulerUtil.runTask { // Need to use the plugin scheduler here to safely touch Bukkit API
+                playSuccessSound()
                 sender.sendMessage {
                     chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.RESPONSE, message)
                 }
@@ -81,8 +97,8 @@ class AskCommand @Inject constructor(
 
         fun sendException(ex: Exception, chatMessage: String = ex.message ?: "No error message available") {
             pluginLogger.warning { ex.message }
-            pluginSchedulerUtil.runTask {
-                playFailureSound(sender)
+            pluginSchedulerUtil.runTask { // Need to use the plugin scheduler here to safely touch Bukkit API
+                playFailureSound()
                 sender.sendMessage {
                     chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.ERROR, chatMessage)
                 }
@@ -104,27 +120,5 @@ class AskCommand @Inject constructor(
                 sendException(ex, "An unknown error occurred")
             }
         }
-    }
-
-    private fun playFailureSound(sender: CommandSender) {
-        sender.playSound(
-            Sound.sound(
-                SoundEventKeys.BLOCK_GLASS_BREAK,
-                Sound.Source.MASTER,
-                1f,
-                1f
-            ), Sound.Emitter.self()
-        )
-    }
-
-    private fun playSuccessSound(sender: CommandSender) {
-        sender.playSound(
-            Sound.sound(
-                SoundEventKeys.ENTITY_EXPERIENCE_ORB_PICKUP,
-                Sound.Source.MASTER,
-                1f,
-                1f
-            ), Sound.Emitter.self()
-        )
     }
 }
