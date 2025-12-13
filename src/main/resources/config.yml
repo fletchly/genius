@@ -1,7 +1,7 @@
 # *****************************************
 # *         Genius Configuration          *
 # *****************************************
-# For reference, see https://github.com/fletchly/genius/wiki/Configuration
+# For reference, see https://fletchly.github.io/genius-wiki/docs/setup/configuration/config-yml
 
 # Properties for the agent's appearance and behavior
 genius:
@@ -49,3 +49,6 @@ context:
   # Maximum number of messages per player to store in the database at one time
   # A higher limit will allow players to continue conversations for longer.
   maxPlayerMessages: 20
+
+# Don't change this
+configVersion: 1
