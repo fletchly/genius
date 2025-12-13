@@ -70,6 +70,25 @@ class AskCommand @Inject constructor(
         val playerUUID = ctx.source.executor!!.uniqueId // safe to assume not null here because of command requirements
         val sender = ctx.source.sender
 
+        fun sendSuccess(message: String) {
+            pluginSchedulerUtil.runTask {
+                playSuccessSound(sender)
+                sender.sendMessage {
+                    chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.RESPONSE, message)
+                }
+            }
+        }
+
+        fun sendException(ex: Exception, chatMessage: String = ex.message ?: "No error message available") {
+            pluginLogger.warning { ex.message }
+            pluginSchedulerUtil.runTask {
+                playFailureSound(sender)
+                sender.sendMessage {
+                    chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.ERROR, chatMessage)
+                }
+            }
+        }
+
         sender.sendMessage {
             chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.INFO, "Generating response...")
         }
@@ -77,28 +96,12 @@ class AskCommand @Inject constructor(
         pluginScope.launch {
             try {
                 val response = conversationManager.generateChat(prompt, playerUUID)
-                pluginSchedulerUtil.runTask {
-                    playSuccessSound(sender)
-                    sender.sendMessage {
-                        chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.RESPONSE, response)
-                    }
-                }
-            } catch (chatServiceEx: ChatServiceException) {
-                pluginLogger.warning { chatServiceEx.message }
-                pluginSchedulerUtil.runTask {
-                    playFailureSound(sender)
-                    sender.sendMessage {
-                        chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.ERROR, "An error occurred while generating a response")
-                    }
-                }
+                sendSuccess(response)
+            } catch (ex: ChatServiceException) {
+                sendException(ex, "An error occurred while generating a response")
             } catch (ex: Exception) {
                 pluginLogger.warning { ex.message }
-                pluginSchedulerUtil.runTask {
-                    playFailureSound(sender)
-                    sender.sendMessage {
-                        chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.ERROR, "An unknown error occurred")
-                    }
-                }
+                sendException(ex, "An unknown error occurred")
             }
         }
     }
