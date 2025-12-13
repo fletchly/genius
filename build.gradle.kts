@@ -52,6 +52,17 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver3:5.3.0")
 }
 
+tasks.test {
+    useJUnitPlatform()
+
+    // Add the javaagent early
+    jvmArgs("-javaagent:${mockitoAgent.asPath}")
+
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
 tasks {
     runServer {
         // Configure the Minecraft version for our task.
@@ -74,13 +85,6 @@ tasks {
         filteringCharset = "UTF-8"
         filesMatching("plugin.yml") {
             expand(props)
-        }
-    }
-    test {
-        useJUnitPlatform()
-        jvmArgs.add("-javaagent:${mockitoAgent.asPath}")
-        testLogging {
-            events("passed", "skipped", "failed")
         }
     }
 }
