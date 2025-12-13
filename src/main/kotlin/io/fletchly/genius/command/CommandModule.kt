@@ -23,8 +23,8 @@ import dagger.Module
 import dagger.Provides
 import io.fletchly.genius.Genius
 import io.fletchly.genius.command.commands.AskCommand
-import io.fletchly.genius.command.commands.manage.InfoCommand
 import io.fletchly.genius.command.commands.manage.ClearContextCommand
+import io.fletchly.genius.command.commands.manage.InfoCommand
 import io.fletchly.genius.command.commands.manage.ManageCommand
 import io.fletchly.genius.command.util.ChatMessageUtil
 import io.fletchly.genius.command.util.PluginSchedulerUtil
@@ -53,7 +53,14 @@ class CommandModule {
         pluginLogger: Logger,
         conversationManager: ConversationManager,
         chatMessageUtil: ChatMessageUtil
-    ) = AskCommand(configurationManager, pluginSchedulerUtil, pluginScope, pluginLogger, conversationManager, chatMessageUtil)
+    ) = AskCommand(
+        configurationManager,
+        pluginSchedulerUtil,
+        pluginScope,
+        pluginLogger,
+        conversationManager,
+        chatMessageUtil
+    )
 
     @Provides
     @Singleton

@@ -38,7 +38,10 @@ import javax.inject.Inject
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(private val pluginLogger: Logger, configurationManager: ConfigurationManager) : GeniusHttpClient<OllamaRequest, OllamaResponse> {
+class OllamaHttpClient @Inject constructor(
+    private val pluginLogger: Logger,
+    configurationManager: ConfigurationManager
+) : GeniusHttpClient<OllamaRequest, OllamaResponse> {
     private val baseUrl: String by lazy { configurationManager.ollamaBaseUrl }
     private val apiKey: String by lazy {
         configurationManager.ollamaApiKey
@@ -89,6 +92,7 @@ class OllamaHttpClient @Inject constructor(private val pluginLogger: Logger, con
                     }
                     throw GeniusHttpClientException.ClientError(response.status)
                 }
+
                 in 500..599 -> {
                     pluginLogger.warning {
                         "[OllamaHttpClient] Got ${response.status.value} Server Error Error response from Ollama API! [${response}]"

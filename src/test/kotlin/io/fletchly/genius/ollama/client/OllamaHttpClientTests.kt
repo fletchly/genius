@@ -5,17 +5,13 @@ import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
-import java.util.logging.Logger
 import kotlinx.coroutines.runBlocking
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertInstanceOf
-import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
+import java.util.logging.Logger
 
 class OllamaHttpClientTests {
     private lateinit var configurationManager: ConfigurationManager
@@ -56,8 +52,8 @@ class OllamaHttpClientTests {
     fun `chat should throw ClientError on 4xx server response`() {
         server.enqueue(
             MockResponse.Builder()
-            .code(418)
-            .build()
+                .code(418)
+                .build()
         )
 
         val exception = assertThrows<GeniusHttpClientException.ClientError> {
@@ -89,11 +85,13 @@ class OllamaHttpClientTests {
 
     @Test
     fun `chat should return valid OllamaResponse on successful response`() {
-        server.enqueue(MockResponse.Builder()
-            .body(GOOD_RESPONSE)
-            .addHeader("Content-Type", "application/json")
-            .code(200)
-            .build())
+        server.enqueue(
+            MockResponse.Builder()
+                .body(GOOD_RESPONSE)
+                .addHeader("Content-Type", "application/json")
+                .code(200)
+                .build()
+        )
 
         val response = runBlocking {
             OllamaHttpClient(pluginLogger, configurationManager).chat(GOOD_REQUEST)

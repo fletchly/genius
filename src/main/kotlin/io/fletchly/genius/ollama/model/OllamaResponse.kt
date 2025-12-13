@@ -29,4 +29,4 @@ data class OllamaResponse(
     val model: String,
     @SerialName("created_at")
     val createdAt: String,
-): GeniusResponse
+) : GeniusResponse

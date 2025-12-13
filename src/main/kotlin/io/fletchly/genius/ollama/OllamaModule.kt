@@ -36,7 +36,10 @@ import javax.inject.Singleton
 class OllamaModule {
     @Provides
     @Singleton
-    fun provideHttpClient(pluginLogger: Logger, configurationManager: ConfigurationManager): GeniusHttpClient<OllamaRequest, OllamaResponse> =
+    fun provideHttpClient(
+        pluginLogger: Logger,
+        configurationManager: ConfigurationManager
+    ): GeniusHttpClient<OllamaRequest, OllamaResponse> =
         OllamaHttpClient(pluginLogger, configurationManager)
 
     @Provides

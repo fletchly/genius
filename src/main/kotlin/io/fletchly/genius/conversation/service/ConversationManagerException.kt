@@ -22,4 +22,4 @@ package io.fletchly.genius.conversation.service
 /**
  * Exception to handle ConversationManager errors
  */
-class ConversationManagerException(message: String): Exception(message, null) { }
+class ConversationManagerException(message: String) : Exception(message, null)

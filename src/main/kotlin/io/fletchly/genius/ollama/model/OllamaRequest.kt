@@ -29,4 +29,4 @@ data class OllamaRequest(
     val options: OllamaOptions,
     val stream: Boolean = false,
     val think: Boolean = false
-): GeniusRequest
+) : GeniusRequest

@@ -23,7 +23,6 @@ import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.config.manager.SystemPromptManager
 import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.client.GeniusHttpClient
-import io.fletchly.genius.ollama.client.GeniusHttpClientException
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
