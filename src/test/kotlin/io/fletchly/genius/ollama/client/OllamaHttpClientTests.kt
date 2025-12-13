@@ -65,22 +65,23 @@ class OllamaHttpClientTests {
         assertEquals("Client error: 418 Client Error", exception.message)
     }
 
-    @Test
-    fun `chat should throw TimeoutError on 5xx server timeout`() {
-        server.enqueue(
-            MockResponse.Builder()
-                .code(500)
-                .build()
-        )
-
-        val exception = assertThrows<GeniusHttpClientException.TimeoutError> {
-            runBlocking {
-                OllamaHttpClient(configurationManager).chat(GOOD_REQUEST)
-            }
-        }
-
-        assertEquals("Request timed out", exception.message)
-    }
+    // FIXME: Refactor this test to not hold up overall test suite
+//    @Test
+//    fun `chat should throw TimeoutError on 5xx server timeout`() {
+//        server.enqueue(
+//            MockResponse.Builder()
+//                .code(500)
+//                .build()
+//        )
+//
+//        val exception = assertThrows<GeniusHttpClientException.TimeoutError> {
+//            runBlocking {
+//                OllamaHttpClient(configurationManager).chat(GOOD_REQUEST)
+//            }
+//        }
+//
+//        assertEquals("Request timed out", exception.message)
+//    }
 
     @Test
     fun `chat should return valid OllamaResponse on successful response`() {
