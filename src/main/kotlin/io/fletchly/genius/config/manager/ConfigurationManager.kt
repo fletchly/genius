@@ -41,6 +41,8 @@ class ConfigurationManager @Inject constructor(private val config: FileConfigura
             GENIUS_AGENT_NAME,
             "Genius"
         )!! // Will never be null because default is provided
+    val geniusAgentPrefix = config.getString(GENIUS_AGENT_PREFIX, "\uD83D\uDCA1")!!
+    val geniusPlayerPrefix = config.getString(GENIUS_PLAYER_PREFIX, "\uD83D\uDC64")!!
     val ollamaBaseUrl: String get() = config.getString(OLLAMA_BASE_URL, "http://localhost:11434/")!!
     val ollamaApiKey: String? get() = config.getString(OLLAMA_API_KEY).takeIf { it?.isNotBlank() == true }
     val ollamaModel: String get() = config.getString(OLLAMA_MODEL, "deepseek-v3.1:671b")!!
@@ -55,6 +57,8 @@ class ConfigurationManager @Inject constructor(private val config: FileConfigura
      */
     private companion object Paths {
         const val GENIUS_AGENT_NAME = "genius.agentName"
+        const val GENIUS_AGENT_PREFIX = "genius.agentPrefix"
+        const val GENIUS_PLAYER_PREFIX = "genius.playerPrefix"
         const val OLLAMA_BASE_URL = "ollama.baseUrl"
         const val OLLAMA_API_KEY = "ollama.apiKey"
         const val OLLAMA_MODEL = "ollama.model"

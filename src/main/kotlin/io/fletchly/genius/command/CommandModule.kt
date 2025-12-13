@@ -26,6 +26,8 @@ import io.fletchly.genius.command.commands.AskCommand
 import io.fletchly.genius.command.commands.manage.InfoCommand
 import io.fletchly.genius.command.commands.manage.ClearContextCommand
 import io.fletchly.genius.command.commands.manage.ManageCommand
+import io.fletchly.genius.command.util.ChatMessageUtil
+import io.fletchly.genius.command.util.PluginSchedulerUtil
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ContextService
 import io.fletchly.genius.conversation.service.ConversationManager
@@ -36,14 +38,22 @@ import javax.inject.Singleton
 @Module
 class CommandModule {
     @Provides
+    fun provideChatMessageUtil(configurationManager: ConfigurationManager) = ChatMessageUtil(configurationManager)
+
+    @Provides
+    @Singleton
+    fun providePluginSchedulerUtil(plugin: Genius) = PluginSchedulerUtil(plugin)
+
+    @Provides
     @Singleton
     fun provideAskCommand(
         configurationManager: ConfigurationManager,
-        plugin: Genius,
+        pluginSchedulerUtil: PluginSchedulerUtil,
         pluginScope: CoroutineScope,
         pluginLogger: Logger,
         conversationManager: ConversationManager,
-    ) = AskCommand(configurationManager, plugin, pluginScope, pluginLogger, conversationManager)
+        chatMessageUtil: ChatMessageUtil
+    ) = AskCommand(configurationManager, pluginSchedulerUtil, pluginScope, pluginLogger, conversationManager, chatMessageUtil)
 
     @Provides
     @Singleton
@@ -51,7 +61,8 @@ class CommandModule {
         pluginScope: CoroutineScope,
         pluginLogger: Logger,
         contextService: ContextService,
-    ) = ClearContextCommand(contextService, pluginScope, pluginLogger)
+        chatMessageUtil: ChatMessageUtil
+    ) = ClearContextCommand(contextService, pluginScope, pluginLogger, chatMessageUtil)
 
     @Provides
     @Singleton
