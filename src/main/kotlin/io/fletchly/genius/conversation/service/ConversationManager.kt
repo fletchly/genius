@@ -50,7 +50,7 @@ class ConversationManager @Inject constructor(
 
         val playerContext = contextService.getContext(playerUuid)
 
-        val response = chatService.generateChat(playerContext)
+        val response = chatService.chat(playerContext)
 
         contextService.addChat(response, playerUuid)
 
