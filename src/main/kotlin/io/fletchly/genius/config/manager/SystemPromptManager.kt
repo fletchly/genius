@@ -33,7 +33,6 @@ class SystemPromptManager @Inject constructor(private val plugin: JavaPlugin) {
     private var _prompt: String = loadDefaultPrompt()
     val prompt: String get() = _prompt
 
-
     init {
         saveDefaultPrompt()
         loadPromptFile()
@@ -45,7 +44,8 @@ class SystemPromptManager @Inject constructor(private val plugin: JavaPlugin) {
 
 
     private fun saveDefaultPrompt() {
-        if (plugin.getResource(promptPath) == null) {
+        val file = File(plugin.dataFolder, promptPath)
+        if (!file.exists()) {
             plugin.saveResource(promptPath, false)
         }
     }
