@@ -17,28 +17,32 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.config
+package io.fletchly.genius.config.util
 
-import dagger.Module
-import dagger.Provides
-import io.fletchly.genius.Genius
-import io.fletchly.genius.config.manager.ConfigurationManager
-import io.fletchly.genius.config.manager.SystemPromptManager
-import io.fletchly.genius.config.util.MigrationUtil
 import org.bukkit.configuration.file.FileConfiguration
-import javax.inject.Singleton
+import javax.inject.Inject
 
-@Module
-class ConfigModule {
-    @Provides
-    @Singleton
-    fun provideConfigManager(config: FileConfiguration) = ConfigurationManager(config)
+class MigrationUtil @Inject constructor( private val config: FileConfiguration) {
+    /**
+     * Apply config migrations
+     *
+     * @return number of migrations performed
+     */
+    fun migrateConfig(): Int {
+        val currentConfigVersion = config.getInt(CONFIG_VERSION_PATH, 0)
+        var migrations = 0
 
-    @Provides
-    @Singleton
-    fun providePromptManager(plugin: Genius) = SystemPromptManager(plugin)
+        if (currentConfigVersion < 1) {
+            config.set("genius.agentPrefix", "\uD83D\uDCA1")
+            config.set("genius.playerPrefix", "\uD83D\uDC64")
+            config.set("configVersion", 1)
+            migrations++
+        }
 
-    @Provides
-    @Singleton
-    fun provideMigrationUtil(config: FileConfiguration) = MigrationUtil(config)
+        return migrations
+    }
+
+    private companion object {
+        const val CONFIG_VERSION_PATH = "configVersion"
+    }
 }
