@@ -21,15 +21,13 @@ package io.fletchly.genius.ollama.client
 
 import io.fletchly.genius.ollama.model.GeniusRequest
 import io.fletchly.genius.ollama.model.GeniusResponse
-import io.fletchly.genius.ollama.model.OllamaRequest
-import io.fletchly.genius.ollama.model.OllamaResponse
-import io.ktor.client.HttpClient
+import io.ktor.client.*
 
-interface GeniusHttpClient<Req: GeniusRequest, Res: GeniusResponse> {
+interface GeniusHttpClient<Req : GeniusRequest, Res : GeniusResponse> {
     /**
      * Internal ktor HttpClient
      */
-     val ktorClient: HttpClient
+    val ktorClient: HttpClient
 
     /**
      * Generate chat using Ollama API

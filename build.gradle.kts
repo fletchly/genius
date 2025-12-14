@@ -35,6 +35,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
 
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
@@ -49,6 +50,17 @@ dependencies {
     mockitoAgent("org.mockito:mockito-core:5.14.0") { isTransitive = false }
 
     testImplementation("com.squareup.okhttp3:mockwebserver3:5.3.0")
+}
+
+tasks.test {
+    useJUnitPlatform()
+
+    // Add the javaagent early
+    jvmArgs("-javaagent:${mockitoAgent.asPath}")
+
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
 tasks {
@@ -73,13 +85,6 @@ tasks {
         filteringCharset = "UTF-8"
         filesMatching("plugin.yml") {
             expand(props)
-        }
-    }
-    test {
-        useJUnitPlatform()
-        jvmArgs.add("-javaagent:${mockitoAgent.asPath}")
-        testLogging {
-            events("passed", "skipped", "failed")
         }
     }
 }

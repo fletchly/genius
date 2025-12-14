@@ -25,5 +25,11 @@ import io.fletchly.genius.conversation.model.Message
  * Service for generating chats from assistant
  */
 interface ChatService {
-    suspend fun generateChat(messages: List<Message>): Message
+    /**
+     * Generate chat
+     *
+     * @param messages context to send assistant
+     * @return the assistant's response
+     */
+    suspend fun chat(messages: List<Message>): Message
 }

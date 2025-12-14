@@ -23,7 +23,6 @@ import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.config.manager.SystemPromptManager
 import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.client.GeniusHttpClient
-import io.fletchly.genius.ollama.client.GeniusHttpClientException
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
@@ -34,8 +33,7 @@ class OllamaChatService @Inject constructor(
     private val systemPromptManager: SystemPromptManager,
     private val httpClient: GeniusHttpClient<OllamaRequest, OllamaResponse>
 ) : ChatService {
-    override suspend fun generateChat(messages: List<Message>): Message {
-        // Build Ollama response parameters
+    override suspend fun chat(messages: List<Message>): Message {
         val ollamaOptions = OllamaOptions(
             temperature = configurationManager.ollamaTemperature,
             topK = configurationManager.ollamaTopK,
@@ -43,26 +41,17 @@ class OllamaChatService @Inject constructor(
             numPredict = configurationManager.ollamaNumPredict
         )
 
-        // Build system prompt
         val systemPromptMessage = Message(
             content = systemPromptManager.prompt,
             role = Message.SYSTEM
         )
 
-        // Build request
         val request = OllamaRequest(
             model = configurationManager.ollamaModel,
             options = ollamaOptions,
             messages = listOf(systemPromptMessage) + messages
         )
 
-        // Use Http client to fetch response
-        return try {
-            httpClient.chat(request).message
-        } catch (httpClientException: GeniusHttpClientException) {
-            throw ChatServiceException("An HTTP error occurred: ${httpClientException.message}", httpClientException)
-        } catch (e: Exception) {
-            throw ChatServiceException("An unknown error occured: ${e.message}", e)
-        }
+        return httpClient.chat(request).message
     }
 }
