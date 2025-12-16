@@ -21,6 +21,8 @@ package io.fletchly.genius.ollama.client
 
 import io.fletchly.genius.ollama.model.GeniusRequest
 import io.fletchly.genius.ollama.model.GeniusResponse
+import io.fletchly.genius.ollama.tool.WebFetch
+import io.fletchly.genius.ollama.tool.WebSearch
 import io.ktor.client.*
 
 interface GeniusHttpClient<Req : GeniusRequest, Res : GeniusResponse> {
@@ -30,10 +32,26 @@ interface GeniusHttpClient<Req : GeniusRequest, Res : GeniusResponse> {
     val ktorClient: HttpClient
 
     /**
-     * Generate chat using Ollama API
+     * Generate chat
      *
      * @param request structured request for Ollama API
      * @return structured response from Ollama API
      */
     suspend fun chat(request: Req): Res
+
+    /**
+     * Search the web
+     *
+     * @param params: web search param object
+     * @return web search results
+     */
+    suspend fun webSearch(params: WebSearch.WebSearchParams): WebSearch.WebSearchResults
+
+    /**
+     * Fetch web result
+     *
+     * @param params: web fetch param object
+     * @return web fetch results
+     */
+    suspend fun  webFetch(params: WebFetch.WebFetchParams): WebFetch.WebFetchResults
 }

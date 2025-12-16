@@ -22,12 +22,15 @@ package io.fletchly.genius.ollama.client
 import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
+import io.fletchly.genius.ollama.tool.WebFetch
+import io.fletchly.genius.ollama.tool.WebSearch
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -39,8 +42,7 @@ import javax.inject.Inject
  * Http client for interacting with the Ollama API
  */
 class OllamaHttpClient @Inject constructor(
-    private val pluginLogger: Logger,
-    configurationManager: ConfigurationManager
+    private val pluginLogger: Logger, configurationManager: ConfigurationManager
 ) : GeniusHttpClient<OllamaRequest, OllamaResponse> {
     private val baseUrl: String by lazy { configurationManager.ollamaBaseUrl }
     private val apiKey: String by lazy {
@@ -66,41 +68,69 @@ class OllamaHttpClient @Inject constructor(
                 retryOnServerErrors()
                 retryOnException(retryOnTimeout = true)
                 exponentialDelay(
-                    baseDelayMs = 1000L,
-                    maxDelayMs = 60_000L,
-                    randomizationMs = 1000L
+                    baseDelayMs = 1000L, maxDelayMs = 60_000L, randomizationMs = 1000L
                 )
             }
             defaultRequest {
-                url(baseUrl)
                 bearerAuth(apiKey)
             }
         }
     }
 
-    override suspend fun chat(request: OllamaRequest): OllamaResponse =
-        try {
-            val response = ktorClient.post("/api/chat") {
+    override suspend fun chat(request: OllamaRequest): OllamaResponse = executeWithErrorHandling {
+        ktorClient.post(buildUrl(baseUrl, "api", "chat")) {
+            contentType(ContentType.Application.Json)
+            setBody(request)
+        }
+    }
+
+    override suspend fun webSearch(params: WebSearch.WebSearchParams): WebSearch.WebSearchResults =
+        executeWithErrorHandling {
+            ktorClient.post("https://ollama.com/api/web_search") {
                 contentType(ContentType.Application.Json)
-                setBody(request)
+                setBody(params)
             }
+        }
+
+    override suspend fun webFetch(params: WebFetch.WebFetchParams): WebFetch.WebFetchResults =
+        executeWithErrorHandling {
+            ktorClient.post("https://ollama.com/api/web_search") {
+                contentType(ContentType.Application.Json)
+                setBody(params)
+            }
+        }
+
+    /**
+     * Safely build URL
+     */
+    private fun buildUrl(base: String, vararg paths: String): Url {
+        return URLBuilder(base).apply {
+            appendPathSegments(*paths)
+        }.build()
+    }
+
+    private suspend inline fun <reified T> executeWithErrorHandling(
+        crossinline call: suspend () -> HttpResponse
+    ): T {
+        return try {
+            val response = call()
 
             when (response.status.value) {
                 in 400..499 -> {
                     pluginLogger.warning {
-                        "[OllamaHttpClient] Got ${response.status.value} Client Error response from Ollama API! [${response}]"
+                        "[OllamaHttpClient] Got ${response.status.value} Client Error response from Ollama API! [$response]"
                     }
                     throw GeniusHttpClientException.ClientError(response.status)
                 }
 
                 in 500..599 -> {
                     pluginLogger.warning {
-                        "[OllamaHttpClient] Got ${response.status.value} Server Error Error response from Ollama API! [${response}]"
-                        throw GeniusHttpClientException.ServerError(response.status)
+                        "[OllamaHttpClient] Got ${response.status.value} Server Error response from Ollama API! [$response]"
                     }
+                    throw GeniusHttpClientException.ServerError(response.status)
                 }
             }
-            response.body<OllamaResponse>()
+            response.body()
         } catch (e: HttpRequestTimeoutException) {
             pluginLogger.warning { "[OllamaHttpClient] Request timed out! [${e.message}]" }
             throw GeniusHttpClientException.TimeoutError(e)
@@ -108,6 +138,7 @@ class OllamaHttpClient @Inject constructor(
             pluginLogger.warning { "[OllamaHttpClient] Network Error! [${e.message}]" }
             throw GeniusHttpClientException.NetworkError(e)
         }
+    }
 
     private companion object {
         const val REQUEST_TIMEOUT_MILLIS: Long = 2 * 60 * 1000 // 2 minutes
