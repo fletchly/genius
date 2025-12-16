@@ -26,6 +26,10 @@ import io.fletchly.genius.config.manager.SystemPromptManager
 import io.fletchly.genius.ollama.client.OllamaHttpClient
 import io.fletchly.genius.ollama.service.ChatService
 import io.fletchly.genius.ollama.service.OllamaChatService
+import io.fletchly.genius.ollama.tool.Tool
+import io.fletchly.genius.ollama.tool.ToolRegistry
+import io.fletchly.genius.ollama.tool.WebFetch
+import io.fletchly.genius.ollama.tool.WebSearch
 import java.util.logging.Logger
 import javax.inject.Singleton
 
@@ -45,4 +49,26 @@ class OllamaModule {
         systemPromptManager: SystemPromptManager,
         httpClient: OllamaHttpClient
     ): ChatService = OllamaChatService(configurationManager, systemPromptManager, httpClient)
+
+    @Provides
+    @Singleton
+    fun provideWebSearchTool(
+        httpClient: OllamaHttpClient
+    ) = WebSearch(httpClient)
+
+    @Provides
+    @Singleton
+    fun provideWebFetchTool(
+        httpClient: OllamaHttpClient
+    ) = WebFetch(httpClient)
+
+    @Provides
+    @Singleton
+    fun provideTools(
+        webSearch: WebSearch,
+        webFetch: WebFetch
+    ) = ToolRegistry(
+        webSearch,
+        webFetch
+    )
 }
