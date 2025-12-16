@@ -19,15 +19,16 @@
 
 package io.fletchly.genius.ollama.tool
 
+import io.fletchly.genius.ollama.client.OllamaHttpClient
 import kotlinx.serialization.Serializable
+import javax.inject.Inject
 
-class WebFetch: Tool<WebFetch.WebFetchParams, WebFetch.WebFetchResults> {
+class WebFetch @Inject constructor(private val httpClient: OllamaHttpClient): Tool<WebFetch.WebFetchParams, WebFetch.WebFetchResults> {
     override val name = "web_fetch"
     override val description = "fetch a website"
 
-    override suspend fun execute(params: WebFetchParams): WebFetchResults {
-        TODO("Not yet implemented")
-    }
+    override suspend fun execute(params: WebFetchParams): WebFetchResults =
+        httpClient.post(params, "https://ollama.com/", "api", "web_fetch")
 
     @Serializable
     data class WebFetchParams(

@@ -19,16 +19,17 @@
 
 package io.fletchly.genius.ollama.tool
 
+import io.fletchly.genius.ollama.client.OllamaHttpClient
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import javax.inject.Inject
 
-class WebSearch: Tool<WebSearch.WebSearchParams, WebSearch.WebSearchResults> {
+class WebSearch @Inject constructor(private val httpClient: OllamaHttpClient): Tool<WebSearch.WebSearchParams, WebSearch.WebSearchResults> {
     override val name = "web_search"
     override val description = "search the web for answers"
 
-    override suspend fun execute(params: WebSearchParams): WebSearchResults {
-        TODO("Not yet implemented")
-    }
+    override suspend fun execute(params: WebSearchParams): WebSearchResults =
+        httpClient.post(params, "https://ollama.com/", "api", "web_search")
 
     @Serializable
     data class WebSearchParams(
