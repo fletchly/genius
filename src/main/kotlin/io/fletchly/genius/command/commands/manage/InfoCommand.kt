@@ -23,6 +23,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.commands.GeniusCommand
+import io.fletchly.genius.config.GeniusConfiguration
 import io.fletchly.genius.config.old.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -38,7 +39,7 @@ import org.bukkit.entity.Player
 import javax.inject.Inject
 
 class InfoCommand @Inject constructor(
-    private val configurationManager: ConfigurationManager,
+    private val configuration: GeniusConfiguration,
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope
 ) : GeniusCommand {
@@ -57,8 +58,8 @@ class InfoCommand @Inject constructor(
         }
 
     override fun execute(ctx: CommandContext<CommandSourceStack>): Int {
-        val agentName = configurationManager.geniusAgentName
-        val model = configurationManager.ollamaModel
+        val agentName = configuration.display.agentName
+        val model = configuration.ollama.model
         val executor = ctx.source.executor
         val sender = ctx.source.sender
 
@@ -81,7 +82,7 @@ class InfoCommand @Inject constructor(
 
             val job = pluginScope.launch {
                 val playerContextSize = contextService.getContext(playerUuid).size
-                val maxPlayerMessages = configurationManager.contextMaxPlayerMessages
+                val maxPlayerMessages = configuration.context.maxPlayerMessages
 
                 textComponent.append {
                     Component.text("\nContext used: ")

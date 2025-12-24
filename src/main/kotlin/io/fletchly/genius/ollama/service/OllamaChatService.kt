@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.ollama.service
 
-import io.fletchly.genius.config.old.manager.ConfigurationManager
+import io.fletchly.genius.config.GeniusConfiguration
 import io.fletchly.genius.config.old.manager.SystemPromptManager
 import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.client.GeniusHttpClient
@@ -29,16 +29,16 @@ import io.fletchly.genius.ollama.model.OllamaResponse
 import javax.inject.Inject
 
 class OllamaChatService @Inject constructor(
-    private val configurationManager: ConfigurationManager,
+    private val configuration: GeniusConfiguration,
     private val systemPromptManager: SystemPromptManager,
     private val httpClient: GeniusHttpClient<OllamaRequest, OllamaResponse>
 ) : ChatService {
     override suspend fun chat(messages: List<Message>): Message {
         val ollamaOptions = OllamaOptions(
-            temperature = configurationManager.ollamaTemperature,
-            topK = configurationManager.ollamaTopK,
-            topP = configurationManager.ollamaTopP,
-            numPredict = configurationManager.ollamaNumPredict
+            temperature = configuration.ollama.temperature,
+            topK = configuration.ollama.topK,
+            topP = configuration.ollama.topP,
+            numPredict = configuration.ollama.numPredict
         )
 
         val systemPromptMessage = Message(
@@ -47,7 +47,7 @@ class OllamaChatService @Inject constructor(
         )
 
         val request = OllamaRequest(
-            model = configurationManager.ollamaModel,
+            model = configuration.ollama.model,
             options = ollamaOptions,
             messages = listOf(systemPromptMessage) + messages
         )

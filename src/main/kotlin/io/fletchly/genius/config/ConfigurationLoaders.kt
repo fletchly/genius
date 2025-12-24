@@ -2,6 +2,7 @@ package io.fletchly.genius.config
 
 import com.hpfxd.configurate.eoyaml.EOYamlConfigurationLoader
 import org.spongepowered.configurate.CommentedConfigurationNode
+import org.spongepowered.configurate.kotlin.objectMapperFactory
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader
 import org.spongepowered.configurate.loader.HeaderMode
 import org.spongepowered.configurate.util.MapFactories
@@ -17,8 +18,14 @@ class ConfigurationLoaders {
          * @param path the path of the file for loading
          * @return A configurate loader
          */
-        fun getYamlLoader(path: Path): AbstractConfigurationLoader<CommentedConfigurationNode> {
+        fun getEoYamlLoader(path: Path): AbstractConfigurationLoader<CommentedConfigurationNode> {
             return EO_YAML
+                .path(path)
+                .build()
+        }
+
+        fun getDefaultYamlLoader(path: Path): AbstractConfigurationLoader<CommentedConfigurationNode> {
+            return DEFAULT_YAML
                 .path(path)
                 .build()
         }
@@ -26,13 +33,15 @@ class ConfigurationLoaders {
         /**
          * Default Configurate YAML loader
          */
-        @Deprecated("The default configurate YAML loader is based on SnakeYAML, which lacks comment support")
         val DEFAULT_YAML: YamlConfigurationLoader.Builder = YamlConfigurationLoader.builder()
             .indent(2)
             .nodeStyle(NodeStyle.BLOCK)
             .headerMode(HeaderMode.PRESET)
             .defaultOptions { opts ->
                 opts.mapFactory(MapFactories.sortedNatural())
+                opts.serializers { builder ->
+                    builder.registerAnnotatedObjects(objectMapperFactory())
+                }
             }
 
         /**
@@ -44,6 +53,9 @@ class ConfigurationLoaders {
             .headerMode(HeaderMode.PRESET)
             .defaultOptions { opts ->
                 opts.mapFactory(MapFactories.sortedNatural())
+                opts.serializers { builder ->
+                    builder.registerAnnotatedObjects(objectMapperFactory())
+                }
             }
     }
 }

@@ -41,7 +41,6 @@ import javax.inject.Inject
  * Structure and logic for /ask
  */
 class AskCommand @Inject constructor(
-    configurationManager: ConfigurationManager,
     private val pluginSchedulerUtil: PluginSchedulerUtil,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,

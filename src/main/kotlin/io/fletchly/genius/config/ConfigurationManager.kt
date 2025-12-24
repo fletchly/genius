@@ -3,6 +3,7 @@ package io.fletchly.genius.config
 import org.bukkit.plugin.java.JavaPlugin
 import org.spongepowered.configurate.ConfigurateException
 import org.spongepowered.configurate.ConfigurationOptions
+import org.spongepowered.configurate.kotlin.extensions.get
 import org.spongepowered.configurate.serialize.SerializationException
 import java.nio.file.Path
 import java.util.logging.Logger
@@ -14,7 +15,8 @@ class ConfigurationManager @Inject constructor(
     plugin: JavaPlugin
 ) {
     private val configPath = Path.of(plugin.dataFolder.path, "config.yml")
-    private val loader = ConfigurationLoaders.getYamlLoader(configPath)
+    private val eoLoader = ConfigurationLoaders.getEoYamlLoader(configPath)
+    private val defaultLoader = ConfigurationLoaders.getDefaultYamlLoader(configPath)
 
     /**
      * Load configuration from file
@@ -23,8 +25,8 @@ class ConfigurationManager @Inject constructor(
         saveDefaultConfig()
 
         try {
-            val root = loader.load()
-            val configuration = root.get(GeniusConfiguration::class.java)
+            val root = defaultLoader.load()
+            val configuration: GeniusConfiguration? = root.get()
 
             if (configuration != null) {
                 return configuration
@@ -44,13 +46,13 @@ class ConfigurationManager @Inject constructor(
 
     private fun saveDefaultConfig(overwrite: Boolean = false) {
         if (overwrite || !configPath.exists()) {
-            val root = loader.createNode(
+            val root = eoLoader.createNode(
                 ConfigurationOptions.defaults()
                     .header(GeniusConfiguration.HEADER)
             )
             try {
                 root.node().set(GeniusConfiguration::class.java, GeniusConfiguration())
-                loader.save(root)
+                eoLoader.save(root)
             } catch (ex: SerializationException) {
                 val message = "Couldn't serialize default configuration"
                 logger.severe { "$message: ${ex.message}" }

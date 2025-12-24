@@ -28,10 +28,8 @@ class Genius : JavaPlugin() {
     lateinit var scope: CoroutineScope
 
     override fun onEnable() {
-        saveDefaultConfig()
         registerPluginScope()
         buildComponent()
-        migrateConfig()
         registerEvents()
         registerCommands()
         logger.info { "Successfully enabled Genius ${pluginMeta.version}!" }

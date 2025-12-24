@@ -21,6 +21,7 @@ package io.fletchly.genius.context
 
 import dagger.Module
 import dagger.Provides
+import io.fletchly.genius.config.GeniusConfiguration
 import io.fletchly.genius.config.old.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ConcurrentHashMapContextService
 import io.fletchly.genius.context.service.ContextService
@@ -30,6 +31,6 @@ import javax.inject.Singleton
 class ContextModule {
     @Provides
     @Singleton
-    fun provideContextService(configurationManager: ConfigurationManager): ContextService =
-        ConcurrentHashMapContextService(configurationManager)
+    fun provideContextService(configuration: GeniusConfiguration): ContextService =
+        ConcurrentHashMapContextService(configuration)
 }

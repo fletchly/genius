@@ -21,10 +21,11 @@ package io.fletchly.genius
 
 import dagger.Module
 import dagger.Provides
+import org.bukkit.plugin.java.JavaPlugin
 import javax.inject.Singleton
 
 @Module
-class PluginModule(private val plugin: Genius) {
+class PluginModule(private val plugin: JavaPlugin) {
     @Provides
     @Singleton
     fun providePlugin() = plugin
@@ -39,5 +40,5 @@ class PluginModule(private val plugin: Genius) {
 
     @Provides
     @Singleton
-    fun providePluginScope() = plugin.scope
+    fun providePluginScope() = (plugin as Genius).scope
 }
