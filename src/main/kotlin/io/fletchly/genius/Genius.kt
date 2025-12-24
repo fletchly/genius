@@ -82,10 +82,4 @@ class Genius : JavaPlugin() {
 
         logger.info { "Successfully registered ${registered}/${component.commands().size} commands" }
     }
-
-    private fun migrateConfig() {
-        val migrations = component.migrationUtil().migrateConfig()
-        if (migrations > 0) logger.info { "Applied $migrations config migrations" }
-        saveConfig()
-    }
 }

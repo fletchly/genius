@@ -21,7 +21,6 @@ package io.fletchly.genius.config
 
 import dagger.Module
 import dagger.Provides
-import io.fletchly.genius.config.old.util.MigrationUtil
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Logger
@@ -32,10 +31,6 @@ class ConfigModule {
     @Provides
     @Singleton
     fun providePromptManager(plugin: JavaPlugin) = SystemPromptManager(plugin)
-
-    @Provides
-    @Singleton
-    fun provideMigrationUtil(config: FileConfiguration) = MigrationUtil(config)
 
     @Provides
     @Singleton
