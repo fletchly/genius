@@ -23,7 +23,7 @@ import dagger.Module
 import dagger.Provides
 import io.fletchly.genius.config.GeniusConfiguration
 import io.fletchly.genius.config.old.manager.ConfigurationManager
-import io.fletchly.genius.config.old.manager.SystemPromptManager
+import io.fletchly.genius.config.SystemPromptManager
 import io.fletchly.genius.ollama.client.GeniusHttpClient
 import io.fletchly.genius.ollama.client.OllamaHttpClient
 import io.fletchly.genius.ollama.model.OllamaRequest
