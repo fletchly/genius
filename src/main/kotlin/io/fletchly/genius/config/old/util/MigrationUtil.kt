@@ -22,7 +22,7 @@ package io.fletchly.genius.config.old.util
 import org.bukkit.configuration.file.FileConfiguration
 import javax.inject.Inject
 
-class MigrationUtil @Inject constructor( private val config: FileConfiguration) {
+class MigrationUtil @Inject constructor(private val config: FileConfiguration) {
     /**
      * Apply config migrations
      *

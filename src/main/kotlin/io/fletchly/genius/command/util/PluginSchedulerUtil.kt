@@ -19,7 +19,6 @@
 
 package io.fletchly.genius.command.util
 
-import io.fletchly.genius.Genius
 import org.bukkit.plugin.java.JavaPlugin
 import javax.inject.Inject
 

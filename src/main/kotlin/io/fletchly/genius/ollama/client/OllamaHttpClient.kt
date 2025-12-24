@@ -20,7 +20,6 @@
 package io.fletchly.genius.ollama.client
 
 import io.fletchly.genius.config.GeniusConfiguration
-import io.fletchly.genius.config.old.manager.ConfigurationManager
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
 import io.ktor.client.*
