@@ -23,7 +23,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.commands.GeniusCommand
-import io.fletchly.genius.config.manager.ConfigurationManager
+import io.fletchly.genius.config.old.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands

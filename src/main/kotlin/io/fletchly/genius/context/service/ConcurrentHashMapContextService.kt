@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.context.service
 
-import io.fletchly.genius.config.manager.ConfigurationManager
+import io.fletchly.genius.config.old.manager.ConfigurationManager
 import io.fletchly.genius.conversation.model.Message
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap

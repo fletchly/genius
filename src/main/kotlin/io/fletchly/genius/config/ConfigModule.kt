@@ -22,9 +22,9 @@ package io.fletchly.genius.config
 import dagger.Module
 import dagger.Provides
 import io.fletchly.genius.Genius
-import io.fletchly.genius.config.manager.ConfigurationManager
-import io.fletchly.genius.config.manager.SystemPromptManager
-import io.fletchly.genius.config.util.MigrationUtil
+import io.fletchly.genius.config.old.manager.ConfigurationManager
+import io.fletchly.genius.config.old.manager.SystemPromptManager
+import io.fletchly.genius.config.old.util.MigrationUtil
 import org.bukkit.configuration.file.FileConfiguration
 import javax.inject.Singleton
 

@@ -28,7 +28,7 @@ import io.fletchly.genius.command.commands.manage.InfoCommand
 import io.fletchly.genius.command.commands.manage.ManageCommand
 import io.fletchly.genius.command.util.ChatMessageUtil
 import io.fletchly.genius.command.util.PluginSchedulerUtil
-import io.fletchly.genius.config.manager.ConfigurationManager
+import io.fletchly.genius.config.old.manager.ConfigurationManager
 import io.fletchly.genius.context.service.ContextService
 import io.fletchly.genius.conversation.service.ConversationManager
 import kotlinx.coroutines.CoroutineScope

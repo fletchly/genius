@@ -1,6 +1,6 @@
 package io.fletchly.genius.ollama.client
 
-import io.fletchly.genius.config.manager.ConfigurationManager
+import io.fletchly.genius.config.old.manager.ConfigurationManager
 import io.fletchly.genius.conversation.model.Message
 import io.fletchly.genius.ollama.model.OllamaOptions
 import io.fletchly.genius.ollama.model.OllamaRequest

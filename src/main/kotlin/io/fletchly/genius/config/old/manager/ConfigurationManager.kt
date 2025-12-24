@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.config.manager
+package io.fletchly.genius.config.old.manager
 
 import org.bukkit.configuration.file.FileConfiguration
 import javax.inject.Inject
