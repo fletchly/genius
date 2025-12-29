@@ -17,13 +17,32 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.service.context.service
 
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.dsl.module
+import io.fletchly.genius.manager.conversation.model.Message
+import java.util.*
 
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
+/**
+ * Manages player conversation context
+ */
+interface ContextService {
+    /**
+     * Get context for given player
+     */
+    suspend fun getContext(playerUuid: UUID): List<Message>
+
+    /**
+     * Add chat to context for given player
+     */
+    suspend fun addChat(message: Message, playerUuid: UUID)
+
+    /**
+     * Clear context for all players in the current session
+     */
+    suspend fun clearContext()
+
+    /**
+     * Clear context for specific player
+     */
+    suspend fun clearContext(playerUuid: UUID)
 }

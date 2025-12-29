@@ -17,13 +17,9 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.manager.conversation.service
 
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.dsl.module
-
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
-}
+/**
+ * Exception to handle ConversationManager errors
+ */
+class ConversationManagerException(message: String) : Exception(message, null)

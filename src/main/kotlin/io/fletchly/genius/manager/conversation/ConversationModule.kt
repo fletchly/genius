@@ -17,13 +17,12 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.manager.conversation
 
-import org.bukkit.plugin.java.JavaPlugin
+import io.fletchly.genius.manager.conversation.service.ConversationManager
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
+val conversationModule = module {
+    singleOf(::ConversationManager)
 }

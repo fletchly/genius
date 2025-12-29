@@ -1,0 +1,9 @@
+package io.fletchly.genius.service
+
+import io.fletchly.genius.service.context.contextModule
+import io.fletchly.genius.service.ollama.ollamaModule
+import org.koin.dsl.module
+
+val serviceModule = module {
+    includes(contextModule, ollamaModule)
+}

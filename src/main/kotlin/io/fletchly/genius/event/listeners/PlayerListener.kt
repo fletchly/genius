@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.event.listeners
 
-import io.fletchly.genius.context.service.ContextService
+import io.fletchly.genius.service.context.service.ContextService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bukkit.event.EventHandler

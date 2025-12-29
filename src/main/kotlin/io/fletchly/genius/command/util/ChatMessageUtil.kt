@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.command.util
 
-import io.fletchly.genius.config.GeniusConfiguration
+import io.fletchly.genius.manager.config.GeniusConfiguration
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 import javax.inject.Inject

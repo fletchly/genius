@@ -22,8 +22,8 @@ package io.fletchly.genius.command.commands.genius
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.commands.Command
-import io.fletchly.genius.config.GeniusConfiguration
-import io.fletchly.genius.context.service.ContextService
+import io.fletchly.genius.manager.config.GeniusConfiguration
+import io.fletchly.genius.service.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import kotlinx.coroutines.CoroutineScope

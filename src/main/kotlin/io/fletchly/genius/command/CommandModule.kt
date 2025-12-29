@@ -19,78 +19,23 @@
 
 package io.fletchly.genius.command
 
-import dagger.Module
-import dagger.Provides
 import io.fletchly.genius.command.commands.AskCommand
+import io.fletchly.genius.command.commands.Command
 import io.fletchly.genius.command.commands.genius.ClearCommand
-import io.fletchly.genius.command.commands.genius.InfoCommand
 import io.fletchly.genius.command.commands.genius.GeniusCommand
+import io.fletchly.genius.command.commands.genius.InfoCommand
 import io.fletchly.genius.command.util.ChatMessageUtil
 import io.fletchly.genius.command.util.PluginSchedulerUtil
-import io.fletchly.genius.config.GeniusConfiguration
-import io.fletchly.genius.context.service.ContextService
-import io.fletchly.genius.conversation.service.ConversationManager
-import kotlinx.coroutines.CoroutineScope
-import org.bukkit.plugin.java.JavaPlugin
-import java.util.logging.Logger
-import javax.inject.Singleton
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-@Module
-class CommandModule {
-    @Provides
-    fun provideChatMessageUtil(configuration: GeniusConfiguration) = ChatMessageUtil(configuration)
-
-    @Provides
-    @Singleton
-    fun providePluginSchedulerUtil(plugin: JavaPlugin) = PluginSchedulerUtil(plugin)
-
-    @Provides
-    @Singleton
-    fun provideAskCommand(
-        pluginSchedulerUtil: PluginSchedulerUtil,
-        pluginScope: CoroutineScope,
-        pluginLogger: Logger,
-        conversationManager: ConversationManager,
-        chatMessageUtil: ChatMessageUtil
-    ) = AskCommand(
-        pluginSchedulerUtil,
-        pluginScope,
-        pluginLogger,
-        conversationManager,
-        chatMessageUtil
-    )
-
-    @Provides
-    @Singleton
-    fun provideClearContextCommand(
-        pluginScope: CoroutineScope,
-        pluginLogger: Logger,
-        contextService: ContextService,
-        chatMessageUtil: ChatMessageUtil
-    ) = ClearCommand(contextService, pluginScope, pluginLogger, chatMessageUtil)
-
-    @Provides
-    @Singleton
-    fun provideInfoCommand(
-        configuration: GeniusConfiguration,
-        contextService: ContextService,
-        pluginScope: CoroutineScope
-    ) = InfoCommand(configuration, contextService, pluginScope)
-
-    @Provides
-    @Singleton
-    fun provideManageCommand(
-        infoCommand: InfoCommand,
-        clearCommand: ClearCommand
-    ) = GeniusCommand(clearCommand, infoCommand)
-
-    @Provides
-    @Singleton
-    fun provideCommands(
-        askCommand: AskCommand,
-        geniusCommand: GeniusCommand
-    ) = listOf(
-        askCommand,
-        geniusCommand
-    )
+val commandModule = module {
+    singleOf(::PluginSchedulerUtil)
+    factoryOf(::ChatMessageUtil)
+    singleOf(::ClearCommand)
+    singleOf(::InfoCommand)
+    singleOf(::AskCommand) { bind<Command>() }
+    singleOf(::GeniusCommand) { bind<Command>() }
 }

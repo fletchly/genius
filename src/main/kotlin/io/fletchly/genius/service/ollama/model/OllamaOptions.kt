@@ -17,13 +17,18 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.service.ollama.model
 
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.dsl.module
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
-}
+@Serializable
+data class OllamaOptions(
+    val temperature: Double,
+    @SerialName("top_k")
+    val topK: Int,
+    @SerialName("top_p")
+    val topP: Double,
+    @SerialName("num_predict")
+    val numPredict: Int
+)
