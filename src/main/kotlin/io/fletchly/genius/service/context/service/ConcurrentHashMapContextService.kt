@@ -23,13 +23,12 @@ import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.manager.conversation.model.Message
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import javax.inject.Inject
 import kotlin.collections.ArrayDeque
 
 /**
  * [ContextService] implementation that stores conversation context in a [ConcurrentHashMap]
  */
-class ConcurrentHashMapContextService @Inject constructor(configuration: GeniusConfiguration) : ContextService {
+class ConcurrentHashMapContextService constructor(configuration: GeniusConfiguration) : ContextService {
     private val maxPlayerMessages = configuration.context.maxPlayerMessages
     private val playerContext = ConcurrentHashMap<UUID, ArrayDeque<Message>>()
 

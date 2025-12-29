@@ -22,12 +22,11 @@ package io.fletchly.genius.command.util
 import io.fletchly.genius.manager.config.GeniusConfiguration
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
-import javax.inject.Inject
 
 /**
  * Utility for generating formatted chat messages
  */
-class ChatMessageUtil @Inject constructor(
+class ChatMessageUtil constructor(
     configuration: GeniusConfiguration
 ) {
     enum class MessageLevel(val color: NamedTextColor) {

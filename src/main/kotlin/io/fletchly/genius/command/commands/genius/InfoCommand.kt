@@ -34,9 +34,8 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import javax.inject.Inject
 
-class InfoCommand @Inject constructor(
+class InfoCommand constructor(
     private val configuration: GeniusConfiguration,
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope

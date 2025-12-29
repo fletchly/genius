@@ -26,9 +26,8 @@ import io.fletchly.genius.service.ollama.client.GeniusHttpClient
 import io.fletchly.genius.service.ollama.model.OllamaOptions
 import io.fletchly.genius.service.ollama.model.OllamaRequest
 import io.fletchly.genius.service.ollama.model.OllamaResponse
-import javax.inject.Inject
 
-class OllamaChatService @Inject constructor(
+class OllamaChatService constructor(
     private val configuration: GeniusConfiguration,
     private val systemPromptManager: SystemPromptManager,
     private val httpClient: GeniusHttpClient<OllamaRequest, OllamaResponse>

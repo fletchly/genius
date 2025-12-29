@@ -19,17 +19,16 @@
 
 package io.fletchly.genius.manager.conversation.service
 
-import io.fletchly.genius.service.context.service.ContextService
 import io.fletchly.genius.manager.conversation.model.Message
+import io.fletchly.genius.service.context.service.ContextService
 import io.fletchly.genius.service.ollama.client.GeniusHttpClientException
 import io.fletchly.genius.service.ollama.service.ChatService
 import java.util.*
-import javax.inject.Inject
 
 /**
  * Manages player conversations
  */
-class ConversationManager @Inject constructor(
+class ConversationManager constructor(
     private val contextService: ContextService,
     private val chatService: ChatService
 ) {

@@ -32,12 +32,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import java.util.logging.Logger
-import javax.inject.Inject
 
 /**
  * Structure and logic for /manage
  */
-class ClearCommand @Inject constructor(
+class ClearCommand constructor(
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,

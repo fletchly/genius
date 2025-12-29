@@ -34,12 +34,11 @@ import kotlinx.coroutines.launch
 import net.kyori.adventure.sound.Sound
 import org.bukkit.entity.Player
 import java.util.logging.Logger
-import javax.inject.Inject
 
 /**
  * Structure and logic for /ask
  */
-class AskCommand @Inject constructor(
+class AskCommand constructor(
     private val pluginSchedulerUtil: PluginSchedulerUtil,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,

@@ -33,12 +33,11 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.util.logging.Logger
-import javax.inject.Inject
 
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient @Inject constructor(
+class OllamaHttpClient constructor(
     private val pluginLogger: Logger,
     configuration: GeniusConfiguration
 ) : GeniusHttpClient<OllamaRequest, OllamaResponse> {

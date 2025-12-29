@@ -20,12 +20,11 @@
 package io.fletchly.genius.command.util
 
 import org.bukkit.plugin.java.JavaPlugin
-import javax.inject.Inject
 
 /**
  * Utility class that exposes the plugin scheduler
  */
-class PluginSchedulerUtil @Inject constructor(private val plugin: JavaPlugin) {
+class PluginSchedulerUtil constructor(private val plugin: JavaPlugin) {
     /**
      * Use the plugin scheduler to run a task
      *

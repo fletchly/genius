@@ -26,12 +26,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
 import java.util.logging.Logger
-import javax.inject.Inject
 
 /**
  * Listener for player events
  */
-class PlayerListener @Inject constructor(
+class PlayerListener constructor(
     private val pluginLogger: Logger,
     private val pluginScope: CoroutineScope,
     private val contextService: ContextService

@@ -26,10 +26,9 @@ import org.spongepowered.configurate.kotlin.extensions.get
 import org.spongepowered.configurate.serialize.SerializationException
 import java.nio.file.Path
 import java.util.logging.Logger
-import javax.inject.Inject
 import kotlin.io.path.exists
 
-class ConfigurationManager @Inject constructor(
+class ConfigurationManager constructor(
     private val logger: Logger,
     plugin: JavaPlugin
 ) {

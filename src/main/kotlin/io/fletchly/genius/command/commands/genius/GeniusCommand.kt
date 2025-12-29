@@ -24,9 +24,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.commands.Command
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
-import javax.inject.Inject
 
-class GeniusCommand @Inject constructor(
+class GeniusCommand constructor(
     private val clearCommand: ClearCommand,
     private val infoCommand: InfoCommand
 ) : Command {

@@ -21,14 +21,13 @@ package io.fletchly.genius.manager.config
 
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import javax.inject.Inject
 
 /**
  * System prompt manager
  *
  * @property prompt Genius system prompt
  */
-class SystemPromptManager @Inject constructor(private val plugin: JavaPlugin) {
+class SystemPromptManager constructor(private val plugin: JavaPlugin) {
     private val promptPath = "system-prompt.md"
     private var _prompt: String = loadDefaultPrompt()
     val prompt: String get() = _prompt
