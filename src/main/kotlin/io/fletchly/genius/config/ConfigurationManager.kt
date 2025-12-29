@@ -15,9 +15,7 @@ class ConfigurationManager @Inject constructor(
     plugin: JavaPlugin
 ) {
     private val configPath = Path.of(plugin.dataFolder.path, "genius.conf")
-    private val eoLoader = ConfigurationLoaders.getEoYamlLoader(configPath)
-    private val defaultLoader = ConfigurationLoaders.getDefaultYamlLoader(configPath)
-    private val hoconLoader = ConfigurationLoaders. getHoconLoader(configPath)
+    private val hoconLoader = ConfigurationLoaders. buildHoconLoader(configPath)
 
     /**
      * Load configuration from file

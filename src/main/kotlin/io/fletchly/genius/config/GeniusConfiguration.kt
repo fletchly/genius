@@ -20,7 +20,7 @@ data class GeniusConfiguration(
 
     @Setting("version")
     @Comment("Don't change this. Doing so could overwrite existing config")
-    val version: Int = 2
+    val version: Int = 0
 ) {
     companion object {
         val HEADER = """
