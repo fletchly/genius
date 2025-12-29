@@ -31,7 +31,7 @@ import io.papermc.paper.command.brigadier.CommandSourceStack
  * @property permission the permission needed to use the command
  * @property commandNode command structure
  */
-interface GeniusCommand {
+interface Command {
     val description: String
     val aliases: List<String>
     val permission: String

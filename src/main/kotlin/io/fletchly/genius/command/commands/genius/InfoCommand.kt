@@ -19,10 +19,9 @@
 
 package io.fletchly.genius.command.commands.genius
 
-import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
-import io.fletchly.genius.command.commands.GeniusCommand
+import io.fletchly.genius.command.commands.Command
 import io.fletchly.genius.config.GeniusConfiguration
 import io.fletchly.genius.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -41,7 +40,7 @@ class InfoCommand @Inject constructor(
     private val configuration: GeniusConfiguration,
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope
-) : GeniusCommand {
+) : Command {
     override val description = "Get info on Genius"
     override val aliases: List<String> = listOf()
     override val permission = "genius.manage.info"
@@ -96,11 +95,11 @@ class InfoCommand @Inject constructor(
                 sendInfo(textComponent, sender)
             }
 
-            return Command.SINGLE_SUCCESS
+            return com.mojang.brigadier.Command.SINGLE_SUCCESS
         }
 
         sendInfo(textComponent, sender)
-        return Command.SINGLE_SUCCESS
+        return com.mojang.brigadier.Command.SINGLE_SUCCESS
     }
 
     private fun sendInfo(textComponent: TextComponent.Builder, sender: CommandSender) {

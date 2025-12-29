@@ -19,10 +19,9 @@
 
 package io.fletchly.genius.command.commands.genius
 
-import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
-import io.fletchly.genius.command.commands.GeniusCommand
+import io.fletchly.genius.command.commands.Command
 import io.fletchly.genius.command.util.ChatMessageUtil
 import io.fletchly.genius.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -43,7 +42,7 @@ class ClearCommand @Inject constructor(
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,
     private val chatMessageUtil: ChatMessageUtil
-) : GeniusCommand {
+) : Command {
     override val description = "Clear conversation context"
     override val aliases = listOf<String>()
     override val permission = "genius.manage.clear"
@@ -76,7 +75,7 @@ class ClearCommand @Inject constructor(
                     "This command must be run by a player"
                 )
             }
-            return Command.SINGLE_SUCCESS
+            return com.mojang.brigadier.Command.SINGLE_SUCCESS
         }
 
         val playerUuid = executor.uniqueId
@@ -91,7 +90,7 @@ class ClearCommand @Inject constructor(
             }
         }
 
-        return Command.SINGLE_SUCCESS
+        return com.mojang.brigadier.Command.SINGLE_SUCCESS
     }
 
     /**
@@ -114,6 +113,6 @@ class ClearCommand @Inject constructor(
             sender.sendMessage(chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.INFO, message))
         }
 
-        return Command.SINGLE_SUCCESS
+        return com.mojang.brigadier.Command.SINGLE_SUCCESS
     }
 }

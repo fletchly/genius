@@ -45,7 +45,7 @@ class AskCommand @Inject constructor(
     private val pluginLogger: Logger,
     private val conversationManager: ConversationManager,
     private val chatMessageUtil: ChatMessageUtil
-) : GeniusCommand {
+) : Command {
     override val description = "Ask Genius a question"
     override val aliases = listOf("g")
     override val permission = "genius.ask"
