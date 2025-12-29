@@ -17,13 +17,23 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.service.ollama.client
 
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.dsl.module
+import io.fletchly.genius.service.ollama.model.GeniusRequest
+import io.fletchly.genius.service.ollama.model.GeniusResponse
+import io.ktor.client.*
 
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
+interface GeniusHttpClient<Req : GeniusRequest, Res : GeniusResponse> {
+    /**
+     * Internal ktor HttpClient
+     */
+    val ktorClient: HttpClient
+
+    /**
+     * Generate chat using Ollama API
+     *
+     * @param request structured request for Ollama API
+     * @return structured response from Ollama API
+     */
+    suspend fun chat(request: Req): Res
 }

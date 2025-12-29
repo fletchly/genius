@@ -17,13 +17,16 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.service.ollama.model
 
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.dsl.module
+import io.fletchly.genius.manager.conversation.model.Message
+import kotlinx.serialization.Serializable
 
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
-}
+@Serializable
+data class OllamaRequest(
+    override val messages: List<Message>,
+    val model: String,
+    val options: OllamaOptions,
+    val stream: Boolean = false,
+    val think: Boolean = false
+) : GeniusRequest

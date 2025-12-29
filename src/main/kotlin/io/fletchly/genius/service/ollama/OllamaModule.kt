@@ -17,13 +17,19 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.service.ollama
 
-import org.bukkit.plugin.java.JavaPlugin
+import io.fletchly.genius.service.ollama.client.GeniusHttpClient
+import io.fletchly.genius.service.ollama.client.OllamaHttpClient
+import io.fletchly.genius.service.ollama.model.OllamaRequest
+import io.fletchly.genius.service.ollama.model.OllamaResponse
+import io.fletchly.genius.service.ollama.service.ChatService
+import io.fletchly.genius.service.ollama.service.OllamaChatService
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
+val ollamaModule = module {
+    singleOf(::OllamaHttpClient) { bind<GeniusHttpClient<OllamaRequest, OllamaResponse>>() }
+    singleOf(::OllamaChatService) { bind<ChatService>() }
 }

@@ -17,13 +17,6 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.manager.config
 
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.dsl.module
-
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
-}
+class ConfigurationException(message: String, cause: Throwable?) : Exception(message, cause)

@@ -17,13 +17,13 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.manager.config
 
-import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
+val configModule = module {
+    singleOf(::ConfigurationManager)
+    singleOf(::SystemPromptManager)
+    single<GeniusConfiguration> { get<ConfigurationManager>().loadConfig() }
 }

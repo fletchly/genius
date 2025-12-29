@@ -23,7 +23,7 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.commands.Command
 import io.fletchly.genius.command.util.ChatMessageUtil
-import io.fletchly.genius.context.service.ContextService
+import io.fletchly.genius.service.context.service.ContextService
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes

@@ -17,13 +17,19 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius
+package io.fletchly.genius.service.ollama.service
 
-import org.bukkit.plugin.java.JavaPlugin
-import org.koin.dsl.module
+import io.fletchly.genius.manager.conversation.model.Message
 
-fun pluginModule(plugin: JavaPlugin) = module {
-    single<JavaPlugin> { plugin }
-    single { plugin.logger }
-    single { (plugin as Genius).scope }
+/**
+ * Service for generating chats from assistant
+ */
+interface ChatService {
+    /**
+     * Generate chat
+     *
+     * @param messages context to send assistant
+     * @return the assistant's response
+     */
+    suspend fun chat(messages: List<Message>): Message
 }

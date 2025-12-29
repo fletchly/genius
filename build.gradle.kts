@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.2.21"
-    kotlin("kapt") version "2.2.21"
     kotlin("plugin.serialization") version "2.2.21"
     id("com.gradleup.shadow") version "8.3.0"
     id("xyz.jpenilla.run-paper") version "2.3.1"
@@ -31,10 +30,6 @@ dependencies {
 
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-
-    // Dagger 2 dependency injection
-    implementation("com.google.dagger:dagger:$dagger_version")
-    kapt("com.google.dagger:dagger-compiler:$dagger_version")
 
     // Ktor – using the official catalog accessors
     implementation(ktor.client.core)

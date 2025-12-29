@@ -19,17 +19,25 @@
 
 package io.fletchly.genius
 
+import io.fletchly.genius.command.commandModule
+import io.fletchly.genius.command.commands.Command
+import io.fletchly.genius.event.eventModule
+import io.fletchly.genius.manager.managerModule
+import io.fletchly.genius.service.serviceModule
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import kotlinx.coroutines.*
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.java.KoinJavaComponent.getKoin
 
 class Genius : JavaPlugin() {
-    private lateinit var component: PluginComponent
     lateinit var scope: CoroutineScope
 
     override fun onEnable() {
         registerPluginScope()
-        buildComponent()
+        registerModules()
         registerEvents()
         registerCommands()
         logger.info { "Successfully enabled Genius ${pluginMeta.version}!" }
@@ -37,12 +45,19 @@ class Genius : JavaPlugin() {
 
     override fun onDisable() {
         cleanUpPluginScope()
+        stopKoin()
     }
 
-    private fun buildComponent() {
-        component = DaggerPluginComponent.builder()
-            .pluginModule(PluginModule(this))
-            .build()
+    private fun registerModules() {
+        startKoin {
+            modules(
+                pluginModule(this@Genius),
+                commandModule,
+                eventModule,
+                managerModule,
+                serviceModule
+            )
+        }
     }
 
     private fun registerPluginScope() {
@@ -54,22 +69,26 @@ class Genius : JavaPlugin() {
     }
 
     private fun registerEvents() {
-        logger.info { "Registering ${component.listeners().size} event listeners" }
+        val listeners = getKoin().getAll<Listener>()
+
+        logger.info { "Registering ${listeners.size} event listeners" }
         var registered = 0
 
-        for (listener in component.listeners()) {
+        for (listener in listeners) {
             server.pluginManager.registerEvents(listener, this)
             registered++
         }
 
-        logger.info { "Successfully registered ${registered}/${component.listeners().size} event listeners" }
+        logger.info { "Successfully registered ${registered}/${listeners.size} event listeners" }
     }
 
     private fun registerCommands() {
-        logger.info { "Registering ${component.commands().size} commands" }
+        val commands = getKoin().getAll<Command>()
+
+        logger.info { "Registering ${commands.size} commands" }
         var registered = 0
 
-        for (command in component.commands()) {
+        for (command in commands) {
             lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
                 it.registrar().register(
                     command.commandNode,
@@ -80,6 +99,6 @@ class Genius : JavaPlugin() {
             registered++
         }
 
-        logger.info { "Successfully registered ${registered}/${component.commands().size} commands" }
+        logger.info { "Successfully registered ${registered}/${commands.size} commands" }
     }
 }
