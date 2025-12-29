@@ -21,7 +21,6 @@ package io.fletchly.genius.config
 
 import dagger.Module
 import dagger.Provides
-import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Logger
 import javax.inject.Singleton
