@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.command.commands.manage
+package io.fletchly.genius.command.commands.genius
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
@@ -27,8 +27,8 @@ import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import javax.inject.Inject
 
-class ManageCommand @Inject constructor(
-    private val clearContextCommand: ClearContextCommand,
+class GeniusCommand @Inject constructor(
+    private val clearCommand: ClearCommand,
     private val infoCommand: InfoCommand
 ) : GeniusCommand {
     override val description = "Manage Genius"
@@ -38,7 +38,7 @@ class ManageCommand @Inject constructor(
         get() {
             return Commands.literal("genius")
                 .then(infoCommand.commandNode)
-                .then(clearContextCommand.commandNode)
+                .then(clearCommand.commandNode)
                 .build()
         }
 

@@ -22,9 +22,9 @@ package io.fletchly.genius.command
 import dagger.Module
 import dagger.Provides
 import io.fletchly.genius.command.commands.AskCommand
-import io.fletchly.genius.command.commands.manage.ClearContextCommand
-import io.fletchly.genius.command.commands.manage.InfoCommand
-import io.fletchly.genius.command.commands.manage.ManageCommand
+import io.fletchly.genius.command.commands.genius.ClearCommand
+import io.fletchly.genius.command.commands.genius.InfoCommand
+import io.fletchly.genius.command.commands.genius.GeniusCommand
 import io.fletchly.genius.command.util.ChatMessageUtil
 import io.fletchly.genius.command.util.PluginSchedulerUtil
 import io.fletchly.genius.config.GeniusConfiguration
@@ -67,7 +67,7 @@ class CommandModule {
         pluginLogger: Logger,
         contextService: ContextService,
         chatMessageUtil: ChatMessageUtil
-    ) = ClearContextCommand(contextService, pluginScope, pluginLogger, chatMessageUtil)
+    ) = ClearCommand(contextService, pluginScope, pluginLogger, chatMessageUtil)
 
     @Provides
     @Singleton
@@ -81,16 +81,16 @@ class CommandModule {
     @Singleton
     fun provideManageCommand(
         infoCommand: InfoCommand,
-        clearContextCommand: ClearContextCommand
-    ) = ManageCommand(clearContextCommand, infoCommand)
+        clearCommand: ClearCommand
+    ) = GeniusCommand(clearCommand, infoCommand)
 
     @Provides
     @Singleton
     fun provideCommands(
         askCommand: AskCommand,
-        manageCommand: ManageCommand
+        geniusCommand: GeniusCommand
     ) = listOf(
         askCommand,
-        manageCommand
+        geniusCommand
     )
 }

@@ -32,10 +32,6 @@ class PluginModule(private val plugin: JavaPlugin) {
 
     @Provides
     @Singleton
-    fun providePluginConfig() = plugin.config
-
-    @Provides
-    @Singleton
     fun providePluginLogger() = plugin.logger
 
     @Provides

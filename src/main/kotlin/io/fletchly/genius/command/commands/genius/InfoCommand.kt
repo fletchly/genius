@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.command.commands.manage
+package io.fletchly.genius.command.commands.genius
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext

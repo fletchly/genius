@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.command.commands.manage
+package io.fletchly.genius.command.commands.genius
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
@@ -38,7 +38,7 @@ import javax.inject.Inject
 /**
  * Structure and logic for /manage
  */
-class ClearContextCommand @Inject constructor(
+class ClearCommand @Inject constructor(
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,
