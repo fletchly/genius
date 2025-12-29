@@ -17,19 +17,6 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.context
+package io.fletchly.genius.config
 
-import dagger.Module
-import dagger.Provides
-import io.fletchly.genius.config.GeniusConfiguration
-import io.fletchly.genius.context.service.ConcurrentHashMapContextService
-import io.fletchly.genius.context.service.ContextService
-import javax.inject.Singleton
-
-@Module
-class ContextModule {
-    @Provides
-    @Singleton
-    fun provideContextService(configuration: GeniusConfiguration): ContextService =
-        ConcurrentHashMapContextService(configuration)
-}
+class ConfigurationException(message: String, cause: Throwable?) : Exception(message, cause)

@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.ollama.client
 
-import io.fletchly.genius.config.manager.ConfigurationManager
+import io.fletchly.genius.config.GeniusConfiguration
 import io.fletchly.genius.ollama.model.OllamaRequest
 import io.fletchly.genius.ollama.model.OllamaResponse
 import io.ktor.client.*
@@ -40,13 +40,10 @@ import javax.inject.Inject
  */
 class OllamaHttpClient @Inject constructor(
     private val pluginLogger: Logger,
-    configurationManager: ConfigurationManager
+    configuration: GeniusConfiguration
 ) : GeniusHttpClient<OllamaRequest, OllamaResponse> {
-    private val baseUrl: String by lazy { configurationManager.ollamaBaseUrl }
-    private val apiKey: String by lazy {
-        configurationManager.ollamaApiKey
-            ?: throw GeniusHttpClientException.ConfigurationError("No Ollama API key provided!")
-    }
+    private val baseUrl = configuration.ollama.baseUrl
+    private val apiKey = configuration.ollama.apiKey
 
     override val ktorClient: HttpClient by lazy {
         HttpClient(CIO) {
@@ -73,7 +70,7 @@ class OllamaHttpClient @Inject constructor(
             }
             defaultRequest {
                 url(baseUrl)
-                bearerAuth(apiKey)
+                if (apiKey != null) bearerAuth(apiKey)
             }
         }
     }
@@ -86,6 +83,11 @@ class OllamaHttpClient @Inject constructor(
             }
 
             when (response.status.value) {
+                401 -> {
+                    pluginLogger.warning { "[OllamaHttpClient] Got ${response.status.value} Unauthorized response from Ollama API. (Is your API key set?)" }
+                    throw GeniusHttpClientException.ClientError(response.status)
+                }
+
                 in 400..499 -> {
                     pluginLogger.warning {
                         "[OllamaHttpClient] Got ${response.status.value} Client Error response from Ollama API! [${response}]"

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "2.2.21"
     kotlin("kapt") version "2.2.21"
@@ -39,6 +41,11 @@ dependencies {
 
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+
+    implementation("com.hpfxd.configurate:configurate-eo-yaml:1.0.0")
+    implementation("org.spongepowered:configurate-extra-kotlin:4.2.0")
+    implementation("org.spongepowered:configurate-yaml:4.2.0")
+    implementation("org.spongepowered:configurate-hocon:4.2.0")
 
     // Testing
     testImplementation(platform("org.junit:junit-bom:6.0.1"))
@@ -92,4 +99,8 @@ tasks {
 val targetJavaVersion = 21
 kotlin {
     jvmToolchain(targetJavaVersion)
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.compilerOptions {
+    freeCompilerArgs.set(listOf("-Xannotation-default-target=param-property"))
 }

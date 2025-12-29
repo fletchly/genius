@@ -21,24 +21,18 @@ package io.fletchly.genius.config
 
 import dagger.Module
 import dagger.Provides
-import io.fletchly.genius.Genius
-import io.fletchly.genius.config.manager.ConfigurationManager
-import io.fletchly.genius.config.manager.SystemPromptManager
-import io.fletchly.genius.config.util.MigrationUtil
-import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.plugin.java.JavaPlugin
+import java.util.logging.Logger
 import javax.inject.Singleton
 
 @Module
 class ConfigModule {
     @Provides
     @Singleton
-    fun provideConfigManager(config: FileConfiguration) = ConfigurationManager(config)
+    fun providePromptManager(plugin: JavaPlugin) = SystemPromptManager(plugin)
 
     @Provides
     @Singleton
-    fun providePromptManager(plugin: Genius) = SystemPromptManager(plugin)
-
-    @Provides
-    @Singleton
-    fun provideMigrationUtil(config: FileConfiguration) = MigrationUtil(config)
+    fun provideConfiguration(logger: Logger, plugin: JavaPlugin) =
+        ConfigurationManager(logger, plugin).loadConfig()
 }

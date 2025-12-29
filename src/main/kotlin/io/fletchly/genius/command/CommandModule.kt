@@ -21,40 +21,38 @@ package io.fletchly.genius.command
 
 import dagger.Module
 import dagger.Provides
-import io.fletchly.genius.Genius
 import io.fletchly.genius.command.commands.AskCommand
 import io.fletchly.genius.command.commands.manage.ClearContextCommand
 import io.fletchly.genius.command.commands.manage.InfoCommand
 import io.fletchly.genius.command.commands.manage.ManageCommand
 import io.fletchly.genius.command.util.ChatMessageUtil
 import io.fletchly.genius.command.util.PluginSchedulerUtil
-import io.fletchly.genius.config.manager.ConfigurationManager
+import io.fletchly.genius.config.GeniusConfiguration
 import io.fletchly.genius.context.service.ContextService
 import io.fletchly.genius.conversation.service.ConversationManager
 import kotlinx.coroutines.CoroutineScope
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Logger
 import javax.inject.Singleton
 
 @Module
 class CommandModule {
     @Provides
-    fun provideChatMessageUtil(configurationManager: ConfigurationManager) = ChatMessageUtil(configurationManager)
+    fun provideChatMessageUtil(configuration: GeniusConfiguration) = ChatMessageUtil(configuration)
 
     @Provides
     @Singleton
-    fun providePluginSchedulerUtil(plugin: Genius) = PluginSchedulerUtil(plugin)
+    fun providePluginSchedulerUtil(plugin: JavaPlugin) = PluginSchedulerUtil(plugin)
 
     @Provides
     @Singleton
     fun provideAskCommand(
-        configurationManager: ConfigurationManager,
         pluginSchedulerUtil: PluginSchedulerUtil,
         pluginScope: CoroutineScope,
         pluginLogger: Logger,
         conversationManager: ConversationManager,
         chatMessageUtil: ChatMessageUtil
     ) = AskCommand(
-        configurationManager,
         pluginSchedulerUtil,
         pluginScope,
         pluginLogger,
@@ -74,10 +72,10 @@ class CommandModule {
     @Provides
     @Singleton
     fun provideInfoCommand(
-        configurationManager: ConfigurationManager,
+        configuration: GeniusConfiguration,
         contextService: ContextService,
         pluginScope: CoroutineScope
-    ) = InfoCommand(configurationManager, contextService, pluginScope)
+    ) = InfoCommand(configuration, contextService, pluginScope)
 
     @Provides
     @Singleton

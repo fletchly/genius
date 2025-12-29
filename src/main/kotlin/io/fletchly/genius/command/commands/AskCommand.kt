@@ -24,7 +24,6 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.util.ChatMessageUtil
 import io.fletchly.genius.command.util.PluginSchedulerUtil
-import io.fletchly.genius.config.manager.ConfigurationManager
 import io.fletchly.genius.conversation.service.ConversationManager
 import io.fletchly.genius.conversation.service.ConversationManagerException
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -41,7 +40,6 @@ import javax.inject.Inject
  * Structure and logic for /ask
  */
 class AskCommand @Inject constructor(
-    configurationManager: ConfigurationManager,
     private val pluginSchedulerUtil: PluginSchedulerUtil,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,

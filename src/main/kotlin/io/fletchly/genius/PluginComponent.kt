@@ -23,7 +23,6 @@ import dagger.Component
 import io.fletchly.genius.command.CommandModule
 import io.fletchly.genius.command.commands.GeniusCommand
 import io.fletchly.genius.config.ConfigModule
-import io.fletchly.genius.config.util.MigrationUtil
 import io.fletchly.genius.context.ContextModule
 import io.fletchly.genius.conversation.ConversationModule
 import io.fletchly.genius.event.EventModule
@@ -47,6 +46,4 @@ interface PluginComponent {
     fun commands(): List<GeniusCommand>
 
     fun listeners(): List<Listener>
-
-    fun migrationUtil(): MigrationUtil
 }
