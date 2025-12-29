@@ -19,44 +19,44 @@ repositories {
     }
 }
 
-val paper_version: String by project
+
+
+val paperVersion = "1.21.10-R0.1-SNAPSHOT"
 val dagger_version: String by project
-val ktor_version: String by project
 val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
     // Paper plugin dev tools
-    compileOnly("io.papermc.paper:paper-api:$paper_version")
-    paperweight.paperDevBundle(paper_version)
+    compileOnly("io.papermc.paper:paper-api:$paperVersion")
+    paperweight.paperDevBundle(paperVersion)
+
+    // Kotlin Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
 
     // Dagger 2 dependency injection
     implementation("com.google.dagger:dagger:$dagger_version")
     kapt("com.google.dagger:dagger-compiler:$dagger_version")
 
-    // Ktor
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-    implementation("io.ktor:ktor-client-logging:$ktor_version")
+    // Ktor – using the official catalog accessors
+    implementation(ktor.client.core)
+    implementation(ktor.client.cio)
+    implementation(ktor.client.contentNegotiation)
+    implementation(ktor.serialization.kotlinx.json)
+    implementation(ktor.client.logging)
 
-    // Kotlin Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation(libs.bundles.configurate)
 
-    implementation("com.hpfxd.configurate:configurate-eo-yaml:1.0.0")
-    implementation("org.spongepowered:configurate-extra-kotlin:4.2.0")
-    implementation("org.spongepowered:configurate-yaml:4.2.0")
-    implementation("org.spongepowered:configurate-hocon:4.2.0")
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
 
     // Testing
     testImplementation(platform("org.junit:junit-bom:6.0.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.0.0")
-
     testImplementation("org.mockito:mockito-core:5.14.0")
-    mockitoAgent("org.mockito:mockito-core:5.14.0") { isTransitive = false }
-
     testImplementation("com.squareup.okhttp3:mockwebserver3:5.3.0")
+
+    mockitoAgent("org.mockito:mockito-core:5.14.0") { isTransitive = false }
 }
 
 tasks.test {
