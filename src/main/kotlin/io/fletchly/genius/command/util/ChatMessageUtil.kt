@@ -26,7 +26,7 @@ import net.kyori.adventure.text.format.NamedTextColor
 /**
  * Utility for generating formatted chat messages
  */
-class ChatMessageUtil constructor(
+class ChatMessageUtil(
     configuration: GeniusConfiguration
 ) {
     enum class MessageLevel(val color: NamedTextColor) {

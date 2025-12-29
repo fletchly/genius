@@ -38,7 +38,7 @@ import java.util.logging.Logger
 /**
  * Structure and logic for /ask
  */
-class AskCommand constructor(
+class AskCommand(
     private val pluginSchedulerUtil: PluginSchedulerUtil,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,

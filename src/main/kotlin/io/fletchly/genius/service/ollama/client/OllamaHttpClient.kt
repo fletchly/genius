@@ -37,7 +37,7 @@ import java.util.logging.Logger
 /**
  * Http client for interacting with the Ollama API
  */
-class OllamaHttpClient constructor(
+class OllamaHttpClient(
     private val pluginLogger: Logger,
     configuration: GeniusConfiguration
 ) : GeniusHttpClient<OllamaRequest, OllamaResponse> {

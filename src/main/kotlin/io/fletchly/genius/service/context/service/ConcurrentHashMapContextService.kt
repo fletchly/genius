@@ -28,7 +28,7 @@ import kotlin.collections.ArrayDeque
 /**
  * [ContextService] implementation that stores conversation context in a [ConcurrentHashMap]
  */
-class ConcurrentHashMapContextService constructor(configuration: GeniusConfiguration) : ContextService {
+class ConcurrentHashMapContextService(configuration: GeniusConfiguration) : ContextService {
     private val maxPlayerMessages = configuration.context.maxPlayerMessages
     private val playerContext = ConcurrentHashMap<UUID, ArrayDeque<Message>>()
 

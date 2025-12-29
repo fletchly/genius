@@ -36,7 +36,7 @@ import java.util.logging.Logger
 /**
  * Structure and logic for /manage
  */
-class ClearCommand constructor(
+class ClearCommand(
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope,
     private val pluginLogger: Logger,

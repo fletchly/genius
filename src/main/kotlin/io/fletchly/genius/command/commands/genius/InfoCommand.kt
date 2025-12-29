@@ -35,7 +35,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class InfoCommand constructor(
+class InfoCommand(
     private val configuration: GeniusConfiguration,
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope

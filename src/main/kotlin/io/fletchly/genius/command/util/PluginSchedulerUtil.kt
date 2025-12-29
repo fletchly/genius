@@ -24,7 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin
 /**
  * Utility class that exposes the plugin scheduler
  */
-class PluginSchedulerUtil constructor(private val plugin: JavaPlugin) {
+class PluginSchedulerUtil(private val plugin: JavaPlugin) {
     /**
      * Use the plugin scheduler to run a task
      *

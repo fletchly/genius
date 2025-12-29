@@ -28,7 +28,7 @@ import java.nio.file.Path
 import java.util.logging.Logger
 import kotlin.io.path.exists
 
-class ConfigurationManager constructor(
+class ConfigurationManager(
     private val logger: Logger,
     plugin: JavaPlugin
 ) {

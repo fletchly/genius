@@ -28,7 +28,7 @@ import java.util.*
 /**
  * Manages player conversations
  */
-class ConversationManager constructor(
+class ConversationManager(
     private val contextService: ContextService,
     private val chatService: ChatService
 ) {

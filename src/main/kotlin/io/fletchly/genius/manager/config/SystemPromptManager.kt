@@ -27,7 +27,7 @@ import java.io.File
  *
  * @property prompt Genius system prompt
  */
-class SystemPromptManager constructor(private val plugin: JavaPlugin) {
+class SystemPromptManager(private val plugin: JavaPlugin) {
     private val promptPath = "system-prompt.md"
     private var _prompt: String = loadDefaultPrompt()
     val prompt: String get() = _prompt

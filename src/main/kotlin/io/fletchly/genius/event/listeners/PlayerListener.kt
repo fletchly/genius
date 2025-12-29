@@ -30,7 +30,7 @@ import java.util.logging.Logger
 /**
  * Listener for player events
  */
-class PlayerListener constructor(
+class PlayerListener(
     private val pluginLogger: Logger,
     private val pluginScope: CoroutineScope,
     private val contextService: ContextService

@@ -25,7 +25,7 @@ import io.fletchly.genius.command.commands.Command
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 
-class GeniusCommand constructor(
+class GeniusCommand(
     private val clearCommand: ClearCommand,
     private val infoCommand: InfoCommand
 ) : Command {
