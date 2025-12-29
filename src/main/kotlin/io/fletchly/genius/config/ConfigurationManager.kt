@@ -14,9 +14,10 @@ class ConfigurationManager @Inject constructor(
     private val logger: Logger,
     plugin: JavaPlugin
 ) {
-    private val configPath = Path.of(plugin.dataFolder.path, "config.yml")
+    private val configPath = Path.of(plugin.dataFolder.path, "genius.conf")
     private val eoLoader = ConfigurationLoaders.getEoYamlLoader(configPath)
     private val defaultLoader = ConfigurationLoaders.getDefaultYamlLoader(configPath)
+    private val hoconLoader = ConfigurationLoaders. getHoconLoader(configPath)
 
     /**
      * Load configuration from file
@@ -25,7 +26,7 @@ class ConfigurationManager @Inject constructor(
         saveDefaultConfig()
 
         try {
-            val root = defaultLoader.load()
+            val root = hoconLoader.load()
             val configuration: GeniusConfiguration? = root.get()
 
             if (configuration != null) {
@@ -46,13 +47,13 @@ class ConfigurationManager @Inject constructor(
 
     private fun saveDefaultConfig(overwrite: Boolean = false) {
         if (overwrite || !configPath.exists()) {
-            val root = eoLoader.createNode(
+            val root = hoconLoader.createNode(
                 ConfigurationOptions.defaults()
                     .header(GeniusConfiguration.HEADER)
             )
             try {
                 root.node().set(GeniusConfiguration::class.java, GeniusConfiguration())
-                eoLoader.save(root)
+                hoconLoader.save(root)
             } catch (ex: SerializationException) {
                 val message = "Couldn't serialize default configuration"
                 logger.severe { "$message: ${ex.message}" }

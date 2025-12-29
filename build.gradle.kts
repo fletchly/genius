@@ -44,6 +44,8 @@ dependencies {
 
     implementation("com.hpfxd.configurate:configurate-eo-yaml:1.0.0")
     implementation("org.spongepowered:configurate-extra-kotlin:4.2.0")
+    implementation("org.spongepowered:configurate-yaml:4.2.0")
+    implementation("org.spongepowered:configurate-hocon:4.2.0")
 
     // Testing
     testImplementation(platform("org.junit:junit-bom:6.0.1"))
