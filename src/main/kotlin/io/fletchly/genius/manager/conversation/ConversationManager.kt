@@ -17,9 +17,9 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.manager.conversation.service
+package io.fletchly.genius.manager.conversation
 
-import io.fletchly.genius.manager.conversation.model.Message
+import io.fletchly.genius.model.Message
 import io.fletchly.genius.service.context.service.ContextService
 import io.fletchly.genius.service.ollama.client.GeniusHttpClientException
 import io.fletchly.genius.service.ollama.service.ChatService

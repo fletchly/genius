@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.service.ollama.model
 
-import io.fletchly.genius.manager.conversation.model.Message
+import io.fletchly.genius.model.Message
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

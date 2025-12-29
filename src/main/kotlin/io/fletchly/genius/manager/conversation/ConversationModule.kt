@@ -19,7 +19,6 @@
 
 package io.fletchly.genius.manager.conversation
 
-import io.fletchly.genius.manager.conversation.service.ConversationManager
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

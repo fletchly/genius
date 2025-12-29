@@ -20,7 +20,7 @@
 package io.fletchly.genius.service.context.service
 
 import io.fletchly.genius.manager.config.GeniusConfiguration
-import io.fletchly.genius.manager.conversation.model.Message
+import io.fletchly.genius.model.Message
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.ArrayDeque

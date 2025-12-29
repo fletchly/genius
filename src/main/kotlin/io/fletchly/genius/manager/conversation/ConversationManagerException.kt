@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.manager.conversation.service
+package io.fletchly.genius.manager.conversation
 
 /**
  * Exception to handle ConversationManager errors

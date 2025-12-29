@@ -21,7 +21,7 @@ package io.fletchly.genius.service.ollama.service
 
 import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.manager.config.SystemPromptManager
-import io.fletchly.genius.manager.conversation.model.Message
+import io.fletchly.genius.model.Message
 import io.fletchly.genius.service.ollama.client.GeniusHttpClient
 import io.fletchly.genius.service.ollama.model.OllamaOptions
 import io.fletchly.genius.service.ollama.model.OllamaRequest

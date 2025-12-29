@@ -17,12 +17,12 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.manager.conversation.model
+package io.fletchly.genius.model
 
-import io.fletchly.genius.manager.conversation.model.Message.Role.ASSISTANT
-import io.fletchly.genius.manager.conversation.model.Message.Role.SYSTEM
-import io.fletchly.genius.manager.conversation.model.Message.Role.TOOL
-import io.fletchly.genius.manager.conversation.model.Message.Role.USER
+import io.fletchly.genius.model.Message.Role.ASSISTANT
+import io.fletchly.genius.model.Message.Role.SYSTEM
+import io.fletchly.genius.model.Message.Role.TOOL
+import io.fletchly.genius.model.Message.Role.USER
 import kotlinx.serialization.Serializable
 
 /**

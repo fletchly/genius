@@ -19,7 +19,7 @@
 
 package io.fletchly.genius.service.ollama.service
 
-import io.fletchly.genius.manager.conversation.model.Message
+import io.fletchly.genius.model.Message
 
 /**
  * Service for generating chats from assistant
