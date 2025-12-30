@@ -22,23 +22,22 @@ package io.fletchly.genius.command.genius
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.Command
-import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.service.context.ContextService
+import io.fletchly.genius.util.ChatMessageUtil
+import io.fletchly.genius.util.PluginSchedulerUtil
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextComponent
-import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class InfoCommand(
-    private val configuration: GeniusConfiguration,
     private val contextService: ContextService,
-    private val pluginScope: CoroutineScope
+    private val pluginScope: CoroutineScope,
+    private val chatMessageUtil: ChatMessageUtil,
+    private val pluginSchedulerUtil: PluginSchedulerUtil
 ) : Command {
     override val description = "Get info on Genius"
     override val aliases: List<String> = listOf()
@@ -55,53 +54,28 @@ class InfoCommand(
         }
 
     override fun execute(ctx: CommandContext<CommandSourceStack>): Int {
-        val agentName = configuration.display.agentName
-        val model = configuration.ollama.model
         val executor = ctx.source.executor
         val sender = ctx.source.sender
-
-        val textComponent = Component.text()
-            .append {
-                Component.text("$agentName info")
-                    .color(NamedTextColor.GREEN)
-                    .decoration(TextDecoration.BOLD, true)
-            }
-            .append {
-                Component.text("\nModel: ")
-                    .append {
-                        Component.text(model)
-                            .color(NamedTextColor.YELLOW)
-                    }
-            }
 
         if (executor is Player) {
             val playerUuid = executor.uniqueId
 
-            val job = pluginScope.launch {
+            pluginScope.launch {
                 val playerContextSize = contextService.getContext(playerUuid).size
-                val maxPlayerMessages = configuration.context.maxPlayerMessages
-
-                textComponent.append {
-                    Component.text("\nContext used: ")
-                        .append {
-                            Component.text("$playerContextSize/$maxPlayerMessages")
-                                .color(NamedTextColor.YELLOW)
-                        }
+                pluginSchedulerUtil.runTask {
+                    sendLines(chatMessageUtil.infoMessage(playerContextSize), sender)
                 }
             }
-
-            job.invokeOnCompletion {
-                sendInfo(textComponent, sender)
-            }
-
             return com.mojang.brigadier.Command.SINGLE_SUCCESS
         }
 
-        sendInfo(textComponent, sender)
+        sendLines(chatMessageUtil.infoMessage(), sender)
         return com.mojang.brigadier.Command.SINGLE_SUCCESS
     }
 
-    private fun sendInfo(textComponent: TextComponent.Builder, sender: CommandSender) {
-        sender.sendMessage(textComponent)
+    private fun sendLines(lines: List<Component>, sender: CommandSender) {
+        for (line in lines) {
+            sender.sendMessage(line)
+        }
     }
 }

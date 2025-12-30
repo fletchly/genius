@@ -20,8 +20,10 @@
 package io.fletchly.genius.util
 
 import io.fletchly.genius.manager.config.GeniusConfiguration
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 
 /**
  * Utility for generating formatted chat messages
@@ -38,6 +40,8 @@ class ChatMessageUtil(
     private val agentName = configuration.display.agentName
     private val agentPrefix = configuration.display.agentPrefix
     private val playerPrefix = configuration.display.playerPrefix
+    private val model = configuration.ollama.model
+    private val maxPlayerMessages = configuration.context.maxPlayerMessages
     private val agentDisplayName = text("$agentPrefix ", NamedTextColor.YELLOW)
         .append { text(agentName, NamedTextColor.GREEN) }
         .append { text(" → ") }
@@ -67,4 +71,28 @@ class ChatMessageUtil(
             text(message)
                 .color(level.color)
         }
+
+    fun infoMessage(context: Int? = null): List<Component> {
+        val lineOne = text("$agentName info")
+            .color(NamedTextColor.GREEN)
+            .decoration(TextDecoration.BOLD, true)
+
+        val lineTwo = text("Model: ")
+            .append {
+                text(model)
+                    .color(NamedTextColor.YELLOW)
+            }
+
+        val lineThree = text("Context used: ")
+            .append {
+                text("$context/$maxPlayerMessages")
+                    .color(NamedTextColor.YELLOW)
+            }
+
+        return if (context != null) {
+            listOf(lineOne, lineTwo, lineThree)
+        } else {
+            listOf(lineOne, lineTwo)
+        }
+    }
 }
