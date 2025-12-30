@@ -1,5 +1,7 @@
 package io.fletchly.genius.service.tool
 
+import io.fletchly.genius.model.ToolCall
+
 class ToolService(
     tools: List<Tool>
 ) {
@@ -10,5 +12,7 @@ class ToolService(
         }
     }
 
+    fun executeToolCall(toolCall: ToolCall) {
 
+    }
 }
