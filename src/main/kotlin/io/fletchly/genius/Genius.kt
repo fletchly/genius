@@ -19,11 +19,13 @@
 
 package io.fletchly.genius
 
+import io.fletchly.genius.client.clientModule
 import io.fletchly.genius.command.commandModule
 import io.fletchly.genius.command.Command
 import io.fletchly.genius.event.eventModule
 import io.fletchly.genius.manager.managerModule
 import io.fletchly.genius.service.serviceModule
+import io.fletchly.genius.util.utilModule
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import kotlinx.coroutines.*
 import org.bukkit.event.Listener
@@ -52,10 +54,12 @@ class Genius : JavaPlugin() {
         startKoin {
             modules(
                 pluginModule(this@Genius),
+                clientModule,
                 commandModule,
                 eventModule,
                 managerModule,
-                serviceModule
+                serviceModule,
+                utilModule
             )
         }
     }

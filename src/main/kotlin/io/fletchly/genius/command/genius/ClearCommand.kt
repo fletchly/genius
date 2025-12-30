@@ -107,9 +107,9 @@ class ClearCommand(
         }
 
         job.invokeOnCompletion {
-            val message = "Cleared conversation context for ${targets.size} player(s)"
+            val message = "Cleared conversation context for ${targets.size} player${if (targets.size != 1) "s" else ""}"
             pluginLogger.info { message }
-            sender.sendMessage(chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.INFO, message))
+            if (sender is Player) sender.sendMessage(chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.INFO, message))
         }
 
         return com.mojang.brigadier.Command.SINGLE_SUCCESS
