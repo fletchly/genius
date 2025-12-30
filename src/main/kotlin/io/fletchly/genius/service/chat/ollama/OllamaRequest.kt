@@ -20,13 +20,26 @@
 package io.fletchly.genius.service.chat.ollama
 
 import io.fletchly.genius.model.Message
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class OllamaRequest(
     val messages: List<Message>,
+    val tools: List<OllamaTool>? = null,
     val model: String,
     val options: OllamaOptions,
     val stream: Boolean = false,
     val think: Boolean = false
+)
+
+@Serializable
+data class OllamaOptions(
+    val temperature: Double,
+    @SerialName("top_k")
+    val topK: Int,
+    @SerialName("top_p")
+    val topP: Double,
+    @SerialName("num_predict")
+    val numPredict: Int
 )
