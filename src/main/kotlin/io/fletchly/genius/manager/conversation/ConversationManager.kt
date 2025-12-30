@@ -23,6 +23,7 @@ import io.fletchly.genius.model.Message
 import io.fletchly.genius.service.context.ContextService
 import io.fletchly.genius.client.HttpClientException
 import io.fletchly.genius.service.chat.ChatService
+import io.fletchly.genius.service.tool.ToolService
 import java.util.*
 
 /**
@@ -30,7 +31,8 @@ import java.util.*
  */
 class ConversationManager(
     private val contextService: ContextService,
-    private val chatService: ChatService
+    private val chatService: ChatService,
+    private val toolService: ToolService
 ) {
     /**
      * Generate chat given prompt
@@ -50,10 +52,18 @@ class ConversationManager(
 
         val playerContext = contextService.getContext(playerUuid)
 
-        try {
-            val response = chatService.chat(playerContext)
-            contextService.addChat(response, playerUuid)
-            return response.content
+        val response = withHttpClientErrorHandling {
+            val response = chatService.chat(playerContext) // Suspend Call
+            contextService.addChat(response, playerUuid) // Suspend Call
+            response.content
+        }
+
+        return response
+    }
+
+    private suspend inline fun <T> withHttpClientErrorHandling(block: suspend () -> T): T {
+        return try {
+            block()
         } catch (_: HttpClientException.ConfigurationError) {
             throw ConversationManagerException("Configuration has errors")
         } catch (_: HttpClientException.TimeoutError) {

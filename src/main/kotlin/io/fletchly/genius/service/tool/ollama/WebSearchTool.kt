@@ -3,12 +3,14 @@ package io.fletchly.genius.service.tool.ollama
 import io.fletchly.genius.client.KtorHttpClient
 import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.service.tool.Tool
+import io.fletchly.genius.service.tool.tool
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 class WebSearchTool(
     configuration: GeniusConfiguration,
@@ -16,7 +18,7 @@ class WebSearchTool(
 ): Tool {
     private val httpClient = ktorHttpClient.getClient(OLLAMA_BASE_URL, configuration.ollama.apiKey)
 
-    override val definition = _root_ide_package_.io.fletchly.genius.service.tool.tool {
+    override val definition = tool {
         name = "web_search"
         description = "search the web"
 
@@ -50,7 +52,11 @@ data class WebSearchRequest(
 @Serializable
 data class WebSearchResponse(
     val results: List<WebSearchResult>
-)
+) {
+    override fun toString(): String {
+        return Json.encodeToString(this)
+    }
+}
 
 @Serializable
 data class WebSearchResult(
