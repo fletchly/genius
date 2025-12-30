@@ -19,21 +19,16 @@
 
 package io.fletchly.genius.command
 
-import io.fletchly.genius.command.commands.AskCommand
-import io.fletchly.genius.command.commands.Command
-import io.fletchly.genius.command.commands.genius.ClearCommand
-import io.fletchly.genius.command.commands.genius.GeniusCommand
-import io.fletchly.genius.command.commands.genius.InfoCommand
-import io.fletchly.genius.command.util.ChatMessageUtil
-import io.fletchly.genius.command.util.PluginSchedulerUtil
+import io.fletchly.genius.command.genius.ClearCommand
+import io.fletchly.genius.command.genius.InfoCommand
+import io.fletchly.genius.util.ChatMessageUtil
+import io.fletchly.genius.util.PluginSchedulerUtil
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val commandModule = module {
-    singleOf(::PluginSchedulerUtil)
-    factoryOf(::ChatMessageUtil)
     singleOf(::ClearCommand)
     singleOf(::InfoCommand)
     singleOf(::AskCommand) { bind<Command>() }

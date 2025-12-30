@@ -17,16 +17,17 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.service.ollama.model
+package io.fletchly.genius.client
 
-import io.fletchly.genius.model.Message
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import io.ktor.http.*
 
-@Serializable
-data class OllamaResponse(
-    override val message: Message,
-    val model: String,
-    @SerialName("created_at")
-    val createdAt: String,
-) : GeniusResponse
+/**
+ * Exception to handle GeniusHttpClient errors
+ */
+sealed class HttpClientException(message: String, cause: Throwable?) : Exception(message, cause) {
+    class ConfigurationError(msg: String) : HttpClientException(msg, null)
+    class NetworkError(cause: Throwable) : HttpClientException("Network failure", cause)
+    class TimeoutError(cause: Throwable) : HttpClientException("Request timed out", cause)
+    class ServerError(val status: HttpStatusCode) : HttpClientException("Server error: $status", null)
+    class ClientError(val status: HttpStatusCode) : HttpClientException("Client error: $status", null)
+}

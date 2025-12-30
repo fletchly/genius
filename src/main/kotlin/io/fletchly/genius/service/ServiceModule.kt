@@ -1,7 +1,7 @@
 package io.fletchly.genius.service
 
 import io.fletchly.genius.service.context.contextModule
-import io.fletchly.genius.service.ollama.ollamaModule
+import io.fletchly.genius.service.chat.ollamaModule
 import org.koin.dsl.module
 
 val serviceModule = module {

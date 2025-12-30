@@ -17,22 +17,13 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.command.util
+package io.fletchly.genius.service.chat
 
-import org.bukkit.plugin.java.JavaPlugin
+import io.fletchly.genius.service.chat.ollama.OllamaChatService
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-/**
- * Utility class that exposes the plugin scheduler
- */
-class PluginSchedulerUtil(private val plugin: JavaPlugin) {
-    /**
-     * Use the plugin scheduler to run a task
-     *
-     * Used to safely touch the Bukkit API from an asynchronous context
-     *
-     * @param task the task to run
-     */
-    fun runTask(task: Runnable) {
-        plugin.server.scheduler.runTask(plugin, task)
-    }
+val ollamaModule = module {
+    singleOf(::OllamaChatService) { bind<ChatService>() }
 }

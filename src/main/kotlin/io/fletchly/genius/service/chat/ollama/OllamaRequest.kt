@@ -17,10 +17,16 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.service.ollama.model
+package io.fletchly.genius.service.chat.ollama
 
 import io.fletchly.genius.model.Message
+import kotlinx.serialization.Serializable
 
-interface GeniusResponse {
-    val message: Message
-}
+@Serializable
+data class OllamaRequest(
+    val messages: List<Message>,
+    val model: String,
+    val options: OllamaOptions,
+    val stream: Boolean = false,
+    val think: Boolean = false
+)

@@ -17,19 +17,16 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.service.ollama.service
+package io.fletchly.genius.service.chat.ollama
 
 import io.fletchly.genius.model.Message
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-/**
- * Service for generating chats from assistant
- */
-interface ChatService {
-    /**
-     * Generate chat
-     *
-     * @param messages context to send assistant
-     * @return the assistant's response
-     */
-    suspend fun chat(messages: List<Message>): Message
-}
+@Serializable
+data class OllamaResponse(
+    val message: Message,
+    val model: String,
+    @SerialName("created_at")
+    val createdAt: String,
+)

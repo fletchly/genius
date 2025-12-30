@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.service.ollama.model
+package io.fletchly.genius.service.chat.ollama
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

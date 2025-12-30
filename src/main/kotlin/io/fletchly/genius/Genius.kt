@@ -20,7 +20,7 @@
 package io.fletchly.genius
 
 import io.fletchly.genius.command.commandModule
-import io.fletchly.genius.command.commands.Command
+import io.fletchly.genius.command.Command
 import io.fletchly.genius.event.eventModule
 import io.fletchly.genius.manager.managerModule
 import io.fletchly.genius.service.serviceModule

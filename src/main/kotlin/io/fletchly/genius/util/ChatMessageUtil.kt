@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.command.util
+package io.fletchly.genius.util
 
 import io.fletchly.genius.manager.config.GeniusConfiguration
 import net.kyori.adventure.text.Component.text

@@ -17,17 +17,22 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.service.ollama.client
+package io.fletchly.genius.util
 
-import io.ktor.http.*
+import org.bukkit.plugin.java.JavaPlugin
 
 /**
- * Exception to handle GeniusHttpClient errors
+ * Utility class that exposes the plugin scheduler
  */
-sealed class GeniusHttpClientException(message: String, cause: Throwable?) : Exception(message, cause) {
-    class ConfigurationError(msg: String) : GeniusHttpClientException(msg, null)
-    class NetworkError(cause: Throwable) : GeniusHttpClientException("Network failure", cause)
-    class TimeoutError(cause: Throwable) : GeniusHttpClientException("Request timed out", cause)
-    class ServerError(val status: HttpStatusCode) : GeniusHttpClientException("Server error: $status", null)
-    class ClientError(val status: HttpStatusCode) : GeniusHttpClientException("Client error: $status", null)
+class PluginSchedulerUtil(private val plugin: JavaPlugin) {
+    /**
+     * Use the plugin scheduler to run a task
+     *
+     * Used to safely touch the Bukkit API from an asynchronous context
+     *
+     * @param task the task to run
+     */
+    fun runTask(task: Runnable) {
+        plugin.server.scheduler.runTask(plugin, task)
+    }
 }
