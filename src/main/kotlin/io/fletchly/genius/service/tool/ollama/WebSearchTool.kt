@@ -11,6 +11,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
 
 class WebSearchTool(
     configuration: GeniusConfiguration,
@@ -29,23 +31,26 @@ class WebSearchTool(
         )
 
         handle { args ->
-            val query = args["query"] as String
-
-            val response = httpClient.post("/api/web_search") {
-                contentType(ContentType.Application.Json)
-                setBody(WebSearchRequest(query))
-            }
-            response.body<WebSearchResponse>()
+            handleTool(args)
         }
     }
 
+    override suspend fun handleTool(args: JsonObject): String {
+        val webSearchArgs = Json.decodeFromJsonElement<WebSearchArgs>(args)
+
+        val response = httpClient.post("/api/web_search") {
+            contentType(ContentType.Application.Json)
+            setBody(webSearchArgs)
+        }
+        return response.body<WebSearchResponse>().toString()
+    }
     private companion object {
         const val OLLAMA_BASE_URL = "https://ollama.com"
     }
 }
 
 @Serializable
-data class WebSearchRequest(
+data class WebSearchArgs(
     val query: String
 )
 

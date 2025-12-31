@@ -1,5 +1,7 @@
 package io.fletchly.genius.service.tool
 
+import kotlinx.serialization.json.JsonObject
+
 class ToolRegistry {
     private val tools = mutableMapOf<String, ToolDefinition>()
 
@@ -11,7 +13,7 @@ class ToolRegistry {
         toolDefs.forEach { register(it) }
     }
 
-    suspend fun execute(toolName: String, arguments: Map<String, Any>): Result<Any> {
+    suspend fun execute(toolName: String, arguments: JsonObject): Result<String> {
         val tool = tools[toolName]
             ?: return Result.failure(IllegalArgumentException("Tool '$toolName' not found"))
 
@@ -22,7 +24,6 @@ class ToolRegistry {
                     "Validation errors: ${validationErrors.joinToString(", ")}"
                 ))
             }
-
             Result.success(tool.handler(arguments))
         } catch (e: Exception) {
             Result.failure(e)
@@ -31,13 +32,13 @@ class ToolRegistry {
 
     private fun validateArguments(
         tool: ToolDefinition,
-        arguments: Map<String, Any>
+        arguments: JsonObject
     ): List<String> {
         val errors = mutableListOf<String>()
 
         // Check required parameters
         tool.parameters.filter { it.required }.forEach { param ->
-            if (param.name !in arguments) {
+            if (param.name !in arguments.keys) {
                 errors.add("Missing required parameter: ${param.name}")
             }
         }

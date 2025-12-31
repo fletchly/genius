@@ -1,10 +1,12 @@
 package io.fletchly.genius.service.tool
 
+import kotlinx.serialization.json.JsonObject
+
 data class ToolDefinition(
     val name: String,
     val description: String,
     val parameters: List<ToolParameter>,
-    val handler: suspend (Map<String, Any>) -> Any
+    val handler: suspend (JsonObject) -> String
 )
 
 data class ToolParameter(
@@ -19,7 +21,7 @@ class ToolBuilder {
     var name: String = ""
     var description: String = ""
     private val parameters = mutableListOf<ToolParameter>()
-    private var handler: suspend (Map<String, Any>) -> Any = { emptyMap<String, Any>() }
+    private var handler: suspend (JsonObject) -> String = { "" }
 
     fun parameter(
         name: String,
@@ -31,7 +33,7 @@ class ToolBuilder {
         parameters.add(ToolParameter(name, type, description, required, enum))
     }
 
-    fun handle(block: suspend (Map<String, Any>) -> Any) {
+    fun handle(block: suspend (JsonObject) -> String) {
         handler = block
     }
 
