@@ -6,6 +6,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val toolModule = module {
+    singleOf(::ToolRegistry)
     singleOf(::WebSearchTool) { bind<Tool>() }
-    singleOf(::ToolService)
+    single { ToolService(get(), getAll<Tool>().toSet()) }
 }

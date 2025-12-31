@@ -4,9 +4,9 @@ import io.fletchly.genius.model.Message
 import io.fletchly.genius.model.ToolCall
 
 class ToolService(
-    tools: List<Tool>
+    private val registry: ToolRegistry,
+    tools: Set<Tool>
 ) {
-    private val registry = ToolRegistry()
     init {
         for (tool in tools) {
             registry.register(tool.definition)
