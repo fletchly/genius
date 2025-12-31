@@ -29,6 +29,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
 class WebSearchTool(
     configuration: GeniusConfiguration,
@@ -65,6 +68,10 @@ class WebSearchTool(
     private companion object {
         const val OLLAMA_BASE_URL = "https://ollama.com"
     }
+}
+
+val webSearchModule = module {
+    singleOf(::WebSearchTool) { bind<Tool>() }
 }
 
 @Serializable

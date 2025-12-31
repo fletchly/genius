@@ -18,6 +18,7 @@
 
 package io.fletchly.genius.service.tool
 
+import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.service.tool.ollama.WebSearchTool
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -25,6 +26,5 @@ import org.koin.dsl.module
 
 val toolModule = module {
     singleOf(::ToolRegistry)
-    singleOf(::WebSearchTool) { bind<Tool>() }
     single { ToolService(get(), getAll<Tool>().toSet()) }
 }
