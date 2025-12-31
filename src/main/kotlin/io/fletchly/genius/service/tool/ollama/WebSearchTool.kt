@@ -38,6 +38,7 @@ class WebSearchTool(
     ktorHttpClient: KtorHttpClient
 ) : Tool {
     private val httpClient = ktorHttpClient.getClient(OLLAMA_BASE_URL, configuration.ollama.apiKey)
+    private val responseLimit = configuration.tool.webSearch.truncateResults
 
     override val definition = tool {
         name = "web_search"
@@ -62,7 +63,7 @@ class WebSearchTool(
             setBody(webSearchArgs)
         }
         // result is truncated to limit token use
-        return response.body<WebSearchResponse>().toString().take(8000)
+        return response.body<WebSearchResponse>().toString().take(responseLimit)
     }
 
     private companion object {
