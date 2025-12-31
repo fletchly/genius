@@ -71,27 +71,33 @@ class ChatMessageUtil(
                 .color(level.color)
         }
 
-    fun infoMessage(context: Int? = null): List<Component> {
-        val lineOne = text("$agentName info")
+    fun infoMessage(context: Int? = null, tools: List<String>): List<Component> {
+        val headerLine = text("$agentName info")
             .color(NamedTextColor.GREEN)
             .decoration(TextDecoration.BOLD, true)
 
-        val lineTwo = text("Model: ")
+        val modelLine = text("Model: ")
             .append {
                 text(model)
                     .color(NamedTextColor.YELLOW)
             }
 
-        val lineThree = text("Context used: ")
+        val toolLine = text("Available tools: ")
+            .append {
+                text(tools.toString())
+                    .color(NamedTextColor.YELLOW)
+            }
+
+        val contextLine = text("Context used: ")
             .append {
                 text("$context/$maxPlayerMessages")
                     .color(NamedTextColor.YELLOW)
             }
 
         return if (context != null) {
-            listOf(lineOne, lineTwo, lineThree)
+            listOf(headerLine, modelLine, toolLine, contextLine)
         } else {
-            listOf(lineOne, lineTwo)
+            listOf(headerLine, modelLine, toolLine)
         }
     }
 }

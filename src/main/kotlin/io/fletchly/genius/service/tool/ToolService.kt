@@ -18,11 +18,15 @@
 
 package io.fletchly.genius.service.tool
 
+import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.model.Message
 import io.fletchly.genius.model.ToolCall
+import java.util.logging.Logger
 
 class ToolService(
     private val registry: ToolRegistry,
+    private val configuration: GeniusConfiguration,
+    private val logger: Logger,
     tools: Set<Tool>
 ) {
     init {
@@ -34,12 +38,14 @@ class ToolService(
     suspend fun executeToolCall(toolCall: ToolCall): Message {
         registry.execute(toolCall.function.name, toolCall.function.arguments)
             .onSuccess {
+                if (configuration.logging.logToolCalls) logger.info { "Executed tool: ${toolCall.function.name}" }
                 return Message(
                     content = it,
                     role = Message.TOOL
                 )
             }
             .onFailure {
+                if (configuration.logging.logToolCalls) logger.warning { "Attempted to execute nonexistent tool: ${toolCall.function.name}" }
                 return Message(
                     content = "Error: ${it.message}",
                     role = Message.TOOL

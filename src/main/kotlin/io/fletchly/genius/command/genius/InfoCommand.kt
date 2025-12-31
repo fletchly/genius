@@ -22,6 +22,7 @@ import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.Command
 import io.fletchly.genius.service.context.ContextService
+import io.fletchly.genius.service.tool.ToolRegistry
 import io.fletchly.genius.util.ChatMessageUtil
 import io.fletchly.genius.util.PluginSchedulerUtil
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -36,7 +37,8 @@ class InfoCommand(
     private val contextService: ContextService,
     private val pluginScope: CoroutineScope,
     private val chatMessageUtil: ChatMessageUtil,
-    private val pluginSchedulerUtil: PluginSchedulerUtil
+    private val pluginSchedulerUtil: PluginSchedulerUtil,
+    private val toolRegistry: ToolRegistry
 ) : Command {
     override val description = "Get info on Genius"
     override val aliases: List<String> = listOf()
@@ -56,19 +58,23 @@ class InfoCommand(
         val executor = ctx.source.executor
         val sender = ctx.source.sender
 
+        val toolNames = toolRegistry.getAllTools().map {
+            it.name
+        }
+
         if (executor is Player) {
             val playerUuid = executor.uniqueId
 
             pluginScope.launch {
                 val playerContextSize = contextService.getContext(playerUuid).size
                 pluginSchedulerUtil.runTask {
-                    sendLines(chatMessageUtil.infoMessage(playerContextSize), sender)
+                    sendLines(chatMessageUtil.infoMessage(playerContextSize, toolNames), sender)
                 }
             }
             return com.mojang.brigadier.Command.SINGLE_SUCCESS
         }
 
-        sendLines(chatMessageUtil.infoMessage(), sender)
+        sendLines(chatMessageUtil.infoMessage(tools = toolNames), sender)
         return com.mojang.brigadier.Command.SINGLE_SUCCESS
     }
 

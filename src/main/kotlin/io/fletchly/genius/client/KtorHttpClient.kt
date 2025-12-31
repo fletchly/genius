@@ -18,11 +18,14 @@
 
 package io.fletchly.genius.client
 
+import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.network.sockets.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -32,7 +35,8 @@ import java.util.logging.Logger
 
 class KtorHttpClient(
     @PublishedApi
-    internal val logger: Logger
+    internal val logger: Logger,
+    private val configuration: GeniusConfiguration
 ) {
     fun getClient(baseUrl: String, apiKey: String?) = HttpClient(CIO) {
         expectSuccess = true
@@ -56,6 +60,22 @@ class KtorHttpClient(
                 maxDelayMs = 60_000L,
                 randomizationMs = 1000L
             )
+        }
+        install(Logging) {
+            logger = object : io.ktor.client.plugins.logging.Logger {
+                override fun log(message: String) {
+                    this@KtorHttpClient.logger.info { message }
+                }
+
+            }
+            level = if (configuration.logging.logHttpRequests) {
+                LogLevel.BODY
+            } else {
+                LogLevel.NONE
+            }
+            sanitizeHeader {
+                it == HttpHeaders.Authorization
+            }
         }
         defaultRequest {
             url(baseUrl)

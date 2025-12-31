@@ -29,12 +29,16 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
 class WebSearchTool(
     configuration: GeniusConfiguration,
     ktorHttpClient: KtorHttpClient
 ) : Tool {
     private val httpClient = ktorHttpClient.getClient(OLLAMA_BASE_URL, configuration.ollama.apiKey)
+    private val responseLimit = configuration.tool.webSearch.truncateResults
 
     override val definition = tool {
         name = "web_search"
@@ -59,12 +63,19 @@ class WebSearchTool(
             setBody(webSearchArgs)
         }
         // result is truncated to limit token use
-        return response.body<WebSearchResponse>().toString().take(8000)
+        val truncatedResponse = response.body<WebSearchResponse>().toString().take(responseLimit)
+
+        // append message to inform LLM of truncation to avoid confusion
+        return "$truncatedResponse... (truncated for performance)"
     }
 
     private companion object {
         const val OLLAMA_BASE_URL = "https://ollama.com"
     }
+}
+
+val webSearchModule = module {
+    singleOf(::WebSearchTool) { bind<Tool>() }
 }
 
 @Serializable

@@ -22,13 +22,16 @@ import io.fletchly.genius.client.clientModule
 import io.fletchly.genius.command.Command
 import io.fletchly.genius.command.commandModule
 import io.fletchly.genius.event.eventModule
+import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.manager.managerModule
 import io.fletchly.genius.service.serviceModule
+import io.fletchly.genius.service.tool.ollama.webSearchModule
 import io.fletchly.genius.util.utilModule
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import kotlinx.coroutines.*
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.java.KoinJavaComponent.getKoin
@@ -61,6 +64,18 @@ class Genius : JavaPlugin() {
                 utilModule
             )
         }
+
+        registerToolModules()
+    }
+
+    private fun registerToolModules() {
+        val config = getKoin().get<GeniusConfiguration>()
+        val tools: MutableList<String> = mutableListOf()
+        if (config.tool.webSearch.enabled) {
+            tools.add("Web Search")
+            loadKoinModules(webSearchModule)
+        }
+        logger.info { "Enabled tools (${tools.size}): $tools" }
     }
 
     private fun registerPluginScope() {
