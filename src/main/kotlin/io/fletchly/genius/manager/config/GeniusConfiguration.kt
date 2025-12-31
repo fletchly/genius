@@ -39,6 +39,14 @@ data class GeniusConfiguration(
     @Comment("Context store configuration")
     val context: ContextConfiguration = ContextConfiguration(),
 
+    @Setting("tool")
+    @Comment("Tool configuration")
+    val tool: ToolConfiguration = ToolConfiguration(),
+
+    @Setting("logging")
+    @Comment("Logging configuration")
+    val logging: LoggingConfiguration = LoggingConfiguration(),
+
     @Setting("version")
     @Comment("Don't change this. Doing so could overwrite existing config")
     val version: Int = 0
@@ -48,7 +56,7 @@ data class GeniusConfiguration(
             |*****************************************
             |*         Genius Configuration          *
             |*****************************************
-            |For reference, see https://fletchly.github.io/genius-wiki/docs/setup/configuration/config-yml
+            |For reference, see https://fletchly.github.io/genius-wiki/docs/setup/configuration/genius-conf
         """.trimMargin()
     }
 }
@@ -104,4 +112,37 @@ data class ContextConfiguration(
     @Setting("max-player-messages")
     @Comment("Maximum number of messages per player to store at one time")
     val maxPlayerMessages: Int = 20
+)
+
+@ConfigSerializable
+data class ToolConfiguration(
+    @Setting("web-search")
+    @Comment("Web search tool configuration")
+    val webSearch: WebSearchConfiguration = WebSearchConfiguration()
+)
+
+@ConfigSerializable
+data class WebSearchConfiguration(
+    @Setting("enabled")
+    @Comment("Enable/disable the web search tool. Note: ollama.api-key must be set for this to work, regardless of hosting strategy")
+    val enabled: Boolean = true,
+
+    @Setting("truncate-results")
+    @Comment("Number of characters to truncate search results to")
+    val truncateResults: Int = 8000
+)
+
+@ConfigSerializable
+data class LoggingConfiguration(
+    @Setting("log-http-requests")
+    @Comment("Log all HTTP requests made by client to the server console")
+    val logHttpRequests: Boolean = false,
+
+    @Setting("log-player-messages")
+    @Comment("Log messages between all players and Genius to the server console")
+    val logPlayerMessages: Boolean = false,
+
+    @Setting("log-tool-calls")
+    @Comment("Log all tool calls to the server console")
+    val logToolCalls: Boolean = false
 )
