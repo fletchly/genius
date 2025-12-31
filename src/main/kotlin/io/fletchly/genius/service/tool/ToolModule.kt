@@ -26,5 +26,5 @@ import org.koin.dsl.module
 
 val toolModule = module {
     singleOf(::ToolRegistry)
-    single { ToolService(get(), getAll<Tool>().toSet()) }
+    single { ToolService(get(), get(), get(), getAll<Tool>().toSet()) }
 }

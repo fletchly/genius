@@ -24,6 +24,7 @@ import io.fletchly.genius.model.ToolCall
 import io.fletchly.genius.service.chat.ChatService
 import io.fletchly.genius.service.context.ContextService
 import io.fletchly.genius.service.tool.ToolService
+import io.fletchly.genius.util.LoggingUtil
 import java.util.*
 
 /**
@@ -32,7 +33,8 @@ import java.util.*
 class ConversationManager(
     private val contextService: ContextService,
     private val chatService: ChatService,
-    private val toolService: ToolService
+    private val toolService: ToolService,
+    private val loggingUtil: LoggingUtil
 ) {
     /**
      * Generate chat given prompt
@@ -48,9 +50,13 @@ class ConversationManager(
             role = Message.USER
         )
 
+        loggingUtil.logConversation(playerUuid, playerMessage.content, false)
+
         contextService.addChat(playerMessage, playerUuid)
 
         val response = fetchChatResponse(playerUuid)
+
+        loggingUtil.logConversation(playerUuid, response.content, true)
 
         return response.content
     }
