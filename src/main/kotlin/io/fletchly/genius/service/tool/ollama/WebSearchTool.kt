@@ -63,7 +63,10 @@ class WebSearchTool(
             setBody(webSearchArgs)
         }
         // result is truncated to limit token use
-        return response.body<WebSearchResponse>().toString().take(responseLimit)
+        val truncatedResponse = response.body<WebSearchResponse>().toString().take(responseLimit)
+
+        // append message to inform LLM of truncation to avoid confusion
+        return "$truncatedResponse... (truncated for performance)"
     }
 
     private companion object {
