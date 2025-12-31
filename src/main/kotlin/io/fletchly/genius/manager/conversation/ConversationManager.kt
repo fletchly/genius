@@ -22,6 +22,7 @@ package io.fletchly.genius.manager.conversation
 import io.fletchly.genius.model.Message
 import io.fletchly.genius.service.context.ContextService
 import io.fletchly.genius.client.HttpClientException
+import io.fletchly.genius.model.ToolCall
 import io.fletchly.genius.service.chat.ChatService
 import io.fletchly.genius.service.tool.ToolService
 import java.util.*
@@ -50,15 +51,33 @@ class ConversationManager(
 
         contextService.addChat(playerMessage, playerUuid)
 
+        val response = fetchChatResponse(playerUuid)
+
+        return response.content
+    }
+
+    private suspend fun fetchChatResponse(playerUuid: UUID): Message {
         val playerContext = contextService.getContext(playerUuid)
 
         val response = withHttpClientErrorHandling {
-            val response = chatService.chat(playerContext) // Suspend Call
-            contextService.addChat(response, playerUuid) // Suspend Call
-            response.content
+            val chatResponse = chatService.chat(playerContext)
+            contextService.addChat(chatResponse, playerUuid)
+            chatResponse
         }
 
-        return response
+        if (response.toolCalls == null) return response
+
+        handleToolCalls(response.toolCalls, playerUuid)
+        return fetchChatResponse(playerUuid)
+    }
+
+    private suspend fun handleToolCalls(toolCalls: List<ToolCall>, playerUuid: UUID) {
+        for (toolCall in toolCalls) {
+            withHttpClientErrorHandling {
+                val toolResponse = toolService.executeToolCall(toolCall)
+                contextService.addChat(toolResponse, playerUuid)
+            }
+        }
     }
 
     private suspend inline fun <T> withHttpClientErrorHandling(block: suspend () -> T): T {

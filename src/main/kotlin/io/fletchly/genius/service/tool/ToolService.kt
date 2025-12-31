@@ -17,7 +17,7 @@ class ToolService(
         registry.execute(toolCall.function.name, toolCall.function.arguments)
             .onSuccess {
                 return Message(
-                    content = it.toString(),
+                    content = it,
                     role = Message.TOOL
                 )
             }
