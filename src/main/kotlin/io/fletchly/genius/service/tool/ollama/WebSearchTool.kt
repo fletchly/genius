@@ -42,7 +42,8 @@ class WebSearchTool(
             contentType(ContentType.Application.Json)
             setBody(webSearchArgs)
         }
-        return response.body<WebSearchResponse>().toString()
+        // result is truncated to limit token use
+        return response.body<WebSearchResponse>().toString().take(8000)
     }
     private companion object {
         const val OLLAMA_BASE_URL = "https://ollama.com"
