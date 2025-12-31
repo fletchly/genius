@@ -19,6 +19,7 @@
 package io.fletchly.genius.manager.config
 
 import org.bukkit.plugin.java.JavaPlugin
+import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.ConfigurateException
 import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.kotlin.extensions.get
@@ -42,6 +43,7 @@ class ConfigurationManager(
 
         try {
             val root = hoconLoader.load()
+            hoconLoader.save(migrateConfig(root))
             val configuration: GeniusConfiguration? = root.get()
 
             if (configuration != null) {
@@ -79,5 +81,28 @@ class ConfigurationManager(
                 throw ConfigurationException(message, ex)
             }
         }
+    }
+
+    private fun migrateConfig(node: CommentedConfigurationNode): CommentedConfigurationNode {
+        val transformation = MigrationUtil.create()
+
+        val startVersion = transformation.version(node)
+        transformation.apply(node)
+        val endVersion = transformation.version(node)
+
+        if (startVersion != endVersion) logger.info { "Migrated config from v$startVersion → v$endVersion" }
+        val commentedConfig = node.get<GeniusConfiguration>()
+
+        if (commentedConfig != null) {
+            val commentedRoot = hoconLoader.createNode(
+                ConfigurationOptions.defaults()
+                    .header(GeniusConfiguration.HEADER)
+            )
+
+            commentedRoot.node().set(GeniusConfiguration::class.java, commentedConfig)
+            return commentedRoot
+        }
+
+        return node
     }
 }
