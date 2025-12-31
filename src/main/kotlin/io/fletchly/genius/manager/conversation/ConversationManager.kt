@@ -22,7 +22,9 @@ package io.fletchly.genius.manager.conversation
 import io.fletchly.genius.model.Message
 import io.fletchly.genius.service.context.ContextService
 import io.fletchly.genius.client.HttpClientException
+import io.fletchly.genius.model.ToolCall
 import io.fletchly.genius.service.chat.ChatService
+import io.fletchly.genius.service.tool.ToolService
 import java.util.*
 
 /**
@@ -30,7 +32,8 @@ import java.util.*
  */
 class ConversationManager(
     private val contextService: ContextService,
-    private val chatService: ChatService
+    private val chatService: ChatService,
+    private val toolService: ToolService
 ) {
     /**
      * Generate chat given prompt
@@ -48,12 +51,38 @@ class ConversationManager(
 
         contextService.addChat(playerMessage, playerUuid)
 
+        val response = fetchChatResponse(playerUuid)
+
+        return response.content
+    }
+
+    private suspend fun fetchChatResponse(playerUuid: UUID): Message {
         val playerContext = contextService.getContext(playerUuid)
 
-        try {
-            val response = chatService.chat(playerContext)
-            contextService.addChat(response, playerUuid)
-            return response.content
+        val response = withHttpClientErrorHandling {
+            val chatResponse = chatService.chat(playerContext)
+            contextService.addChat(chatResponse, playerUuid)
+            chatResponse
+        }
+
+        if (response.toolCalls == null) return response
+
+        handleToolCalls(response.toolCalls, playerUuid)
+        return fetchChatResponse(playerUuid)
+    }
+
+    private suspend fun handleToolCalls(toolCalls: List<ToolCall>, playerUuid: UUID) {
+        for (toolCall in toolCalls) {
+            withHttpClientErrorHandling {
+                val toolResponse = toolService.executeToolCall(toolCall)
+                contextService.addChat(toolResponse, playerUuid)
+            }
+        }
+    }
+
+    private suspend inline fun <T> withHttpClientErrorHandling(block: suspend () -> T): T {
+        return try {
+            block()
         } catch (_: HttpClientException.ConfigurationError) {
             throw ConversationManagerException("Configuration has errors")
         } catch (_: HttpClientException.TimeoutError) {

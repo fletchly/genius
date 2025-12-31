@@ -5,6 +5,7 @@ import io.fletchly.genius.manager.config.SystemPromptManager
 import io.fletchly.genius.model.Message
 import io.fletchly.genius.client.KtorHttpClient
 import io.fletchly.genius.service.chat.ChatService
+import io.fletchly.genius.service.tool.ToolRegistry
 import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -13,6 +14,7 @@ import io.ktor.http.contentType
 
 class OllamaChatService(
     private val configuration: GeniusConfiguration,
+    private val toolRegistry: ToolRegistry,
     systemPromptManager: SystemPromptManager,
     ktorHttpClient: KtorHttpClient
 
@@ -38,7 +40,8 @@ class OllamaChatService(
         val request = OllamaRequest(
             model = configuration.ollama.model,
             options = ollamaOptions,
-            messages = listOf(systemPromptMessage) + messages
+            messages = listOf(systemPromptMessage) + messages,
+            tools = toolRegistry.getOllamaToolDefinitions()
         )
 
         val response = httpClient.post("/api/chat") {

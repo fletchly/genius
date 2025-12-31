@@ -23,6 +23,7 @@ import io.fletchly.genius.model.Message.Role.ASSISTANT
 import io.fletchly.genius.model.Message.Role.SYSTEM
 import io.fletchly.genius.model.Message.Role.TOOL
 import io.fletchly.genius.model.Message.Role.USER
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -34,7 +35,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Message(
     val content: String,
-    val role: String
+    val role: String,
+    @SerialName("tool_calls")
+    val toolCalls: List<ToolCall>? = null
 ) {
     /**
      * Sender roles

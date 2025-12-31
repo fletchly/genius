@@ -1,0 +1,61 @@
+@startuml
+!pragma teoz true
+
+actor Player
+
+box "Command" #Yellow
+    participant AskCommand
+end box
+
+box "Manager" #LightGreen
+    box "Conversation"
+        participant ConversationManager
+    end box
+end box
+
+box "Service" #LightBlue
+    box "Chat"
+        participant ChatService
+    end box
+
+    box "Context"
+        participant ContextService
+    end box
+
+    box "Tool"
+        participant ToolService
+    end box
+
+end box
+
+box "Client" #LightSteelBlue
+    participant KtorHttpClient
+end box
+
+autonumber
+
+Player -> AskCommand: /g <prompt>
+AskCommand -> ConversationManager: generate chat with prompt
+ConversationManager -> ContextService: add chat to player context
+ConversationManager -> ContextService: get full player context
+ContextService -> ConversationManager: return full player context
+ConversationManager -> ToolService: get available tools
+ToolService -> ConversationManager: return available tools
+ConversationManager -> ChatService: generate chat with context and tools
+ChatService -> KtorHttpClient: make POST request to API
+KtorHttpClient -> ChatService: return response
+ChatService -> ConversationManager: return LLM response
+loop [while tool calls > 0]
+    ConversationManager -> ToolService: make tool calls
+    ToolService -> ConversationManager: return tool results
+    ConversationManager -> ChatService: make request with appended tool results
+    ChatService -> ConversationManager: return response with tool context
+    ChatService -> KtorHttpClient: make POST request to API
+    KtorHttpClient -> ChatService: return response
+end loop
+ConversationManager -> ContextService: add response to context
+ConversationManager -> AskCommand: return LLM response
+AskCommand -> Player: display response
+
+
+@enduml
