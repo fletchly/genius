@@ -22,11 +22,9 @@ import io.fletchly.genius.client.KtorHttpClient
 import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.service.tool.Tool
 import io.fletchly.genius.service.tool.tool
-import io.ktor.client.call.body
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -35,7 +33,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 class WebSearchTool(
     configuration: GeniusConfiguration,
     ktorHttpClient: KtorHttpClient
-): Tool {
+) : Tool {
     private val httpClient = ktorHttpClient.getClient(OLLAMA_BASE_URL, configuration.ollama.apiKey)
 
     override val definition = tool {
@@ -63,6 +61,7 @@ class WebSearchTool(
         // result is truncated to limit token use
         return response.body<WebSearchResponse>().toString().take(8000)
     }
+
     private companion object {
         const val OLLAMA_BASE_URL = "https://ollama.com"
     }

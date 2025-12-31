@@ -20,10 +20,7 @@ package io.fletchly.genius.command
 
 import io.fletchly.genius.command.genius.ClearCommand
 import io.fletchly.genius.command.genius.InfoCommand
-import io.fletchly.genius.util.ChatMessageUtil
-import io.fletchly.genius.util.PluginSchedulerUtil
 import org.koin.core.module.dsl.bind
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

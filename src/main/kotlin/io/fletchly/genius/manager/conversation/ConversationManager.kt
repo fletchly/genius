@@ -18,11 +18,11 @@
 
 package io.fletchly.genius.manager.conversation
 
-import io.fletchly.genius.model.Message
-import io.fletchly.genius.service.context.ContextService
 import io.fletchly.genius.client.HttpClientException
+import io.fletchly.genius.model.Message
 import io.fletchly.genius.model.ToolCall
 import io.fletchly.genius.service.chat.ChatService
+import io.fletchly.genius.service.context.ContextService
 import io.fletchly.genius.service.tool.ToolService
 import java.util.*
 

@@ -21,10 +21,10 @@ package io.fletchly.genius.command
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
-import io.fletchly.genius.util.ChatMessageUtil
-import io.fletchly.genius.util.PluginSchedulerUtil
 import io.fletchly.genius.manager.conversation.ConversationManager
 import io.fletchly.genius.manager.conversation.ConversationManagerException
+import io.fletchly.genius.util.ChatMessageUtil
+import io.fletchly.genius.util.PluginSchedulerUtil
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.registry.keys.SoundEventKeys

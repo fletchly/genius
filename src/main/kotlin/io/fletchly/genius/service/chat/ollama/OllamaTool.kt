@@ -48,7 +48,7 @@ data class OllamaProperty(
     val description: String
 )
 
-fun ToolDefinition.toOllamaTool() : OllamaTool {
+fun ToolDefinition.toOllamaTool(): OllamaTool {
     val function = OllamaFunction(
         name = name,
         description = description,

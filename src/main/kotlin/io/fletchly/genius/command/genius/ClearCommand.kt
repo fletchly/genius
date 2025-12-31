@@ -21,8 +21,8 @@ package io.fletchly.genius.command.genius
 import com.mojang.brigadier.context.CommandContext
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.command.Command
-import io.fletchly.genius.util.ChatMessageUtil
 import io.fletchly.genius.service.context.ContextService
+import io.fletchly.genius.util.ChatMessageUtil
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
@@ -108,7 +108,12 @@ class ClearCommand(
         job.invokeOnCompletion {
             val message = "Cleared conversation context for ${targets.size} player${if (targets.size != 1) "s" else ""}"
             pluginLogger.info { message }
-            if (sender is Player) sender.sendMessage(chatMessageUtil.geniusMessage(ChatMessageUtil.MessageLevel.INFO, message))
+            if (sender is Player) sender.sendMessage(
+                chatMessageUtil.geniusMessage(
+                    ChatMessageUtil.MessageLevel.INFO,
+                    message
+                )
+            )
         }
 
         return com.mojang.brigadier.Command.SINGLE_SUCCESS

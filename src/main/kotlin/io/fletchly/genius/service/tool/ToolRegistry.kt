@@ -38,9 +38,11 @@ class ToolRegistry {
         return try {
             val validationErrors = validateArguments(tool, arguments)
             if (validationErrors.isNotEmpty()) {
-                return Result.failure(IllegalArgumentException(
-                    "Validation errors: ${validationErrors.joinToString(", ")}"
-                ))
+                return Result.failure(
+                    IllegalArgumentException(
+                        "Validation errors: ${validationErrors.joinToString(", ")}"
+                    )
+                )
             }
             Result.success(tool.handler(arguments))
         } catch (e: Exception) {

@@ -18,8 +18,6 @@
 
 package io.fletchly.genius.service.context
 
-import io.fletchly.genius.service.context.ConcurrentHashMapContextService
-import io.fletchly.genius.service.context.ContextService
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module

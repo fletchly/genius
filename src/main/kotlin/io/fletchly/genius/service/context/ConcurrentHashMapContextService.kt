@@ -20,9 +20,12 @@ package io.fletchly.genius.service.context
 
 import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.model.Message
-import io.fletchly.genius.service.context.ContextService
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.ArrayDeque
+import kotlin.collections.List
+import kotlin.collections.listOf
+import kotlin.collections.toList
 
 /**
  * [ContextService] implementation that stores conversation context in a [java.util.concurrent.ConcurrentHashMap]
