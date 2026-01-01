@@ -20,7 +20,7 @@ package io.fletchly.genius.util
 
 import io.fletchly.genius.manager.config.GeniusConfiguration
 import org.bukkit.Bukkit
-import java.util.UUID
+import java.util.*
 import java.util.logging.Logger
 
 class LoggingUtil(

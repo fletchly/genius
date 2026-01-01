@@ -18,7 +18,6 @@
 
 package io.fletchly.genius.manager.config
 
-import org.spongepowered.configurate.CommentedConfigurationNode
 import org.spongepowered.configurate.NodePath.path
 import org.spongepowered.configurate.transformation.ConfigurationTransformation
 
