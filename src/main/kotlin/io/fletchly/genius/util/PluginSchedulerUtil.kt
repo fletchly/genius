@@ -19,6 +19,7 @@
 package io.fletchly.genius.util
 
 import org.bukkit.plugin.java.JavaPlugin
+import java.util.concurrent.CompletableFuture
 
 /**
  * Utility class that exposes the plugin scheduler
@@ -33,5 +34,26 @@ class PluginSchedulerUtil(private val plugin: JavaPlugin) {
      */
     fun runTask(task: Runnable) {
         plugin.server.scheduler.runTask(plugin, task)
+    }
+
+    /**
+     * Use the plugin scheduler to run a callable task synchronously and return its result via a future.
+     *
+     * Used to safely touch the Bukkit API from an asynchronous context and retrieve a value.
+     *
+     * @param callable the callable task that returns a value of type T
+     * @return a CompletableFuture that completes with the result or an exception
+     */
+    fun <T> callSync(callable: () -> T): CompletableFuture<T> {
+        val future = CompletableFuture<T>()
+        plugin.server.scheduler.runTask(plugin, Runnable {
+            try {
+                val result = callable()
+                future.complete(result)
+            } catch (e: Exception) {
+                future.completeExceptionally(e)
+            }
+        })
+        return future
     }
 }

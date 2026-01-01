@@ -25,6 +25,7 @@ import io.fletchly.genius.event.eventModule
 import io.fletchly.genius.manager.config.GeniusConfiguration
 import io.fletchly.genius.manager.managerModule
 import io.fletchly.genius.service.serviceModule
+import io.fletchly.genius.service.tool.minecraft.gameInfoModule
 import io.fletchly.genius.service.tool.ollama.webSearchModule
 import io.fletchly.genius.util.utilModule
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
@@ -75,6 +76,10 @@ class Genius : JavaPlugin() {
             tools.add("Web Search")
             loadKoinModules(webSearchModule)
         }
+
+        tools.add("Game Info")
+        loadKoinModules(gameInfoModule)
+
         logger.info { "Enabled tools (${tools.size}): $tools" }
     }
 

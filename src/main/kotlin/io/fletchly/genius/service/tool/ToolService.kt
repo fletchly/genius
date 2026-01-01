@@ -38,7 +38,7 @@ class ToolService(
     suspend fun executeToolCall(toolCall: ToolCall): Message {
         registry.execute(toolCall.function.name, toolCall.function.arguments)
             .onSuccess {
-                if (configuration.logging.logToolCalls) logger.info { "Executed tool: ${toolCall.function.name}" }
+                if (configuration.logging.logToolCalls) logger.info { "Executed tool: ${toolCall.function.name} > $it" }
                 return Message(
                     content = it,
                     role = Message.TOOL
