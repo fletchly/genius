@@ -41,17 +41,17 @@ class ConversationManager(
     override suspend fun handlePlayerInput(playerUUID: UUID, content: String) {
         val inputMessage = Message(content, Message.USER)
 
-        displayService.displayPlayerMessage(inputMessage.content)
+        displayService.displayPlayerMessage(playerUUID, inputMessage.content)
         loggingService.logPlayerMessage(playerUUID, inputMessage.content)
 
         contextService.appendContext(playerUUID, inputMessage)
 
         try {
             val responseMessage = generateResponseWithCurrentContext(playerUUID)
-            displayService.displayAssistantMessage(responseMessage.content)
+            displayService.displayAssistantMessage(playerUUID, responseMessage.content)
             loggingService.logAssistantMessage(playerUUID, responseMessage.content)
         } catch (ex: AiProviderException) {
-            displayService.displayErrorMessage("Error generating response: ${ex.message}")
+            displayService.displayErrorMessage(playerUUID, "Error generating response: ${ex.message}")
         }
 
     }
