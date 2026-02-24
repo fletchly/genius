@@ -18,16 +18,16 @@
 
 package io.fletchly.genius
 
-import io.fletchly.genius.client.clientModule
-import io.fletchly.genius.command.Command
-import io.fletchly.genius.command.commandModule
-import io.fletchly.genius.event.eventModule
-import io.fletchly.genius.manager.config.GeniusConfiguration
-import io.fletchly.genius.manager.managerModule
-import io.fletchly.genius.service.serviceModule
-import io.fletchly.genius.service.tool.minecraft.gameInfoModule
-import io.fletchly.genius.service.tool.ollama.webSearchModule
-import io.fletchly.genius.util.utilModule
+import io.fletchly.genius.old.client.clientModule
+import io.fletchly.genius.old.command.Command
+import io.fletchly.genius.old.command.commandModule
+import io.fletchly.genius.old.event.eventModule
+import io.fletchly.genius.old.manager.config.GeniusConfiguration
+import io.fletchly.genius.old.manager.managerModule
+import io.fletchly.genius.old.service.serviceModule
+import io.fletchly.genius.old.service.tool.minecraft.gameInfoModule
+import io.fletchly.genius.old.service.tool.ollama.webSearchModule
+import io.fletchly.genius.old.util.utilModule
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 import kotlinx.coroutines.*
 import org.bukkit.event.Listener
