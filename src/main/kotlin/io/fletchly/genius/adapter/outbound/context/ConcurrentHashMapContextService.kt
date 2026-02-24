@@ -23,18 +23,21 @@ import io.fletchly.genius.core.port.outbound.ContextService
 import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.ArrayDeque
+import kotlin.collections.listOf
+import kotlin.collections.toList
 
 /**
  * [ConcurrentHashMap] implementation of [ContextService]
  */
-class ConcurrentHashMapContextService(configuration: GeniusConfiguration): ContextService {
+class ConcurrentHashMapContextService(configuration: GeniusConfiguration) : ContextService {
     private val maxPlayerMessages = configuration.context.maxPlayerMessages
     private val context = ConcurrentHashMap<UUID, ArrayDeque<Message>>()
 
     override suspend fun getContext(playerUUID: UUID) = context[playerUUID]?.toList() ?: listOf()
 
     override suspend fun appendContext(playerUUID: UUID, message: Message) {
-        context.compute(playerUUID) { _, messages, ->
+        context.compute(playerUUID) { _, messages ->
             val queue = messages ?: ArrayDeque()
             if (queue.size >= maxPlayerMessages) {
                 queue.removeFirst()

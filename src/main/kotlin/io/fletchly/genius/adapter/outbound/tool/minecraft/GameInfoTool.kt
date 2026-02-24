@@ -30,7 +30,7 @@ import java.time.LocalDate
 class GameInfoTool(
     private val plugin: JavaPlugin,
     private val pluginScheduler: PluginScheduler,
-): Tool {
+) : Tool {
     override val definition = tool {
         name = "game_info"
         description = "Get the current Minecraft server version, as well as the current date"

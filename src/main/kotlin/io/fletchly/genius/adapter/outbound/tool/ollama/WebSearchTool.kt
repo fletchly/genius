@@ -35,7 +35,7 @@ import kotlinx.serialization.json.decodeFromJsonElement
 class WebSearchTool(
     configuration: GeniusConfiguration,
     private val httpClient: HttpClient
-): Tool {
+) : Tool {
     private val apiKey = configuration.ollama.apiKey
     private val responseLimit = configuration.tool.webSearch.truncateResults
 

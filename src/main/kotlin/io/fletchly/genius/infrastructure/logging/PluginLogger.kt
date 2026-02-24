@@ -18,12 +18,10 @@
 
 package io.fletchly.genius.infrastructure.logging
 
+import io.fletchly.genius.core.model.Target
 import io.fletchly.genius.core.port.outbound.LoggingService
 import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
-import io.fletchly.genius.old.model.Message
-import org.bukkit.Bukkit
-import java.util.*
 import java.util.logging.Logger
 
 /**
@@ -52,12 +50,7 @@ class PluginLogger(
         if (configuration.logging.logToolCalls) logger.warning { message }
     }
 
-    /**
-     * Log message with info level
-     *
-     * @param message message to log
-     */
-    fun logInfo(message: String) = logger.info { message }
+    override fun logInfo(message: String) = logger.info { message }
 
     /**
      * Log message with warning level
@@ -73,27 +66,21 @@ class PluginLogger(
      */
     fun logError(message: String) = logger.severe { message }
 
-    override suspend fun logPlayerMessage(playerUUID: UUID, message: String) {
-        pluginScheduler.runTask {
-            val player = Bukkit.getPlayer(playerUUID)
-            val playerName = player?.name ?: playerUUID.toString()
-            val agentName = configuration.display.agentName
+    override fun logPlayerMessage(target: Target, message: String) {
+        val targetName = target.displayName
+        val agentName = configuration.display.agentName
 
-            logConversation("$playerName > $agentName: $message")
-        }
+        logConversation("$targetName > $agentName: $message")
     }
 
-    override suspend fun logAssistantMessage(
-        playerUUID: UUID,
+    override fun logAssistantMessage(
+        target: Target,
         message: String
     ) {
-        pluginScheduler.runTask {
-            val player = Bukkit.getPlayer(playerUUID)
-            val playerName = player?.name ?: playerUUID.toString()
-            val agentName = configuration.display.agentName
+        val targetName = target.displayName
+        val agentName = configuration.display.agentName
 
-            logConversation("$agentName > $playerName: $message")
-        }
+        logConversation("$agentName > $targetName: $message")
     }
 
     private fun logConversation(message: String) {

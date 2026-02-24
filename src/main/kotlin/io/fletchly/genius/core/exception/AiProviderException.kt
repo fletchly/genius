@@ -21,4 +21,4 @@ package io.fletchly.genius.core.exception
 /**
  * Thrown when the external AI service provider encounters an exception
  */
-class AiProviderException(message: String): Exception(message)
+class AiProviderException(message: String) : Exception(message)

@@ -20,13 +20,10 @@ package io.fletchly.genius.core.manager
 
 import io.fletchly.genius.core.exception.AiProviderException
 import io.fletchly.genius.core.model.Message
+import io.fletchly.genius.core.model.Target
 import io.fletchly.genius.core.port.inbound.GenerateAssistantResponse
-import io.fletchly.genius.core.port.outbound.AiService
-import io.fletchly.genius.core.port.outbound.ContextService
-import io.fletchly.genius.core.port.outbound.DisplayService
-import io.fletchly.genius.core.port.outbound.LoggingService
-import io.fletchly.genius.core.port.outbound.ToolService
-import java.util.UUID
+import io.fletchly.genius.core.port.outbound.*
+import java.util.*
 
 /**
  * Manages conversations between assistant and player
@@ -38,20 +35,20 @@ class ConversationManager(
     private val loggingService: LoggingService,
     private val toolService: ToolService
 ) : GenerateAssistantResponse {
-    override suspend fun handlePlayerInput(playerUUID: UUID, content: String) {
+    override suspend fun handleInput(target: Target, content: String) {
         val inputMessage = Message(content, Message.USER)
 
-        displayService.displayPlayerMessage(playerUUID, inputMessage.content)
-        loggingService.logPlayerMessage(playerUUID, inputMessage.content)
+        displayService.displayPlayerMessage(target, inputMessage.content)
+        loggingService.logPlayerMessage(target, inputMessage.content)
 
-        contextService.appendContext(playerUUID, inputMessage)
+        contextService.appendContext(target.uniqueId, inputMessage)
 
         try {
-            val responseMessage = generateResponseWithCurrentContext(playerUUID)
-            displayService.displayAssistantMessage(playerUUID, responseMessage.content)
-            loggingService.logAssistantMessage(playerUUID, responseMessage.content)
+            val responseMessage = generateResponseWithCurrentContext(target.uniqueId)
+            displayService.displayAssistantMessage(target, responseMessage.content)
+            loggingService.logAssistantMessage(target, responseMessage.content)
         } catch (ex: AiProviderException) {
-            displayService.displayErrorMessage(playerUUID, "Error generating response: ${ex.message}")
+            displayService.displayErrorMessage(target, "Error generating response: ${ex.message}")
         }
 
     }

@@ -19,7 +19,7 @@
 package io.fletchly.genius.core.port.outbound
 
 import io.fletchly.genius.core.model.Message
-import java.util.UUID
+import java.util.*
 
 /**
  * Manages conversation context

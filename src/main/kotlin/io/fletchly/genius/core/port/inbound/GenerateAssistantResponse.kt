@@ -18,7 +18,7 @@
 
 package io.fletchly.genius.core.port.inbound
 
-import java.util.UUID
+import io.fletchly.genius.core.model.Target
 
 /**
  * Response generation usecase
@@ -27,8 +27,8 @@ interface GenerateAssistantResponse {
     /**
      * Handle input from player
      *
-     * @param playerUUID UUID of player sending input
+     * @param target UUID of player sending input
      * @param content Player input message
      */
-    suspend fun handlePlayerInput(playerUUID: UUID, content: String)
+    suspend fun handleInput(target: Target, content: String)
 }

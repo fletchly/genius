@@ -18,44 +18,43 @@
 
 package io.fletchly.genius.adapter.inbound.command
 
+import com.mojang.brigadier.Command
 import com.mojang.brigadier.arguments.StringArgumentType
-import com.mojang.brigadier.tree.LiteralCommandNode
 import io.fletchly.genius.core.port.inbound.GenerateAssistantResponse
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
+import io.fletchly.genius.infrastructure.target.ConsoleTarget
+import io.fletchly.genius.infrastructure.target.PlayerTarget
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import org.bukkit.entity.Player
+import org.bukkit.permissions.PermissionDefault
 
-class AskCommand(
+fun askCommand(
     generateAssistantResponse: GenerateAssistantResponse,
-    pluginScheduler: PluginScheduler
-) : Command {
-    override val definition = command {
-        description = "Ask genius a question"
-        permission = "genius.ask"
-        aliases("g")
-        handle { ctx ->
-            // Safe to assume that executor is a non-null
-            // player here due to command requirements
-            val playerUUID = ctx.source.executor!!.uniqueId
-            val prompt = ctx.getArgument("prompt", String::class.java)
+    pluginScheduler: PluginScheduler,
+) = command<CommandSourceStack>("ask") {
+    description = "Ask Genius a question"
+    aliases = listOf("g")
+    permission = "genius.ask"
+    permissionDescription = "Allows a player to ask Genius questions"
+    permissionDefault = PermissionDefault.TRUE
 
-            pluginScheduler.runCoroutine {
-                generateAssistantResponse.handlePlayerInput(playerUUID, prompt)
-            }
-
-            com.mojang.brigadier.Command.SINGLE_SUCCESS
-        }
-    }
-    override val structure: LiteralCommandNode<CommandSourceStack> = Commands.literal("ask")
-        .requires {
-            it.executor is Player && it.sender.hasPermission(definition.permission)
-        }
-        .then(
+    node {
+        then(
             Commands.argument("prompt", StringArgumentType.greedyString())
-                .executes {
-                    definition.handler(it)
+                .executes { ctx ->
+                    val prompt = StringArgumentType.getString(ctx, "prompt")
+                    val target = when (val sender = ctx.source.sender) {
+                        is Player -> PlayerTarget(sender)
+                        else -> ConsoleTarget
+                    }
+
+                    pluginScheduler.runCoroutine {
+                        generateAssistantResponse.handleInput(target, prompt)
+                    }
+
+                    Command.SINGLE_SUCCESS
                 }
         )
-        .build()
+    }
 }

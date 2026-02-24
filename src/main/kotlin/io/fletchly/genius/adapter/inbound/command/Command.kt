@@ -18,41 +18,89 @@
 
 package io.fletchly.genius.adapter.inbound.command
 
-import com.mojang.brigadier.context.CommandContext
+import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.tree.LiteralCommandNode
-import net.minecraft.commands.CommandSourceStack
+import io.papermc.paper.command.brigadier.CommandSourceStack
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 
-interface Command {
-    val definition: CommandDefinition
-    val structure: LiteralCommandNode<CommandSourceStack>
-}
+import org.bukkit.permissions.Permission
+import org.bukkit.permissions.PermissionDefault
+import org.bukkit.plugin.java.JavaPlugin
 
-data class CommandDefinition(
+class GeniusCommand<S: CommandSourceStack> (
+    val node: LiteralCommandNode<S>,
     val description: String,
-    val permission: String,
     val aliases: List<String>,
-    val handler: (CommandContext<CommandSourceStack>) -> Int
+    val permission: String,
+    val permissionDescription: String,
+    val permissionDefault: PermissionDefault,
+    val childPermissions: List<Permission>
 )
 
-class CommandBuilder {
-    var description: String = ""
-    var permission: String = ""
-    private val aliases: MutableList<String> = mutableListOf()
-    private var handler: (CommandContext<CommandSourceStack>) -> Int = { 0 }
+class GeniusCommandBuilder<S: CommandSourceStack>(private val name: String) {
+    var description = ""
+    var aliases: List<String> = emptyList()
+    var permission = ""
+    var permissionDescription = ""
+    var permissionDefault: PermissionDefault = PermissionDefault.OP
+    var childPermissions: List<Permission> = emptyList()
 
-    fun aliases(vararg aliases: String) {
-        for (alias in aliases) {
-            this.aliases.add(alias)
+    private var hasExecutes: Boolean = false
+    private var nodeBuilder: LiteralArgumentBuilder<S> =
+        LiteralArgumentBuilder.literal(name)
+
+    fun executes(handler: (S) -> Int) {
+        hasExecutes = true
+        nodeBuilder = nodeBuilder.executes { ctx ->
+            handler(ctx.source)
         }
     }
 
-    fun handle(block: (CommandContext<CommandSourceStack>) -> Int) {
-        handler = block
+    fun node(block: LiteralArgumentBuilder<S>.() -> Unit) {
+        nodeBuilder.apply { block() }
     }
 
-    fun build() = CommandDefinition(description, permission, aliases, handler)
+    fun build(): GeniusCommand<S> {
+        require(description.isNotBlank()) { "Command $name must have a description" }
+        require(permission.isNotBlank()) { "Command $name must have a permission" }
+        require(permissionDescription.isNotBlank()) { "Command $name must have a permission message" }
+        require(hasExecutes || nodeBuilder.arguments.isNotEmpty()) {
+            "Command $name must have either a default handler or provide arguments"
+        }
+
+        nodeBuilder = nodeBuilder.requires { it.sender.hasPermission(permission) }
+
+        return GeniusCommand(
+            node = nodeBuilder.build(),
+            description = description,
+            aliases = aliases,
+            permission = permission,
+            permissionDescription = permissionDescription,
+            permissionDefault = permissionDefault,
+            childPermissions = childPermissions
+        )
+    }
 }
 
-fun command(block: CommandBuilder.() -> Unit): CommandDefinition {
-    return CommandBuilder().apply(block).build()
+fun <S: CommandSourceStack> command(
+    name: String,
+    block: GeniusCommandBuilder<S>.() -> Unit
+): GeniusCommand<S> = GeniusCommandBuilder<S>(name).apply(block).build()
+
+fun JavaPlugin.registerCommand(cmd: GeniusCommand<CommandSourceStack>) {
+    server.pluginManager.addPermission(
+        Permission(cmd.permission, cmd.permissionDescription, cmd.permissionDefault)
+    )
+
+    cmd.childPermissions.forEach { perm ->
+        server.pluginManager.addPermission(perm)
+    }
+
+    lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
+        it.registrar().register(
+            cmd.node,
+            cmd.description,
+            cmd.aliases
+        )
+    }
 }

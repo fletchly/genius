@@ -16,29 +16,12 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.core.port.outbound
+package io.fletchly.genius.infrastructure.target
 
 import io.fletchly.genius.core.model.Target
+import java.util.*
 
-/**
- * Logs conversations
- */
-interface LoggingService {
-    /**
-     * Log message from player
-     *
-     * @param target target sending message
-     * @param message message body
-     */
-    fun logPlayerMessage(target: Target, message: String)
-
-    /**
-     * Log message from assistant
-     *
-     * @param target target receiving message
-     * @param message message body
-     */
-    fun logAssistantMessage(target: Target, message: String)
-
-    fun logInfo(message: String)
+object ConsoleTarget : Target {
+    override val displayName: String = "Console"
+    override val uniqueId: UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
 }

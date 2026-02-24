@@ -16,29 +16,6 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.core.port.outbound
+package io.fletchly.genius.core.port.inbound
 
-import io.fletchly.genius.core.model.Target
-
-/**
- * Logs conversations
- */
-interface LoggingService {
-    /**
-     * Log message from player
-     *
-     * @param target target sending message
-     * @param message message body
-     */
-    fun logPlayerMessage(target: Target, message: String)
-
-    /**
-     * Log message from assistant
-     *
-     * @param target target receiving message
-     * @param message message body
-     */
-    fun logAssistantMessage(target: Target, message: String)
-
-    fun logInfo(message: String)
-}
+interface DisplayInfo

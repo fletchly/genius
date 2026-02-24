@@ -18,4 +18,4 @@
 
 package io.fletchly.genius.adapter.outbound.tool
 
-class ToolException(message: String): Exception(message)
+class ToolException(message: String) : Exception(message)

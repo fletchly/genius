@@ -18,7 +18,7 @@
 
 package io.fletchly.genius.core.port.outbound
 
-import java.util.*
+import io.fletchly.genius.core.model.Target
 
 /**
  * Displays output to players
@@ -27,24 +27,32 @@ interface DisplayService {
     /**
      * Display message from player
      *
-     * @param playerUUID UUID of player to display message for
+     * @param target Target to display message for
      * @param message Message to display
      */
-    suspend fun displayPlayerMessage(playerUUID: UUID, message: String)
+    suspend fun displayPlayerMessage(target: Target, message: String)
 
     /**
      * Display message from assistant
      *
-     * @param playerUUID UUID of player to display message for
+     * @param target Target to display message for
      * @param message Message to display
      */
-    suspend fun displayAssistantMessage(playerUUID: UUID, message: String)
+    suspend fun displayAssistantMessage(target: Target, message: String)
+
+    /**
+     * Display info message
+     *
+     * @param target Target to display message for
+     * @param message Message to display
+     */
+    suspend fun displayInfoMessage(target: Target, message: String)
 
     /**
      * Display error message
      *
-     * @param playerUUID UUID of player to display message for
+     * @param target Target to display message for
      * @param message Message to display
      */
-    suspend fun displayErrorMessage(playerUUID: UUID, message: String)
+    suspend fun displayErrorMessage(target: Target, message: String)
 }

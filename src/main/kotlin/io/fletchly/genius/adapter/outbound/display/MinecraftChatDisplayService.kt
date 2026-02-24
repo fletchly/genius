@@ -18,48 +18,74 @@
 
 package io.fletchly.genius.adapter.outbound.display
 
+import io.fletchly.genius.core.model.Target
 import io.fletchly.genius.core.port.outbound.DisplayService
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
+import io.fletchly.genius.infrastructure.target.ConsoleTarget
+import io.fletchly.genius.infrastructure.target.PlayerTarget
 import io.fletchly.genius.old.manager.config.GeniusConfiguration
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Bukkit
-import java.util.*
+import org.bukkit.Server
 
 /**
  * [DisplayService] implementation that displays messages in Minecraft chat
  */
 class MinecraftChatDisplayService(
-    private val configuration: GeniusConfiguration,
-    private val pluginScheduler: PluginScheduler
+    private val pluginScheduler: PluginScheduler,
+    private val server: Server,
+    configuration: GeniusConfiguration
 ) : DisplayService {
     private val displayConfig = configuration.display
 
-    override suspend fun displayPlayerMessage(playerUUID: UUID, message: String) {
+    override suspend fun displayPlayerMessage(target: Target, message: String) {
+        val chatMessage = playerMessage(target.displayName, message)
         pluginScheduler.runTask {
-            val player = Bukkit.getPlayer(playerUUID) ?: return@runTask
-
-            player.sendMessage { playerMessage(player.name, message) }
+            when (target) {
+                is PlayerTarget -> target.player.sendMessage { chatMessage }
+                is ConsoleTarget -> server.consoleSender.sendMessage { chatMessage }
+            }
         }
     }
 
-    override suspend fun displayAssistantMessage(playerUUID: UUID, message: String) {
+    override suspend fun displayAssistantMessage(target: Target, message: String) {
+        val chatMessage = assistantMessage(message)
         pluginScheduler.runTask {
-            val player = Bukkit.getPlayer(playerUUID) ?: return@runTask
+            when (target) {
+                is PlayerTarget -> {
+                    target.player.playSound(RESPONSE_SOUND, Sound.Emitter.self())
+                    target.player.sendMessage { chatMessage }
+                }
 
-            player.playSound(RESPONSE_SOUND, Sound.Emitter.self())
-            player.sendMessage { assistantMessage(message) }
+                is ConsoleTarget -> server.consoleSender.sendMessage { chatMessage }
+            }
         }
     }
 
-    override suspend fun displayErrorMessage(playerUUID: UUID, message: String) {
+    override suspend fun displayInfoMessage(target: Target, message: String) {
+        val chatMessage = infoMessage(message)
         pluginScheduler.runTask {
-            val player = Bukkit.getPlayer(playerUUID) ?: return@runTask
+            when (target) {
+                is PlayerTarget -> target.player.sendMessage { chatMessage }
+                is ConsoleTarget -> server.consoleSender.sendMessage { chatMessage }
+            }
+        }
+    }
 
-            player.playSound(ERROR_SOUND, Sound.Emitter.self())
-            player.sendMessage { errorMessage(message) }
+
+    override suspend fun displayErrorMessage(target: Target, message: String) {
+        val chatMessage = errorMessage(message)
+        pluginScheduler.runTask {
+            when (target) {
+                is PlayerTarget -> {
+                    target.player.playSound(ERROR_SOUND, Sound.Emitter.self())
+                    target.player.sendMessage { chatMessage }
+                }
+
+                is ConsoleTarget -> server.consoleSender.sendMessage { chatMessage }
+            }
         }
     }
 
@@ -74,6 +100,8 @@ class MinecraftChatDisplayService(
             .append { text(displayConfig.agentName, NamedTextColor.GREEN) }
             .append { ARROW_COMPONENT }
             .append { text(message).color(NamedTextColor.WHITE) }
+
+    private fun infoMessage(message: String) = text(message).color(NamedTextColor.YELLOW)
 
     private fun errorMessage(message: String) = text(message).color(NamedTextColor.RED)
 
@@ -93,6 +121,6 @@ class MinecraftChatDisplayService(
             1f,
         )
 
-        val ARROW_COMPONENT = text( " → ")
+        val ARROW_COMPONENT = text(" → ")
     }
 }

@@ -18,15 +18,8 @@
 
 package io.fletchly.genius.infrastructure.scheduling
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.*
 import org.bukkit.plugin.java.JavaPlugin
-import kotlin.coroutines.resumeWithException
 
 /**
  * Safely exposes the plugin's scheduler

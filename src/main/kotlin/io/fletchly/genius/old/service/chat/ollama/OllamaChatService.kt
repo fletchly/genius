@@ -50,7 +50,7 @@ class OllamaChatService(
 
         val systemPromptMessage = Message(
             content = systemPrompt,
-            role = Message.Role.SYSTEM
+            role = Message.SYSTEM
         )
 
         val request = OllamaRequest(

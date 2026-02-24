@@ -31,7 +31,7 @@ class BasicToolService(
     private val registry: ToolRegistry,
     private val pluginLogger: PluginLogger,
     tools: Set<Tool>
-): ToolService {
+) : ToolService {
     init {
         for (tool in tools) {
             registry.register(tool.definition)
@@ -52,7 +52,8 @@ class BasicToolService(
 
         val validationErrors = validateArguments(tool, toolCall.arguments)
         if (validationErrors.isNotEmpty()) {
-            val errorMessage = toolErrorMessage(tool.name, "Invalid argument(s): ${validationErrors.joinToString { ", " }}")
+            val errorMessage =
+                toolErrorMessage(tool.name, "Invalid argument(s): ${validationErrors.joinToString { ", " }}")
             pluginLogger.logToolCallError(errorMessage)
             return Message(
                 errorMessage,

@@ -65,7 +65,7 @@ class OllamaAiService(
         )
 
         try {
-            val response =  httpClient.post("$baseUrl/api/chat") {
+            val response = httpClient.post("$baseUrl/api/chat") {
                 if (apiKey != null) bearerAuth(apiKey)
                 contentType(ContentType.Application.Json)
                 setBody(request)
