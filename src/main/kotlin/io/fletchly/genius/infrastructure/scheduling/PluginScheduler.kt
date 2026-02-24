@@ -18,7 +18,12 @@
 
 package io.fletchly.genius.infrastructure.scheduling
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.bukkit.plugin.java.JavaPlugin
 import kotlin.coroutines.resumeWithException
@@ -29,10 +34,21 @@ import kotlin.coroutines.resumeWithException
 class PluginScheduler(
     private val plugin: JavaPlugin
 ) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    fun runCoroutine(block: suspend CoroutineScope.() -> Unit) {
+        scope.launch(block = block)
+    }
+
+    fun cancel() {
+        scope.cancel()
+    }
+
     /**
      * Run task from an async context using the plugin's scheduler
      */
     suspend fun <T> runTask(block: () -> T): T {
+        if (plugin.server.isPrimaryThread) return block()
         return suspendCancellableCoroutine { continuation ->
             plugin.server.scheduler.runTask(plugin, Runnable {
                 continuation.resumeWith(runCatching(block))
