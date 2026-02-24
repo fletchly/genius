@@ -21,6 +21,7 @@ package io.fletchly.genius.infrastructure.logging
 import io.fletchly.genius.core.port.outbound.LoggingService
 import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
+import io.fletchly.genius.old.model.Message
 import org.bukkit.Bukkit
 import java.util.*
 import java.util.logging.Logger
@@ -33,6 +34,7 @@ class PluginLogger(
     private val pluginScheduler: PluginScheduler,
     private val configuration: GeniusConfiguration
 ) : LoggingService {
+
     /**
      * Log HTTP requests from client if configured to do so
      *
@@ -40,6 +42,14 @@ class PluginLogger(
      */
     fun logHttpRequest(request: String) {
         if (configuration.logging.logHttpRequests) logger.info { request }
+    }
+
+    fun logToolCall(message: String) {
+        if (configuration.logging.logToolCalls) logger.info { message }
+    }
+
+    fun logToolCallError(message: String) {
+        if (configuration.logging.logToolCalls) logger.warning { message }
     }
 
     /**

@@ -24,6 +24,7 @@ import io.fletchly.genius.infrastructure.config.SystemPromptManager
 import io.fletchly.genius.infrastructure.http.createKtorHttpClient
 import io.fletchly.genius.infrastructure.logging.PluginLogger
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
+import io.fletchly.genius.infrastructure.tool.ToolRegistry
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -41,4 +42,7 @@ val infrastructureModule = module {
 
     // Scheduling
     singleOf(::PluginScheduler)
+
+    // Tool
+    singleOf(::ToolRegistry)
 }

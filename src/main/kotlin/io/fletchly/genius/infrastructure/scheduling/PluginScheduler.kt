@@ -19,7 +19,9 @@
 package io.fletchly.genius.infrastructure.scheduling
 
 import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.bukkit.plugin.java.JavaPlugin
+import kotlin.coroutines.resumeWithException
 
 /**
  * Safely exposes the plugin's scheduler
@@ -30,7 +32,11 @@ class PluginScheduler(
     /**
      * Run task from an async context using the plugin's scheduler
      */
-    fun runTask(task: Runnable) {
-        plugin.server.scheduler.runTask(plugin, task)
+    suspend fun <T> runTask(block: () -> T): T {
+        return suspendCancellableCoroutine { continuation ->
+            plugin.server.scheduler.runTask(plugin, Runnable {
+                continuation.resumeWith(runCatching(block))
+            })
+        }
     }
 }

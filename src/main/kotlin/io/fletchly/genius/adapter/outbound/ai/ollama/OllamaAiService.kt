@@ -18,28 +18,24 @@
 
 package io.fletchly.genius.adapter.outbound.ai.ollama
 
-import io.fletchly.genius.adapter.outbound.ai.ollama.model.OllamaMessage
-import io.fletchly.genius.adapter.outbound.ai.ollama.model.OllamaOptions
-import io.fletchly.genius.adapter.outbound.ai.ollama.model.OllamaRequest
-import io.fletchly.genius.adapter.outbound.ai.ollama.model.OllamaResponse
-import io.fletchly.genius.adapter.outbound.ai.ollama.model.toOllamMessage
+import io.fletchly.genius.adapter.outbound.ai.ollama.model.*
 import io.fletchly.genius.core.exception.AiProviderException
 import io.fletchly.genius.core.model.Message
 import io.fletchly.genius.core.port.outbound.AiService
 import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.config.SystemPromptManager
+import io.fletchly.genius.infrastructure.tool.ToolDefinition
+import io.fletchly.genius.infrastructure.tool.ToolRegistry
 import io.fletchly.genius.old.client.HttpClientException
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.bearerAuth
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 
 class OllamaAiService(
     private val httpClient: HttpClient,
     private val configuration: GeniusConfiguration,
+    private val toolRegistry: ToolRegistry,
     systemPromptManager: SystemPromptManager
 ) : AiService {
     private val systemPrompt = systemPromptManager.prompt
@@ -65,7 +61,7 @@ class OllamaAiService(
             model = configuration.ollama.model,
             options = options,
             messages = listOf(systemPromptMessage) + ollamaMessages,
-            tools = listOf() // FIXME
+            tools = toolRegistry.getAllToolDefinitions().map { it.toOllamaTool() }
         )
 
         try {
@@ -90,4 +86,23 @@ class OllamaAiService(
             throw AiProviderException("An unknown error occurred")
         }
     }
+}
+
+fun ToolDefinition.toOllamaTool(): OllamaTool {
+    val function = OllamaFunction(
+        name = name,
+        description = description,
+        parameters = OllamaParameters(
+            properties = parameters.associate {
+                it.name to OllamaProperty(it.type, it.description)
+            },
+            required = parameters
+                .filter { it.required }
+                .map { it.name }
+        )
+    )
+
+    return OllamaTool(
+        function = function
+    )
 }
