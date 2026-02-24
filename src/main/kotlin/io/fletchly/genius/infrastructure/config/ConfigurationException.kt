@@ -1,7 +1,7 @@
 /*
  * This file is part of Genius, licensed under the Apache License 2.0
  *
- * Copyright (c) 2026 fletchly
+ * Copyright (c) 2025 fletchly
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,6 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.core.port.inbound
+package io.fletchly.genius.infrastructure.config
 
-import java.util.UUID
-
-/**
- * Response generation usecase
- */
-interface GenerateAssistantResponse {
-    /**
-     * Handle input from player
-     */
-    suspend fun handlePlayerInput(playerUUID: UUID, content: String)
-}
+class ConfigurationException(message: String, cause: Throwable?) : Exception(message, cause)

@@ -16,16 +16,15 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.core.port.inbound
+package io.fletchly.genius.infrastructure.scheduling
 
-import java.util.UUID
+import kotlinx.coroutines.Runnable
+import org.bukkit.plugin.java.JavaPlugin
 
-/**
- * Response generation usecase
- */
-interface GenerateAssistantResponse {
-    /**
-     * Handle input from player
-     */
-    suspend fun handlePlayerInput(playerUUID: UUID, content: String)
+class PluginScheduler(
+    private val plugin: JavaPlugin
+) {
+    fun runTask(task: Runnable) {
+        plugin.server.scheduler.runTask(plugin, task)
+    }
 }

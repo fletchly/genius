@@ -18,29 +18,39 @@
 
 package io.fletchly.genius.core.manager
 
+import io.fletchly.genius.core.exception.AiProviderException
 import io.fletchly.genius.core.model.Message
 import io.fletchly.genius.core.port.inbound.GenerateAssistantResponse
 import io.fletchly.genius.core.port.outbound.AiService
 import io.fletchly.genius.core.port.outbound.ContextService
 import io.fletchly.genius.core.port.outbound.DisplayService
+import io.fletchly.genius.core.port.outbound.LoggingService
 import io.fletchly.genius.core.port.outbound.ToolService
 import java.util.UUID
 
 class ConversationManager(
-    val aiService: AiService,
-    val contextService: ContextService,
-    val displayService: DisplayService,
-    val toolService: ToolService
+    private val aiService: AiService,
+    private val contextService: ContextService,
+    private val displayService: DisplayService,
+    private val loggingService: LoggingService,
+    private val toolService: ToolService
 ) : GenerateAssistantResponse {
     override suspend fun handlePlayerInput(playerUUID: UUID, content: String) {
         val inputMessage = Message(content, Message.USER)
 
         displayService.displayPlayerMessage(inputMessage.content)
+        loggingService.logPlayerMessage(playerUUID, inputMessage.content)
 
         contextService.appendContext(playerUUID, inputMessage)
-        val responseMessage = generateResponseWithCurrentContext(playerUUID)
 
-        displayService.displayAssistantMessage(responseMessage.content)
+        try {
+            val responseMessage = generateResponseWithCurrentContext(playerUUID)
+            displayService.displayAssistantMessage(responseMessage.content)
+            loggingService.logAssistantMessage(playerUUID, responseMessage.content)
+        } catch (ex: AiProviderException) {
+            displayService.displayErrorMessage("Error generating response: ${ex.message}")
+        }
+
     }
 
     private suspend fun generateResponseWithCurrentContext(playerUUID: UUID): Message {

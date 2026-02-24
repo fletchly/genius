@@ -16,16 +16,9 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.core.port.inbound
-
-import java.util.UUID
+package io.fletchly.genius.core.exception
 
 /**
- * Response generation usecase
+ * Thrown when the external AI service provider encounters an exception
  */
-interface GenerateAssistantResponse {
-    /**
-     * Handle input from player
-     */
-    suspend fun handlePlayerInput(playerUUID: UUID, content: String)
-}
+class AiProviderException(message: String): Exception(message)

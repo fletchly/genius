@@ -16,16 +16,11 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.core.port.inbound
+package io.fletchly.genius.core.port.outbound
 
-import java.util.UUID
+import java.util.*
 
-/**
- * Response generation usecase
- */
-interface GenerateAssistantResponse {
-    /**
-     * Handle input from player
-     */
-    suspend fun handlePlayerInput(playerUUID: UUID, content: String)
+interface LoggingService {
+    suspend fun logPlayerMessage(playerUUID: UUID, message: String)
+    suspend fun logAssistantMessage(playerUUID: UUID, message: String)
 }

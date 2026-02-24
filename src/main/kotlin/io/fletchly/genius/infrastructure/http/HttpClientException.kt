@@ -16,16 +16,14 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.core.port.inbound
+package io.fletchly.genius.infrastructure.http
 
-import java.util.UUID
+import io.ktor.http.*
 
-/**
- * Response generation usecase
- */
-interface GenerateAssistantResponse {
-    /**
-     * Handle input from player
-     */
-    suspend fun handlePlayerInput(playerUUID: UUID, content: String)
+sealed class HttpClientException(message: String, cause: Throwable?) : Exception(message, cause) {
+    class ConfigurationError(msg: String) : HttpClientException(msg, null)
+    class NetworkError(cause: Throwable) : HttpClientException("Network failure", cause)
+    class TimeoutError(cause: Throwable) : HttpClientException("Request timed out", cause)
+    class ServerError(status: HttpStatusCode) : HttpClientException("Server error: $status", null)
+    class ClientError(status: HttpStatusCode) : HttpClientException("Client error: $status", null)
 }
