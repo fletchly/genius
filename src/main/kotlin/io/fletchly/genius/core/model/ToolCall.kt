@@ -20,6 +20,9 @@ package io.fletchly.genius.core.model
 
 import kotlinx.serialization.json.JsonObject
 
+/**
+ * Tool call from assistant
+ */
 data class ToolCall(
     val name: String,
     val arguments: JsonObject

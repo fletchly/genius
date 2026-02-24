@@ -21,9 +21,15 @@ package io.fletchly.genius.infrastructure.scheduling
 import kotlinx.coroutines.Runnable
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * Safely exposes the plugin's scheduler
+ */
 class PluginScheduler(
     private val plugin: JavaPlugin
 ) {
+    /**
+     * Run task from an async context using the plugin's scheduler
+     */
     fun runTask(task: Runnable) {
         plugin.server.scheduler.runTask(plugin, task)
     }

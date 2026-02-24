@@ -18,27 +18,33 @@
 
 package io.fletchly.genius.core.port.outbound
 
+import java.util.*
+
 /**
  * Displays output to players
  */
 interface DisplayService {
     /**
-     * Display info message
-     */
-    suspend fun displayInfo(message: String)
-
-    /**
      * Display message from player
+     *
+     * @param playerUUID UUID of player to display message for
+     * @param message Message to display
      */
-    suspend fun displayPlayerMessage(message: String)
+    suspend fun displayPlayerMessage(playerUUID: UUID, message: String)
 
     /**
      * Display message from assistant
+     *
+     * @param playerUUID UUID of player to display message for
+     * @param message Message to display
      */
-    suspend fun displayAssistantMessage(message: String)
+    suspend fun displayAssistantMessage(playerUUID: UUID, message: String)
 
     /**
      * Display error message
+     *
+     * @param playerUUID UUID of player to display message for
+     * @param message Message to display
      */
-    suspend fun displayErrorMessage(message: String)
+    suspend fun displayErrorMessage(playerUUID: UUID, message: String)
 }

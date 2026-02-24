@@ -20,7 +20,23 @@ package io.fletchly.genius.core.port.outbound
 
 import java.util.*
 
+/**
+ * Logs conversations
+ */
 interface LoggingService {
+    /**
+     * Log message from player
+     *
+     * @param playerUUID UUID of player sending message
+     * @param message message body
+     */
     suspend fun logPlayerMessage(playerUUID: UUID, message: String)
+
+    /**
+     * Log message from assistant
+     *
+     * @param playerUUID UUID of player receiving message
+     * @param message message body
+     */
     suspend fun logAssistantMessage(playerUUID: UUID, message: String)
 }

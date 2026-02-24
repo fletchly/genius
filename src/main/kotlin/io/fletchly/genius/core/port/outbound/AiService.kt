@@ -26,6 +26,8 @@ import io.fletchly.genius.core.model.Message
 interface AiService {
     /**
      * Generate new chat from input
+     *
+     * @param messages Messages to use as context when generating a response
      */
     suspend fun generateResponse(messages: List<Message>): Message
 }

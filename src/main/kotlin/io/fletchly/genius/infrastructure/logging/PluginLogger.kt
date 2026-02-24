@@ -25,17 +25,42 @@ import org.bukkit.Bukkit
 import java.util.*
 import java.util.logging.Logger
 
+/**
+ * Plugin logging service
+ */
 class PluginLogger(
     private val logger: Logger,
     private val pluginScheduler: PluginScheduler,
     private val configuration: GeniusConfiguration
 ) : LoggingService {
+    /**
+     * Log HTTP requests from client if configured to do so
+     *
+     * @param request request to log
+     */
     fun logHttpRequest(request: String) {
         if (configuration.logging.logHttpRequests) logger.info { request }
     }
 
+    /**
+     * Log message with info level
+     *
+     * @param message message to log
+     */
     fun logInfo(message: String) = logger.info { message }
+
+    /**
+     * Log message with warning level
+     *
+     * @param message message to log
+     */
     fun logWarning(message: String) = logger.warning { message }
+
+    /**
+     * Log message with severe level
+     *
+     * @param message message to log
+     */
     fun logError(message: String) = logger.severe { message }
 
     override suspend fun logPlayerMessage(playerUUID: UUID, message: String) {

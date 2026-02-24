@@ -26,6 +26,9 @@ import java.util.UUID
 interface GenerateAssistantResponse {
     /**
      * Handle input from player
+     *
+     * @param playerUUID UUID of player sending input
+     * @param content Player input message
      */
     suspend fun handlePlayerInput(playerUUID: UUID, content: String)
 }

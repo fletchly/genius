@@ -27,16 +27,23 @@ import java.util.UUID
 interface ContextService {
     /**
      * Get context for individual player
+     *
+     * @param playerUUID UUID of player to get context for
      */
     suspend fun getContext(playerUUID: UUID): List<Message>
 
     /**
      * Append context for individual player
+     *
+     * @param playerUUID UUID of player to append context for
+     * @param message Message to append to context
      */
-    suspend fun appendContext(playerUUID: UUID, chatMessage: Message)
+    suspend fun appendContext(playerUUID: UUID, message: Message)
 
     /**
      * Clear context for individual player
+     *
+     * @param playerUUID UUID of player to clear context for
      */
     suspend fun clearContext(playerUUID: UUID)
 

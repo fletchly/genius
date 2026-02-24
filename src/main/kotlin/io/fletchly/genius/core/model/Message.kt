@@ -18,6 +18,9 @@
 
 package io.fletchly.genius.core.model
 
+/**
+ * Message to/from assistant
+ */
 data class Message(
     val content: String,
     val role: String,

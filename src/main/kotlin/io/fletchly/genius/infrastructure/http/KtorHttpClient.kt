@@ -18,7 +18,6 @@
 
 package io.fletchly.genius.infrastructure.http
 
-import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.logging.PluginLogger
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -39,7 +38,10 @@ private const val BASE_DELAY_MS = 1000L
 private const val MAX_DELAY_MS = 60_000L
 private const val RANDOMIZATION_MS = 1000L
 
-fun createKtorHttpClient(pluginLogger: PluginLogger, geniusConfiguration: GeniusConfiguration) = HttpClient(CIO) {
+/**
+ * Creates a configured instance of a Ktor HTTP client
+ */
+fun createKtorHttpClient(pluginLogger: PluginLogger) = HttpClient(CIO) {
     expectSuccess = true
     install(ContentNegotiation) {
         json(Json {

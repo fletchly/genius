@@ -28,6 +28,9 @@ import io.fletchly.genius.core.port.outbound.LoggingService
 import io.fletchly.genius.core.port.outbound.ToolService
 import java.util.UUID
 
+/**
+ * Manages conversations between assistant and player
+ */
 class ConversationManager(
     private val aiService: AiService,
     private val contextService: ContextService,

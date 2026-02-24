@@ -16,20 +16,5 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.core.port.outbound
+package io.fletchly.genius.infrastructure.di
 
-import io.fletchly.genius.core.model.Message
-import io.fletchly.genius.core.model.ToolCall
-
-
-/**
- * Manages tool execution
- */
-interface ToolService {
-    /**
-     * Execute tool and return result as message
-     *
-     * @param toolCall Tool call to execute
-     */
-    suspend fun executeToolCall(toolCall: ToolCall): Message
-}
