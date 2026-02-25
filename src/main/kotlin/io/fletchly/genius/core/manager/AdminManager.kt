@@ -19,6 +19,7 @@
 package io.fletchly.genius.core.manager
 
 import io.fletchly.genius.core.model.Target
+import io.fletchly.genius.core.port.inbound.DisplayInfo
 import io.fletchly.genius.core.port.inbound.ManageContext
 import io.fletchly.genius.core.port.outbound.ContextService
 import io.fletchly.genius.core.port.outbound.DisplayService

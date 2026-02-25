@@ -29,11 +29,11 @@ import java.util.logging.Logger
 import kotlin.io.path.exists
 
 class ConfigurationManager(
-    private val logger: Logger,
     plugin: JavaPlugin
 ) {
     private val configPath = Path.of(plugin.dataFolder.path, "genius.conf")
     private val hoconLoader = ConfigurationLoaders.buildHoconLoader(configPath)
+    private val logger = plugin.logger
 
     /**
      * Load configuration from file

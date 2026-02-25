@@ -18,110 +18,63 @@
 
 package io.fletchly.genius
 
-import io.fletchly.genius.old.client.clientModule
-import io.fletchly.genius.old.command.Command
-import io.fletchly.genius.old.command.commandModule
-import io.fletchly.genius.old.event.eventModule
-import io.fletchly.genius.old.manager.config.GeniusConfiguration
-import io.fletchly.genius.old.manager.managerModule
-import io.fletchly.genius.old.service.serviceModule
-import io.fletchly.genius.old.service.tool.minecraft.gameInfoModule
-import io.fletchly.genius.old.service.tool.ollama.webSearchModule
-import io.fletchly.genius.old.util.utilModule
-import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
-import kotlinx.coroutines.*
+import io.fletchly.genius.adapter.inbound.command.GeniusCommand
+import io.fletchly.genius.adapter.inbound.command.registerCommand
+import io.fletchly.genius.adapter.inbound.event.registerEventListener
+import io.fletchly.genius.core.port.outbound.ContextService
+import io.fletchly.genius.infrastructure.di.pluginModule
+import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
+import kotlinx.coroutines.runBlocking
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.java.KoinJavaComponent.getKoin
 
 class Genius : JavaPlugin() {
-    lateinit var scope: CoroutineScope
-
     override fun onEnable() {
-        registerPluginScope()
-        registerModules()
-        registerEvents()
+        startKoin { pluginModule(this@Genius) }
         registerCommands()
-        logger.info { "Successfully enabled Genius ${pluginMeta.version}!" }
+        registerEventListeners()
+
+        logger.info { "Successfully enabled Genius ${pluginMeta.version}. Happy chatting! \uD83D\uDCA1" }
     }
 
     override fun onDisable() {
-        cleanUpPluginScope()
+        val contextService = getKoin().get<ContextService>()
+        val pluginScheduler = getKoin().get<PluginScheduler>()
+
+        logger.info { "Clearing context for all users..." }
+        runBlocking {
+            contextService.clearContext()
+        }
+
+        pluginScheduler.cancel()
+
         stopKoin()
     }
 
-    private fun registerModules() {
-        startKoin {
-            modules(
-                pluginModule(this@Genius),
-                clientModule,
-                commandModule,
-                eventModule,
-                managerModule,
-                serviceModule,
-                utilModule
-            )
-        }
-
-        registerToolModules()
-    }
-
-    private fun registerToolModules() {
-        val config = getKoin().get<GeniusConfiguration>()
-        val tools: MutableList<String> = mutableListOf()
-        if (config.tool.webSearch.enabled) {
-            tools.add("Web Search")
-            loadKoinModules(webSearchModule)
-        }
-
-        tools.add("Game Info")
-        loadKoinModules(gameInfoModule)
-
-        logger.info { "Enabled tools (${tools.size}): $tools" }
-    }
-
-    private fun registerPluginScope() {
-        scope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
-    }
-
-    private fun cleanUpPluginScope() {
-        scope.cancel()
-    }
-
-    private fun registerEvents() {
-        val listeners = getKoin().getAll<Listener>()
-
-        logger.info { "Registering ${listeners.size} event listeners" }
-        var registered = 0
-
-        for (listener in listeners) {
-            server.pluginManager.registerEvents(listener, this)
-            registered++
-        }
-
-        logger.info { "Successfully registered ${registered}/${listeners.size} event listeners" }
-    }
-
     private fun registerCommands() {
-        val commands = getKoin().getAll<Command>()
+        val commands = getKoin().getAll<GeniusCommand>()
 
-        logger.info { "Registering ${commands.size} commands" }
         var registered = 0
-
-        for (command in commands) {
-            lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) {
-                it.registrar().register(
-                    command.commandNode,
-                    command.description,
-                    command.aliases
-                )
-            }
-            registered++
+        commands.forEach {
+            registerCommand(it)
+            registered ++
         }
 
-        logger.info { "Successfully registered ${registered}/${commands.size} commands" }
+        logger.info { "Registered $registered commands" }
+    }
+
+    private fun registerEventListeners() {
+        val eventListeners = getKoin().getAll<Listener>()
+
+        var registered = 0
+        eventListeners.forEach {
+            registerEventListener(it)
+            registered ++
+        }
+
+        logger.info { "Registered $registered event listeners" }
     }
 }

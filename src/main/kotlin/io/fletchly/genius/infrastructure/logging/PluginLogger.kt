@@ -22,16 +22,17 @@ import io.fletchly.genius.core.model.Target
 import io.fletchly.genius.core.port.outbound.LoggingService
 import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Logger
 
 /**
  * Plugin logging service
  */
 class PluginLogger(
-    private val logger: Logger,
-    private val pluginScheduler: PluginScheduler,
-    private val configuration: GeniusConfiguration
+    private val configuration: GeniusConfiguration,
+    plugin: JavaPlugin
 ) : LoggingService {
+    private val logger = plugin.logger
 
     /**
      * Log HTTP requests from client if configured to do so

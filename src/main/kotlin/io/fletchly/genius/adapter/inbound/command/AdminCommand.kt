@@ -19,16 +19,13 @@
 package io.fletchly.genius.adapter.inbound.command
 
 import com.mojang.brigadier.Command
-import com.mojang.brigadier.arguments.ArgumentType
-import com.mojang.brigadier.context.CommandContext
 import io.fletchly.genius.core.port.inbound.ManageContext
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
 import io.fletchly.genius.infrastructure.target.ConsoleTarget
 import io.fletchly.genius.infrastructure.target.PlayerTarget
+import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
-import net.minecraft.commands.CommandSourceStack
-import net.minecraft.commands.Commands
 import org.bukkit.entity.Player
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
@@ -36,7 +33,7 @@ import org.bukkit.permissions.PermissionDefault
 fun adminCommand(
     manageContext: ManageContext,
     pluginScheduler: PluginScheduler
-) = command<CommandSourceStack>("genius") {
+) = command("genius") {
     description = "Manage Genius"
     permission = "genius.manage"
     permissionDescription = "Allow a player to manage genius"

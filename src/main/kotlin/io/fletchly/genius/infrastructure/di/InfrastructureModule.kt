@@ -29,20 +29,31 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val infrastructureModule = module {
-    // Config
+    configModule
+    httpModule
+    loggingModule
+    schedulingModule
+    toolModule
+}
+
+private val configModule = module {
     singleOf(::ConfigurationManager)
     singleOf(::SystemPromptManager)
     single<GeniusConfiguration> { get<ConfigurationManager>().loadConfig() }
+}
 
-    // Http
+private val httpModule = module {
     single { createKtorHttpClient(get()) }
+}
 
-    // Logging
+private val loggingModule = module {
     singleOf(::PluginLogger)
+}
 
-    // Scheduling
+private val schedulingModule = module {
     singleOf(::PluginScheduler)
+}
 
-    // Tool
+private val toolModule = module {
     singleOf(::ToolRegistry)
 }

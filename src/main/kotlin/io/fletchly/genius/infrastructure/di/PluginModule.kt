@@ -18,3 +18,12 @@
 
 package io.fletchly.genius.infrastructure.di
 
+import org.bukkit.plugin.java.JavaPlugin
+import org.koin.dsl.module
+
+fun pluginModule(plugin: JavaPlugin) = module {
+    single { plugin }
+    coreModule
+    infrastructureModule
+    adapterModule
+}

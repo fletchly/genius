@@ -24,15 +24,14 @@ import io.fletchly.genius.core.port.inbound.GenerateAssistantResponse
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
 import io.fletchly.genius.infrastructure.target.ConsoleTarget
 import io.fletchly.genius.infrastructure.target.PlayerTarget
-import net.minecraft.commands.CommandSourceStack
-import net.minecraft.commands.Commands
+import io.papermc.paper.command.brigadier.Commands
 import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionDefault
 
 fun askCommand(
     generateAssistantResponse: GenerateAssistantResponse,
     pluginScheduler: PluginScheduler,
-) = command<CommandSourceStack>("ask") {
+) = command("ask") {
     description = "Ask Genius a question"
     aliases = listOf("g")
     permission = "genius.ask"

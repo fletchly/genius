@@ -1,7 +1,7 @@
 /*
  * This file is part of Genius, licensed under the Apache License 2.0
  *
- * Copyright (c) 2025 fletchly
+ * Copyright (c) 2026 fletchly
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,11 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.old.manager.config
+package io.fletchly.genius.adapter.inbound.event
 
-class ConfigurationException(message: String, cause: Throwable?) : Exception(message, cause)
+import org.bukkit.event.Listener
+import org.bukkit.plugin.java.JavaPlugin
+
+fun JavaPlugin.registerEventListener(eventListener: Listener) {
+    server.pluginManager.registerEvents(eventListener, this)
+}

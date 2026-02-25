@@ -27,8 +27,8 @@ import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 import org.bukkit.plugin.java.JavaPlugin
 
-class GeniusCommand<S: CommandSourceStack> (
-    val node: LiteralCommandNode<S>,
+class GeniusCommand (
+    val node: LiteralCommandNode<CommandSourceStack>,
     val description: String,
     val aliases: List<String>,
     val permission: String,
@@ -37,7 +37,7 @@ class GeniusCommand<S: CommandSourceStack> (
     val childPermissions: List<Permission>
 )
 
-class GeniusCommandBuilder<S: CommandSourceStack>(private val name: String) {
+class GeniusCommandBuilder(private val name: String) {
     var description = ""
     var aliases: List<String> = emptyList()
     var permission = ""
@@ -46,21 +46,21 @@ class GeniusCommandBuilder<S: CommandSourceStack>(private val name: String) {
     var childPermissions: List<Permission> = emptyList()
 
     private var hasExecutes: Boolean = false
-    private var nodeBuilder: LiteralArgumentBuilder<S> =
+    private var nodeBuilder: LiteralArgumentBuilder<CommandSourceStack> =
         LiteralArgumentBuilder.literal(name)
 
-    fun executes(handler: (S) -> Int) {
+    fun executes(handler: (CommandSourceStack) -> Int) {
         hasExecutes = true
         nodeBuilder = nodeBuilder.executes { ctx ->
             handler(ctx.source)
         }
     }
 
-    fun node(block: LiteralArgumentBuilder<S>.() -> Unit) {
+    fun node(block: LiteralArgumentBuilder<CommandSourceStack>.() -> Unit) {
         nodeBuilder.apply { block() }
     }
 
-    fun build(): GeniusCommand<S> {
+    fun build(): GeniusCommand {
         require(description.isNotBlank()) { "Command $name must have a description" }
         require(permission.isNotBlank()) { "Command $name must have a permission" }
         require(permissionDescription.isNotBlank()) { "Command $name must have a permission message" }
@@ -82,12 +82,12 @@ class GeniusCommandBuilder<S: CommandSourceStack>(private val name: String) {
     }
 }
 
-fun <S: CommandSourceStack> command(
+fun command(
     name: String,
-    block: GeniusCommandBuilder<S>.() -> Unit
-): GeniusCommand<S> = GeniusCommandBuilder<S>(name).apply(block).build()
+    block: GeniusCommandBuilder.() -> Unit
+): GeniusCommand = GeniusCommandBuilder(name).apply(block).build()
 
-fun JavaPlugin.registerCommand(cmd: GeniusCommand<CommandSourceStack>) {
+fun JavaPlugin.registerCommand(cmd: GeniusCommand) {
     server.pluginManager.addPermission(
         Permission(cmd.permission, cmd.permissionDescription, cmd.permissionDefault)
     )

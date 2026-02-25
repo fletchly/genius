@@ -18,3 +18,54 @@
 
 package io.fletchly.genius.infrastructure.di
 
+import io.fletchly.genius.adapter.inbound.command.GeniusCommand
+import io.fletchly.genius.adapter.inbound.command.adminCommand
+import io.fletchly.genius.adapter.inbound.command.askCommand
+import io.fletchly.genius.adapter.inbound.event.PlayerEvents
+import io.fletchly.genius.adapter.outbound.ai.ollama.OllamaAiService
+import io.fletchly.genius.adapter.outbound.context.ConcurrentHashMapContextService
+import io.fletchly.genius.adapter.outbound.display.MinecraftChatDisplayService
+import io.fletchly.genius.adapter.outbound.tool.BasicToolService
+import io.fletchly.genius.core.port.outbound.AiService
+import io.fletchly.genius.core.port.outbound.ContextService
+import io.fletchly.genius.core.port.outbound.DisplayService
+import io.fletchly.genius.core.port.outbound.ToolService
+import net.minecraft.commands.CommandSourceStack
+import org.bukkit.event.Listener
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
+
+val adapterModule = module {
+    commandModule
+    eventModule
+    aiModule
+    contextModule
+    displayModule
+    toolModule
+}
+
+private val commandModule = module {
+    single { askCommand(get(), get()) } bind GeniusCommand::class
+    single { adminCommand(get(), get()) } bind GeniusCommand::class
+}
+
+private val eventModule = module {
+    singleOf(::PlayerEvents) bind Listener::class
+}
+
+private val aiModule = module {
+    singleOf(::OllamaAiService) bind AiService::class
+}
+
+private val contextModule = module {
+    singleOf(::ConcurrentHashMapContextService) bind ContextService::class
+}
+
+private val displayModule = module {
+    singleOf(::MinecraftChatDisplayService) bind DisplayService::class
+}
+
+private val toolModule = module {
+    singleOf(::BasicToolService) bind ToolService::class
+}

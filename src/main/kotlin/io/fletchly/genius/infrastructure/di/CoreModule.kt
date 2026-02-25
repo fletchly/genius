@@ -18,3 +18,20 @@
 
 package io.fletchly.genius.infrastructure.di
 
+import io.fletchly.genius.core.manager.AdminManager
+import io.fletchly.genius.core.manager.ConversationManager
+import io.fletchly.genius.core.port.inbound.GenerateAssistantResponse
+import io.fletchly.genius.core.port.inbound.ManageContext
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.binds
+import org.koin.dsl.module
+
+val coreModule = module {
+    singleOf(::ConversationManager) binds arrayOf(
+        GenerateAssistantResponse::class,
+    )
+
+    singleOf(::AdminManager) binds arrayOf(
+        ManageContext::class,
+    )
+}
