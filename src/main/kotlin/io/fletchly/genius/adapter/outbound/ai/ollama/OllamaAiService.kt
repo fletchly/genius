@@ -25,7 +25,8 @@ import io.fletchly.genius.core.port.outbound.AiService
 import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.config.SystemPromptManager
 import io.fletchly.genius.infrastructure.http.HttpClientException
-import io.fletchly.genius.infrastructure.tool.ToolDefinition
+import io.fletchly.genius.infrastructure.tool.ParamType
+import io.fletchly.genius.infrastructure.tool.Tool
 import io.fletchly.genius.infrastructure.tool.ToolRegistry
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -61,7 +62,7 @@ class OllamaAiService(
             model = configuration.ollama.model,
             options = options,
             messages = listOf(systemPromptMessage) + ollamaMessages,
-            tools = toolRegistry.getAllToolDefinitions().map { it.toOllamaTool() }
+            tools = toolRegistry.toSchemaList { it.toOllamaTool() }
         )
 
         try {
@@ -72,8 +73,6 @@ class OllamaAiService(
             }
 
             return response.body<OllamaResponse>().message.toMessage()
-        } catch (_: HttpClientException.ConfigurationError) {
-            throw AiProviderException("Configuration has errors")
         } catch (_: HttpClientException.TimeoutError) {
             throw AiProviderException("Request timed out")
         } catch (_: HttpClientException.NetworkError) {
@@ -88,13 +87,21 @@ class OllamaAiService(
     }
 }
 
-fun ToolDefinition.toOllamaTool(): OllamaTool {
+fun Tool.toOllamaTool(): OllamaTool {
     val function = OllamaFunction(
         name = name,
         description = description,
         parameters = OllamaParameters(
             properties = parameters.associate {
-                it.name to OllamaProperty(it.type, it.description)
+                val typeName: String = when (it.type) {
+                    ParamType.ARRAY -> "array"
+                    ParamType.STRING -> "string"
+                    ParamType.INTEGER -> "integer"
+                    ParamType.NUMBER -> "number"
+                    ParamType.BOOLEAN -> "boolean"
+                    ParamType.OBJECT -> "object"
+                }
+                it.name to OllamaProperty(typeName, it.description)
             },
             required = parameters
                 .filter { it.required }

@@ -23,9 +23,9 @@ import io.fletchly.genius.core.model.ToolCall
 import io.fletchly.genius.core.port.outbound.ToolService
 import io.fletchly.genius.infrastructure.logging.PluginLogger
 import io.fletchly.genius.infrastructure.tool.Tool
-import io.fletchly.genius.infrastructure.tool.ToolDefinition
+import io.fletchly.genius.infrastructure.tool.ToolData
 import io.fletchly.genius.infrastructure.tool.ToolRegistry
-import kotlinx.serialization.json.JsonObject
+import io.fletchly.genius.infrastructure.tool.ToolResult
 
 class BasicToolService(
     private val registry: ToolRegistry,
@@ -33,83 +33,22 @@ class BasicToolService(
     tools: Set<Tool>
 ) : ToolService {
     init {
-        for (tool in tools) {
-            registry.register(tool.definition)
+        tools.forEach {
+            registry.register(it)
         }
     }
 
     override suspend fun executeToolCall(toolCall: ToolCall): Message {
-        val tool = registry.getToolDefinition(toolCall.name)
-
-        if (tool == null) {
-            val errorMessage = toolErrorMessage(toolCall.name, "Tool not found")
-            pluginLogger.logToolCallError(errorMessage)
-            return Message(
-                errorMessage,
-                Message.TOOL
-            )
+        val toolData: ToolData = when (val result = registry.invoke(toolCall.name, toolCall.arguments)) {
+            is ToolResult.Success -> ToolData(toolName = toolCall.name, success = true, data = result.value)
+            is ToolResult.Failure -> ToolData(toolName = toolCall.name, success = false, error = result.message)
         }
 
-        val validationErrors = validateArguments(tool, toolCall.arguments)
-        if (validationErrors.isNotEmpty()) {
-            val errorMessage =
-                toolErrorMessage(tool.name, "Invalid argument(s): ${validationErrors.joinToString { ", " }}")
-            pluginLogger.logToolCallError(errorMessage)
-            return Message(
-                errorMessage,
-                Message.TOOL
-            )
-        }
+        pluginLogger.logToolCall("Executed tool: $toolData")
 
-        try {
-            val toolResult = tool.handler(toolCall.arguments)
-            pluginLogger.logToolCall("Executed tool: ${tool.name} > $toolResult")
-            return Message(
-                toolResult,
-                Message.TOOL
-            )
-        } catch (ex: ToolException) {
-            val errorMessage = toolErrorMessage(tool.name, "Encountered an exception: $ex")
-            pluginLogger.logToolCallError(errorMessage)
-            return Message(
-                errorMessage,
-                Message.TOOL
-            )
-        } catch (_: Exception) {
-            val errorMessage = toolErrorMessage(tool.name, "Encountered an unknown exception")
-            return Message(
-                errorMessage,
-                Message.TOOL
-            )
-        }
-    }
-
-    private fun toolErrorMessage(name: String, message: String) = "Error executing tool '$name': $message"
-
-    private fun validateArguments(
-        tool: ToolDefinition,
-        arguments: JsonObject
-    ): List<String> {
-        val errors = mutableListOf<String>()
-
-        // Check required parameters
-        tool.parameters.filter { it.required }.forEach { param ->
-            if (param.name !in arguments.keys) {
-                errors.add("Missing required parameter: ${param.name}")
-            }
-        }
-
-        // Check enum constraints
-        tool.parameters.forEach { param ->
-            param.enum?.let { allowedValues ->
-                arguments[param.name]?.let { value ->
-                    if (value.toString() !in allowedValues) {
-                        errors.add("${param.name} must be one of: ${allowedValues.joinToString()}")
-                    }
-                }
-            }
-        }
-
-        return errors
+        return Message(
+            toolData.toString(),
+            Message.TOOL
+        )
     }
 }

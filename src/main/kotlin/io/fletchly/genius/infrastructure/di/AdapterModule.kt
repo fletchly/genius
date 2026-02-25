@@ -32,12 +32,13 @@ import io.fletchly.genius.core.port.outbound.DisplayService
 import io.fletchly.genius.core.port.outbound.ToolService
 import org.bukkit.event.Listener
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 private val commandModule = module {
-    single { askCommand(get(), get()) } bind GeniusCommand::class
-    single { adminCommand(get(), get()) } bind GeniusCommand::class
+    single(named("ask")) { askCommand(get(), get()) } bind GeniusCommand::class
+    single(named("admin")) { adminCommand(get(), get()) } bind GeniusCommand::class
 }
 
 private val eventModule = module {

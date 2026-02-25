@@ -20,8 +20,7 @@ package io.fletchly.genius.infrastructure.http
 
 import io.ktor.http.*
 
-sealed class HttpClientException(message: String, cause: Throwable?) : Exception(message, cause) {
-    class ConfigurationError(msg: String) : HttpClientException(msg, null)
+sealed class HttpClientException(override val message: String, cause: Throwable?) : Exception(message, cause) {
     class NetworkError(cause: Throwable) : HttpClientException("Network failure", cause)
     class TimeoutError(cause: Throwable) : HttpClientException("Request timed out", cause)
     class ServerError(status: HttpStatusCode) : HttpClientException("Server error: $status", null)

@@ -16,47 +16,42 @@
  * limitations under the License.
  */
 
-package io.fletchly.genius.adapter.outbound.tool.minecraft
+package io.fletchly.genius.infrastructure.tool.minecraft
 
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
 import io.fletchly.genius.infrastructure.tool.Tool
+import io.fletchly.genius.infrastructure.tool.ToolResult
 import io.fletchly.genius.infrastructure.tool.tool
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.encodeToJsonElement
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.qualifier.named
+import org.koin.dsl.bind
+import org.koin.dsl.module
 import java.time.LocalDate
 
-class GameInfoTool(
-    private val plugin: JavaPlugin,
-    private val pluginScheduler: PluginScheduler,
-) : Tool {
-    override val definition = tool {
-        name = "game_info"
-        description = "Get the current Minecraft server version, as well as the current date"
-        handle { args ->
-            handleTool(args)
-        }
-    }
+fun gameInfoTool(
+    plugin: JavaPlugin,
+    pluginScheduler: PluginScheduler
+) = tool("game_info") {
+    description = "Get information about the Minecraft server and current date. Used to ensure up-to-date information."
 
-    override suspend fun handleTool(args: JsonObject): String {
-        val version = pluginScheduler.runTask {
-            plugin.server.version
-        }
-
+    handler {
+        val serverVersion = pluginScheduler.runTask { plugin.server.version }
         val currentDate = LocalDate.now().toString()
+        val gameInfo = GameInfo(serverVersion, currentDate)
 
-        return GameInfo(version, currentDate).toString()
+        ToolResult.Success(Json.encodeToJsonElement(gameInfo))
     }
-
 }
 
 @Serializable
 data class GameInfo(
-    val version: String,
+    val serverVersion: String,
     val currentDate: String
-) {
-    override fun toString(): String {
-        return Json.encodeToString(this)
-    }
+)
+
+val gameInfoToolModule = module {
+    single(named("game_info")) { gameInfoTool(get(), get()) } bind Tool::class
 }

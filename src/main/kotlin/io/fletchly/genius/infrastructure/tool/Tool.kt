@@ -18,51 +18,70 @@
 
 package io.fletchly.genius.infrastructure.tool
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
-interface Tool {
-    val definition: ToolDefinition
-    suspend fun handleTool(args: JsonObject): String
-}
-
-data class ToolDefinition(
+data class Tool(
     val name: String,
     val description: String,
-    val parameters: List<ToolParameter>,
-    val handler: suspend (JsonObject) -> String
+    val parameters: List<Parameter>,
+    val handler: suspend (JsonObject) -> ToolResult
 )
 
-data class ToolParameter(
+sealed interface ToolResult {
+    data class Success(val value: JsonElement) : ToolResult
+    data class Failure(val message: String) : ToolResult
+}
+
+@Serializable
+data class ToolData(
+    val toolName: String,
+    val success: Boolean,
+    val data: JsonElement? = null,
+    val error: String? = null
+) {
+    override fun toString(): String = Json.encodeToString(this)
+}
+
+class ToolBuilder(private val name: String) {
+    var description = ""
+    private val parameters = mutableListOf<Parameter>()
+    private var handler: (suspend (JsonObject) -> ToolResult)? = null
+
+    fun parameter(name: String, block: ParameterBuilder.() -> Unit) {
+        parameters.add(ParameterBuilder(name).apply(block).build())
+    }
+
+    fun handler(block: suspend (JsonObject) -> ToolResult) {
+        handler = block
+    }
+
+    fun build(): Tool {
+        requireNotNull(handler) { "Tool '$name' must have a handler defined." }
+        return Tool(name, description, parameters, handler!!)
+    }
+}
+
+fun tool(name: String, block: ToolBuilder.() -> Unit): Tool =
+    ToolBuilder(name).apply(block).build()
+
+enum class ParamType { STRING, INTEGER, NUMBER, BOOLEAN, ARRAY, OBJECT }
+
+data class Parameter(
     val name: String,
-    val type: String,
+    val type: ParamType,
     val description: String,
     val required: Boolean = true,
     val enum: List<String>? = null
 )
 
-class ToolBuilder {
-    var name: String = ""
-    var description: String = ""
-    private val parameters = mutableListOf<ToolParameter>()
-    private var handler: suspend (JsonObject) -> String = { "" }
+class ParameterBuilder(private val name: String) {
+    var type = ParamType.STRING
+    var description = ""
+    var required = true
+    var enum: List<String>? = null
 
-    fun parameter(
-        name: String,
-        type: String,
-        description: String,
-        required: Boolean = true,
-        enum: List<String>? = null
-    ) {
-        parameters.add(ToolParameter(name, type, description, required, enum))
-    }
-
-    fun handle(block: suspend (JsonObject) -> String) {
-        handler = block
-    }
-
-    fun build() = ToolDefinition(name, description, parameters, handler)
-}
-
-fun tool(block: ToolBuilder.() -> Unit): ToolDefinition {
-    return ToolBuilder().apply(block).build()
+    fun build() = Parameter(name, type, description, required, enum)
 }

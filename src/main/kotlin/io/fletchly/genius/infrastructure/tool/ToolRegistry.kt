@@ -18,14 +18,26 @@
 
 package io.fletchly.genius.infrastructure.tool
 
-class ToolRegistry {
-    private val tools = mutableMapOf<String, ToolDefinition>()
+import kotlinx.serialization.json.JsonObject
 
-    fun register(toolDefinition: ToolDefinition) {
-        tools[toolDefinition.name] = toolDefinition
+class ToolRegistry {
+    private val tools = mutableMapOf<String, Tool>()
+
+    fun register(tool: Tool) {
+        tools[tool.name] = tool
     }
 
-    fun getToolDefinition(name: String): ToolDefinition? = tools[name]
+    fun register(vararg tools: Tool) {
+        tools.forEach {
+            register(it)
+        }
+    }
 
-    fun getAllToolDefinitions(): List<ToolDefinition> = tools.values.toList()
+    suspend fun invoke(name: String, args: JsonObject): ToolResult {
+        val tool = tools[name] ?: return ToolResult.Failure("No tool registered with name '$name'")
+        return tool.handler(args)
+    }
+
+    fun <T> toSchemaList(transform: (Tool) -> T): List<T> =
+        tools.values.map(transform)
 }

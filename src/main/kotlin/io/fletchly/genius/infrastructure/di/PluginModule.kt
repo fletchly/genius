@@ -24,8 +24,8 @@ import org.koin.dsl.module
 fun pluginModule(plugin: JavaPlugin) = module {
     single { plugin }
     includes(
-        coreModule,
         infrastructureModule,
+        coreModule,
         adapterModule
     )
 }

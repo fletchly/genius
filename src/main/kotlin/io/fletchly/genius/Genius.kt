@@ -22,18 +22,27 @@ import io.fletchly.genius.adapter.inbound.command.GeniusCommand
 import io.fletchly.genius.adapter.inbound.command.registerCommand
 import io.fletchly.genius.adapter.inbound.event.registerEventListener
 import io.fletchly.genius.core.port.outbound.ContextService
+import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.di.pluginModule
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
+import io.fletchly.genius.infrastructure.tool.Tool
+import io.fletchly.genius.infrastructure.tool.minecraft.gameInfoToolModule
+import io.fletchly.genius.infrastructure.tool.ollama.webSearchToolModule
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
+import org.koin.core.logger.Level
 import org.koin.java.KoinJavaComponent.getKoin
 
 class Genius : JavaPlugin() {
     override fun onEnable() {
-        startKoin { modules( pluginModule(this@Genius) ) }
+        startKoin {
+            printLogger(Level.DEBUG)
+            modules( pluginModule(this@Genius) )
+        }
         registerCommands()
         registerEventListeners()
 
@@ -76,5 +85,19 @@ class Genius : JavaPlugin() {
         }
 
         logger.info { "Registered $registered event listeners" }
+    }
+
+    private fun registerTools() {
+        val config = getKoin().get<GeniusConfiguration>()
+
+        if (config.tool.webSearch.enabled) {
+            loadKoinModules(webSearchToolModule)
+        }
+
+        loadKoinModules(gameInfoToolModule)
+
+        val loadedTools = getKoin().getAll<Tool>()
+
+        logger.info { "Registered ${loadedTools.size} tools: ${loadedTools.joinToString(", ") { it.name }}}" }
     }
 }
