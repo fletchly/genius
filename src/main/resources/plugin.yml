@@ -6,22 +6,22 @@ prefix: "Genius"
 authors:
   - fletchly
 
-permissions:
-  genius:
-    children:
-      genius.ask:
-        description: "Ask Genius a question"
-        default: true
-      genius.manage:
-        children:
-          genius.manage.clear:
-            children:
-              genius.manage.clear.self:
-                description: "Clear conversation context for yourself"
-                default: true
-              genius.manage.clear.any:
-                description: "Clear conversation context for anyone"
-                default: op
-          genius.manage.info:
-            description: "Get info on Genius"
-            default: true
+#permissions:
+#  genius:
+#    children:
+#      genius.ask:
+#        description: "Ask Genius a question"
+#        default: true
+#      genius.manage:
+#        children:
+#          genius.manage.clear:
+#            children:
+#              genius.manage.clear.self:
+#                description: "Clear conversation context for yourself"
+#                default: true
+#              genius.manage.clear.any:
+#                description: "Clear conversation context for anyone"
+#                default: op
+#          genius.manage.info:
+#            description: "Get info on Genius"
+#            default: true

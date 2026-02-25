@@ -30,20 +30,10 @@ import io.fletchly.genius.core.port.outbound.AiService
 import io.fletchly.genius.core.port.outbound.ContextService
 import io.fletchly.genius.core.port.outbound.DisplayService
 import io.fletchly.genius.core.port.outbound.ToolService
-import net.minecraft.commands.CommandSourceStack
 import org.bukkit.event.Listener
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-
-val adapterModule = module {
-    commandModule
-    eventModule
-    aiModule
-    contextModule
-    displayModule
-    toolModule
-}
 
 private val commandModule = module {
     single { askCommand(get(), get()) } bind GeniusCommand::class
@@ -68,4 +58,15 @@ private val displayModule = module {
 
 private val toolModule = module {
     singleOf(::BasicToolService) bind ToolService::class
+}
+
+val adapterModule = module {
+    includes(
+        commandModule,
+        eventModule,
+        aiModule,
+        contextModule,
+        displayModule,
+        toolModule
+    )
 }

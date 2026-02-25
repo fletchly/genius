@@ -20,25 +20,26 @@ package io.fletchly.genius.adapter.outbound.display
 
 import io.fletchly.genius.core.model.Target
 import io.fletchly.genius.core.port.outbound.DisplayService
+import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
 import io.fletchly.genius.infrastructure.target.ConsoleTarget
 import io.fletchly.genius.infrastructure.target.PlayerTarget
-import io.fletchly.genius.old.manager.config.GeniusConfiguration
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Server
+import org.bukkit.plugin.java.JavaPlugin
 
 /**
  * [DisplayService] implementation that displays messages in Minecraft chat
  */
 class MinecraftChatDisplayService(
     private val pluginScheduler: PluginScheduler,
-    private val server: Server,
+    plugin: JavaPlugin,
     configuration: GeniusConfiguration
 ) : DisplayService {
     private val displayConfig = configuration.display
+    private val server = plugin.server
 
     override suspend fun displayPlayerMessage(target: Target, message: String) {
         val chatMessage = playerMessage(target.displayName, message)

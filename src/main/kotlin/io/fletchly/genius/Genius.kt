@@ -33,7 +33,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 
 class Genius : JavaPlugin() {
     override fun onEnable() {
-        startKoin { pluginModule(this@Genius) }
+        startKoin { modules( pluginModule(this@Genius) ) }
         registerCommands()
         registerEventListeners()
 

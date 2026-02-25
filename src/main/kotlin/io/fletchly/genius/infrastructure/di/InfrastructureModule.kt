@@ -18,6 +18,7 @@
 
 package io.fletchly.genius.infrastructure.di
 
+import io.fletchly.genius.core.port.outbound.LoggingService
 import io.fletchly.genius.infrastructure.config.ConfigurationManager
 import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.config.SystemPromptManager
@@ -26,15 +27,8 @@ import io.fletchly.genius.infrastructure.logging.PluginLogger
 import io.fletchly.genius.infrastructure.scheduling.PluginScheduler
 import io.fletchly.genius.infrastructure.tool.ToolRegistry
 import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
-
-val infrastructureModule = module {
-    configModule
-    httpModule
-    loggingModule
-    schedulingModule
-    toolModule
-}
 
 private val configModule = module {
     singleOf(::ConfigurationManager)
@@ -47,13 +41,23 @@ private val httpModule = module {
 }
 
 private val loggingModule = module {
-    singleOf(::PluginLogger)
+    singleOf(::PluginLogger) bind LoggingService::class
 }
 
 private val schedulingModule = module {
     singleOf(::PluginScheduler)
 }
 
-private val toolModule = module {
+private val toolRegistryModule = module {
     singleOf(::ToolRegistry)
+}
+
+val infrastructureModule = module {
+    includes(
+        configModule,
+        httpModule,
+        loggingModule,
+        schedulingModule,
+        toolRegistryModule,
+    )
 }

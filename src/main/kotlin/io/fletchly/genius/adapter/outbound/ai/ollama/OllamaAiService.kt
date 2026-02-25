@@ -24,9 +24,9 @@ import io.fletchly.genius.core.model.Message
 import io.fletchly.genius.core.port.outbound.AiService
 import io.fletchly.genius.infrastructure.config.GeniusConfiguration
 import io.fletchly.genius.infrastructure.config.SystemPromptManager
+import io.fletchly.genius.infrastructure.http.HttpClientException
 import io.fletchly.genius.infrastructure.tool.ToolDefinition
 import io.fletchly.genius.infrastructure.tool.ToolRegistry
-import io.fletchly.genius.old.client.HttpClientException
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
