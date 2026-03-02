@@ -1,3 +1,13 @@
+> [!WARNING]
+> ## 🚧 This project is no longer actively maintained
+>
+> Hey there! Thanks for stopping by. Genius has had a good run, but development has
+> moved on — it's been superseded by **[Comparator](https://github.com/fletchly/comparator)**, which takes
+> everything here and runs with it in a better direction.
+>
+> Feel free to explore the code, but for anything new we'd recommend heading over to
+> Comparator. See you there! 👋
+
 ![](/doc/images/banner.png)
 
 [![Github](https://img.shields.io/badge/github-genius-blue?logo=github)](https://github.com/fletchly/genius)
